@@ -127,4 +127,6 @@ Parser feature is available in GUI from "Edit->Parse password" menu
 item. In command line mode you can use ``new -p`` command - it will
 fire up your favorite text editor for you to provide mail text.
 
+Check out parser! Tell me what you think.
+
 .. vim: tw=72 nocindent et
