@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: wnd_main.py,v 1.4 2003/08/26 21:33:57 kedder Exp $
+# $Id: wnd_main.py,v 1.5 2003/08/27 20:09:55 kedder Exp $
 
 '''Main KedPM window'''
 
@@ -34,10 +34,12 @@ class MainWindow(Window):
     
     name = "wnd_main"
 
-    passwords = [] # List of passwords currently displaying in the password pane
-    prot = None # Prototype password instance
-    password_menu = None # Popup menu for RMB in password pane
-    selected_text = '' # Current selection
+    passwords = []          # List of passwords currently displaying in the password pane
+    prot = None             # Prototype password instance
+    password_menu = None    # Popup menu for RMB in password pane
+    selected_text = ''      # Current selection
+    cwtree = None           # Current working tree
+    search_text = ''        # Current password filter
     
 
     def __init__(self):
@@ -72,38 +74,46 @@ class MainWindow(Window):
         for column in password_list.get_columns():
             password_list.remove_column(column)
         
-        self.prot = self.passwords[0]
-        fields = self.prot.getFieldsOfType([TYPE_STRING])
-        count = 1
-        for field in fields:
-            renderer = gtk.CellRendererText()
-            col = gtk.TreeViewColumn(self.prot.getFieldTitle(field), renderer)
-            col.add_attribute(renderer, 'text', count)
-            password_list.append_column(col)
-            count += 1
+        passwords = self.cwtree.locate(self.search_text)
 
-        store = apply(gtk.ListStore,  [gobject.TYPE_INT] + [gobject.TYPE_STRING] * count)
-        
-        pidx = 0
-        for pwd in self.passwords:
-            iter = store.append()
-            store.set(iter, 0, pidx)
-            pidx += 1
+        if passwords:
+            self.prot = passwords[0]
+            fields = self.prot.getFieldsOfType([TYPE_STRING])
             count = 1
             for field in fields:
-                store.set(iter, count, pwd[field])
+                renderer = gtk.CellRendererText()
+                col = gtk.TreeViewColumn(self.prot.getFieldTitle(field), renderer)
+                col.add_attribute(renderer, 'text', count)
+                password_list.append_column(col)
                 count += 1
+
+            store = apply(gtk.ListStore,  [gobject.TYPE_INT] + [gobject.TYPE_STRING] * count)
+            
+            pidx = 0
+            for pwd in passwords:
+                iter = store.append()
+                store.set(iter, 0, pidx)
+                pidx += 1
+                count = 1
+                for field in fields:
+                    store.set(iter, count, pwd[field])
+                    count += 1
+        else:
+            store = gtk.ListStore(gobject.TYPE_STRING)
+        self.passwords = passwords
         password_list.set_model(store)
 
     def generatePasswordPopup(self):
         menu_password = self.getGladeWidget('menu_password')
-        print menu_password
+        #return menu_password
         fields = self.prot.getFieldsOfType()
         fields.reverse()
         for field in fields:
             copy_mi = gtk.MenuItem('Copy %s' % self.prot.getFieldTitle(field))
+            #copy_mi.show()
             copy_mi.connect('activate', self.on_password_popup_activate, field)
             menu_password.prepend(copy_mi)
+            #menu_password.add(copy_mi)
         menu_password.show_all()
         return menu_password
 
@@ -136,16 +146,15 @@ class MainWindow(Window):
 
         cur_iter = store.get_iter(path)
         pass_path = store.get_value(store.get_iter(path), 1)
-        tree = self.password_tree.getTreeFromPath(pass_path.split('/'))
-        self.passwords = tree.getNodes()
+        self.cwtree = self.password_tree.getTreeFromPath(pass_path.split('/'))
         self.setupPasswords()
 
     def on_password_list_button_press_event(self, widget, event):
         if event.button == 3:
             # RMB clicked
             path, column, cell_x, cell_y = self['password_list'].get_path_at_pos(int(event.x), int(event.y))
-            if not self.password_menu:
-                self.password_menu = self.generatePasswordPopup()
+            #if not self.password_menu:
+            self.password_menu = self.generatePasswordPopup()
             self.password_menu.popup(None, None, None, event.button, event.time)
             print path
         return gtk.FALSE
@@ -163,3 +172,14 @@ class MainWindow(Window):
     def on_wnd_main_selection_get(self, widget, selection_data, info, time_stamp):
         print "providing selection %s" % selection_data.selection
         selection_data.set_text(self.selected_text, len(self.selected_text))
+
+    def on_find_button_activate(self, widget):
+        search_text = self['search_entry'].get_text()
+        if search_text != self.search_text:
+            self.search_text = search_text
+            self.setupPasswords()
+
+    def on_clear_button_activate(self, widget):
+        self['search_entry'].set_text('')
+        self.on_find_button_activate(widget)
+ 
