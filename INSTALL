@@ -1,0 +1,42 @@
+====================
+Ked Password Manager
+====================
+
+Copyright (c) 2003 Andrey Lebedev <andrey@micro.lt>
+
+
+Prerequisites
+=============
+
+To run this software you need:
+
+    * Python interpreter (tested with 2.2.3, but should run on 2.1.x as
+      well)
+    * Python Crypto module (http://www.amk.ca/python/code/crypto.html)
+
+
+Installation
+============
+
+To install the KedPM support code into your Python tree and
+KedPM scripts into /usr/bin (substitute that path for whatever is
+appropriate on your system). You need to have write permissions
+for these locations, eg. being root on unix::
+
+    python setup.py install
+
+If you would like to place the KedPM scripts in a directory other than
+``/usr/bin``, then specify the preferred location with
+``--install-script``. For example, to install them in
+``/opt/kedpm/bin``::
+
+    python setup.py install --install-scripts=/opt/kedpm/bin
+
+You can also use the ``--prefix`` option to use a completely different
+base directory, if you do not want to use administrator rights. If you
+choose to do this, take note of the message at the end of installation
+and modify the python path accordingly.
+
+
+
+ vim: tw=72

@@ -1,0 +1,42 @@
+
+Ked Password Manager
+====================
+
+Copyright (c) 2003 Andrey Lebedev <andrey@micro.lt>
+
+
+About
+=====
+
+Ked Password Manager helps to manage large amounts of passwords and related
+information and simplifies tasks of searching and entering password data.
+
+Ked-PM written in python and can be run virtually on any platform python
+interpreter can run.
+
+Ked-PM written as extensible framework, which allows to plug in custom password
+database back-ends and custom user interface front-ends. Currently only Figaro
+PM back-end and CLI (Command Line Interface) front-end supported.
+
+Installation
+============
+
+Read INSTALL file provided in this distributions for installations instructions
+
+
+Command Line Interface
+======================
+
+To run Ked Password Manager Command Line Interface, run::
+
+    kedpm-cli
+
+kedpm-cli program should be located in your PATH.
+
+Commands
+--------
+
+
+
+
+.. vim: tw=72
