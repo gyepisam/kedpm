@@ -1,6 +1,14 @@
 Noteworthy changes in Ked Password Manager. Most recent changes are at
 the top.
 
+Version 0.4.0 (??)
+
+    * Search entry automatically gets focus, when switching to flat
+    view.
+
+    * First password in root category creation bug fixed. GTK warnings
+    should be gone too. (SF BUG #862551)
+
 Version 0.3.1 (2003-10-27)
 
     * Fixed password database initialization problem. New databases

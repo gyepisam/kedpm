@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: wnd_main.py,v 1.24 2003/10/26 16:58:50 kedder Exp $
+# $Id: wnd_main.py,v 1.25 2004/01/02 21:08:14 kedder Exp $
 
 '''Main KedPM window'''
 
@@ -224,18 +224,20 @@ class MainWindow(Window):
         self.statusbar.push(cid, "Password database saved.")
         self.setModified(False)
 
-    def addPasswordInteractively(self, pswd = FigaroPassword()):
+    def addPasswordInteractively(self, pswd = None):
         """Add the given password to the current category interactively. 
         
         Let user deside add the password or not and let him correct information
         before adding."""
         
+        if pswd is None:
+            pswd = FigaroPassword()
         dlg = dialogs.PasswordEditDialog(pswd)
         response = dlg.run()
         if response == gtk.RESPONSE_OK:
             self.getCWTree().addNode(pswd)
             self.setupPasswords()
-            self.tryToSave()        
+            self.tryToSave()
 
     def toggleFlatView(self):
         """Toggle flat password view and update related controls"""
@@ -246,6 +248,9 @@ class MainWindow(Window):
         # disable some controls
         for control in ['tb_add', 'mi_add_password', 'mi_parse_password']:
             self[control].set_sensitive(not self.flat_view)
+        if self.flat_view:
+            # put focus on search entry
+            self['search_entry'].grab_focus()
         self.setupPasswords()
 
     #################################################################
@@ -332,14 +337,6 @@ class MainWindow(Window):
     def on_tb_add_clicked(self, widget):
         '''Toolbar 'Add' button clicked'''
         self.addPasswordInteractively()
-        return
-        pswd = FigaroPassword()
-        dlg = dialogs.PasswordEditDialog(pswd)
-        response = dlg.run()
-        if response == gtk.RESPONSE_OK:
-            self.getCWTree().addNode(pswd)
-            self.setupPasswords()
-            self.tryToSave()
 
     def on_mi_save_activate(self, widget):
         '''Main menu 'Save' item activated'''

@@ -189,7 +189,6 @@
 	      <property name="visible">True</property>
 	      <property name="label" translatable="yes">_View</property>
 	      <property name="use_underline">True</property>
-	      <signal name="activate" handler="on_view1_activate" last_modification_time="Sat, 25 Oct 2003 19:00:38 GMT"/>
 
 	      <child>
 		<widget class="GtkMenu" id="view1_menu">
@@ -475,7 +474,6 @@
 		      <property name="enable_search">True</property>
 		      <signal name="button_press_event" handler="on_password_list_button_press_event" last_modification_time="Mon, 25 Aug 2003 19:32:07 GMT"/>
 		      <signal name="popup_menu" handler="on_password_list_popup_menu" last_modification_time="Tue, 02 Sep 2003 21:03:41 GMT"/>
-		      <signal name="toggle_cursor_row" handler="on_password_list_cursor_changed" last_modification_time="Sat, 18 Oct 2003 21:15:01 GMT"/>
 		    </widget>
 		  </child>
 		</widget>
@@ -1044,7 +1042,6 @@
   <property name="resizable">False</property>
   <property name="destroy_with_parent">False</property>
   <property name="has_separator">True</property>
-  <signal name="response" handler="on_dlg_edit_response" last_modification_time="Sat, 30 Aug 2003 19:31:22 GMT"/>
 
   <child internal-child="vbox">
     <widget class="GtkVBox" id="dialog-vbox4">
@@ -1742,7 +1739,6 @@ Please choose the password which will be used to encrypt your passwords. It is v
 				  <property name="visible">True</property>
 				  <property name="label" translatable="yes">auto</property>
 				  <property name="use_underline">True</property>
-				  <signal name="activate" handler="on_sm_auto_activate" last_modification_time="Sat, 11 Oct 2003 18:34:39 GMT"/>
 				</widget>
 			      </child>
 			    </widget>
