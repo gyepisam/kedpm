@@ -15,11 +15,31 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: __init__.py,v 1.8 2003/09/27 19:48:09 kedder Exp $
+# $Id: __init__.py,v 1.9 2003/10/08 20:10:15 kedder Exp $
 
 ''' KED Password Manager 
 
 Simple to use, extensible and secure password manager
 '''
 
+import os
+
 __version__ = '0.2.6'
+
+data_files_dir = None
+
+def setupPrefix():
+    """Figure out base location where kedpm data files were installed by examining
+    __file__ value. 
+    
+    On UNIX data files shoud be stored in <prefix>/share/kedpm directory."""
+
+    global data_files_dir
+    elements = __file__.split(os.path.sep)
+    data_files_dir = os.path.sep.join(elements[:-5]+['share', 'kedpm'])
+    if not os.access(data_files_dir, os.F_OK):
+        # We are in the distribution dir
+        data_files_dir = "."
+
+if data_files_dir is None:
+    setupPrefix()
