@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: dialogs.py,v 1.16 2003/10/25 19:39:03 kedder Exp $
+# $Id: dialogs.py,v 1.17 2003/10/25 19:51:45 kedder Exp $
 
 '''Dialog classes'''
 
@@ -92,7 +92,7 @@ class AboutDialog(Dialog):
         self.window.show()
         
     def on_dlg_about_response(self, widget, response_id):
-        if response_id == gtk.RESPONSE_OK:
+        if response_id == gtk.RESPONSE_CANCEL:
             self.destroyDialog()
         elif response_id == 1:
             CreditsDialog(transient_for=self.window).run()

@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: wnd_main.py,v 1.22 2003/10/25 19:39:03 kedder Exp $
+# $Id: wnd_main.py,v 1.23 2003/10/25 19:51:45 kedder Exp $
 
 '''Main KedPM window'''
 
@@ -145,7 +145,7 @@ class MainWindow(Window):
 
         # Check if any password is currently selected
         pwd_controls = ["tb_edit", "tb_delete", "mi_edit_password",
-            "mi_delete_password"]
+            "mi_delete_password", "mi_as_plain_text"]
         pwd_sensitive = False
         if self.getSelectedPassword():
             pwd_sensitive = True
@@ -413,3 +413,6 @@ class MainWindow(Window):
             dlg = dialogs.AsPlainTextDialog()
             dlg.showPassword(sel_pswd)
             dlg.run()
+
+    def on_pmi_view_as_plain_text_activate(self, widget):
+        self.on_mi_as_plain_text_activate(widget)
