@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: cli.py,v 1.28 2004/01/04 17:07:16 kedder Exp $
+# $Id: cli.py,v 1.29 2004/01/18 16:29:20 kedder Exp $
 
 "Command line interface for Ked Password Manager"
 
@@ -44,7 +44,7 @@ try 'help' for brief description of available commands
         Cmd.__init__(self)
         if sys.stdout.isatty():
             self.PS1 = "\x1b[1m"+self.PS1+"\x1b[0m" # colored prompt template
-    
+
     def openDatabase(self):
         ''' Open database amd prompt for password if nesessary '''
         self.pdb = PDBFigaro(filename = expanduser(self.conf.options['fpm-database']))
@@ -57,7 +57,7 @@ try 'help' for brief description of available commands
             except WrongPassword:
                 if password:
                     print "Error! Wrong password."
-                else: 
+                else:
                     print "Provide password to access the database (Ctrl-C to exit)"
                 password = getpass("Password: ")
             except DatabaseNotExist:
@@ -104,7 +104,7 @@ try 'help' for brief description of available commands
             lengths[fld] = len(ftitle)
             fstr = fstr + "%%%ds "
             headers.append(ftitle)
-        
+
         ptuples = []
         num = 1
         for pwd in passwords:
@@ -129,12 +129,12 @@ try 'help' for brief description of available commands
 
     def pickPassword(self, regexp, tree = None):
         '''Prompt user to pick one password from given password tree. Password
-        tree, provided by "tree" argument filtered using "regexp". 
-        
+        tree, provided by "tree" argument filtered using "regexp".
+
         If resulted list contains only one password, return it without
         prompting. If no passwords were located, or user desides to cancel
         operation, return None'''
-        
+
         if tree is None:
             tree = self.getCwd()
         passwords = tree.locate(regexp)
@@ -179,7 +179,7 @@ try 'help' for brief description of available commands
             pass2 = getpass('Repeat: ')
             if pass1==pass2:
                 pwd = pass1
-            else:                
+            else:
                 print "Passwords don't match. Try again."
         return pwd
 
@@ -187,10 +187,10 @@ try 'help' for brief description of available commands
         '''Prompt user for each field of the password. Respect fields' type.'''
 
         input = {}
-    
+
         for field, fieldinfo in pwd.fields_type_info:
             field_type = fieldinfo['type']
-            
+
             new_value = ""
             if field_type == password.TYPE_STRING:
                 new_value = self.inputString("Enter %s (\"%s\"): " % (pwd.getFieldTitle(field), pwd[field]))
@@ -221,17 +221,17 @@ long password correctly."""
         #return pwd
 
     def tryToSave(self):
-        
+
         self.modified = 1
         savemode = self.conf.options["save-mode"]
         if savemode == 'no':
             return
         answer = 'y'
         if self.conf.options["save-mode"] == "ask":
-            answer = raw_input("Database was modified. Do you want to save it now? [Y/n]: ")            
+            answer = raw_input("Database was modified. Do you want to save it now? [Y/n]: ")
         if answer=='' or answer.lower().startswith('y'):
             self.do_save('')
-    
+
     def complete_dirs(self, text, line, begidx, endidx):
         dirs=self.pdb.getTree().getBranches()
         compl = []
@@ -239,20 +239,25 @@ long password correctly."""
             if dir.startswith(text):
                 compl.append(dir)
         return compl
-    
-    def getEditorInput(self):
+
+    def getEditorInput(self, content=''):
         """Fire up default editor and read user input from temporary file"""
         default_editor = "vi"
         if os.environ.has_key('VISUAL'):
             editor = os.environ['VISUAL']
         elif os.environ.has_key('EDITOR'):
             editor = os.environ['EDITOR']
-        else: 
+        else:
             editor = default_editor
         print "running %s" % editor
         # create temporary file
         handle, tmpfname = tempfile.mkstemp(prefix="kedpm_")
+        tmpfile = open(tmpfname, 'w')
+        tmpfile.write(content)
+        tmpfile.close()
+        
         os.system(editor + " " + tmpfname)
+
         tmpfile = open(tmpfname, 'r')
         text = tmpfile.read()
         tmpfile.close()
@@ -267,13 +272,13 @@ long password correctly."""
         else:
             path = root.normalizePath(self.cwd + arg.split('/'))
         return path
-    
+
     ##########################################
     # Command implementations below.         #
-        
+
     def emptyline(self):
         pass
-    
+
     def do_exit(self, arg):
         '''Quit KED Password Manager'''
         if self.modified:
@@ -314,10 +319,10 @@ Syntax:
 
     def complete_ls(self, text, line, begidx, endidx):
         return self.complete_dirs(text, line, begidx, endidx)
-    
+
     def do_cd(self, arg):
         '''change directory (catalog)
- 
+
 Syntax:
     cd <category>
 '''
@@ -333,14 +338,14 @@ Syntax:
 
     def complete_cd(self, text, line, begidx, endidx):
         return self.complete_dirs(text, line, begidx, endidx)
-    
+
     def do_pwd(self, arg):
         '''print name of current/working directory'''
         print '/'+'/'.join(self.cwd)
-    
+
     def do_show(self, arg):
         '''display password information.
-        
+
 Syntax:
     show [-r] <regexp>
 
@@ -351,16 +356,16 @@ subtree, if -r flag was specified. If several items matched by <regexp>, list
 of them will be printed and you will be prompted to enter a number, pointing to
 password you want to look at.  After receiving that number, KedPM will show you
 the password.'''
-        
+
         argv = arg.split()
-        tree = None        
+        tree = None
         if argv and argv[0] == '-r':
             tree = self.getCwd().flatten()
             if len(argv) > 1:
                 arg = " ".join(argv[1:])
             else:
                 arg = ""
-            
+
         selected_password = self.pickPassword(arg, tree)
         if selected_password:
             print "---------------------------------------"
@@ -369,14 +374,14 @@ the password.'''
 
     def do_edit(self, arg):
         '''edit password information.
-        
+
 Syntax:
     edit <regexp>
-            
+
 This will prompt you for editing of a password item in current category. If
 several items matched by <regexp>, list of them will be printed and you will be
 prompted to enter a number, pointing to password you want to edit.  After
-receiving that number, you will be able to edit picked password.  
+receiving that number, you will be able to edit picked password.
 
 '''
 
@@ -394,7 +399,7 @@ receiving that number, you will be able to edit picked password.
     def do_new(self, arg):
         '''Add new password to current category. You will be prompted to enter
 fields.
-    
+
 Syntax:
     new [-p]
 
@@ -406,9 +411,9 @@ Syntax:
 
         if "-p" in argv:
             text = self.getEditorInput()
-            choosendict = parser.parseMessage(text, parser.patterns)
+            choosendict = parser.parseMessage(text, self.conf.patterns)
             new_pass.update(choosendict)
-        
+
         try:
             self.editPassword(new_pass)
         except (KeyboardInterrupt, EOFError):
@@ -428,10 +433,10 @@ Syntax:
 
     def do_mkdir(self, arg):
         '''create new category (directory)
-        
+
 Syntax:
     mkdir <category>
-            
+
 Creates new password category in current one.
 '''
         if not arg:
@@ -444,7 +449,7 @@ Creates new password category in current one.
 
     def do_rename(self, arg):
         '''rename category
-        
+
 Syntax:
     rename <category> <new_name>
 '''
@@ -477,7 +482,7 @@ Syntax:
             help_def = getattr(self, "help_"+argv[0])
             if help_def:
                 help_def(' '.join(argv[1:]))
-            else: 
+            else:
                 Cmd.do_help(self, arg)
         else:
             Cmd.do_help(self, arg)
@@ -494,7 +499,7 @@ for boolean values 1, 'on' or 'true' are considered as True; 0, 'off' or 'false'
 considered as False.
 
 enter help set <option> for more info on particular option."""
-        
+
         opts = self.conf.options
         if not arg:
             # show all options
@@ -519,7 +524,7 @@ enter help set <option> for more info on particular option."""
                 print "set: %s" % e
         # save confuguration file
         self.conf.save()
-        
+
     def complete_set(self, text, line, begidx, endidx):
         compl = []
         #print self.conf.options
@@ -541,10 +546,10 @@ enter help set <option> for more info on particular option."""
 
     def do_rm(self, arg):
         """Remove password
-        
+
 Syntax:
     rm <regexp>
-    
+
 Remove password from database. If several passwords matches <regexp>, you will
 be prompted to choose one from the list."""
 
@@ -569,7 +574,7 @@ be prompted to choose one from the list."""
 
     def do_mv(self, arg):
         '''move a password
-        
+
 Syntax:
     mv <regexp> <category>
 '''
@@ -579,7 +584,7 @@ Syntax:
             mv <regexp> <category>
 '''
             return
-   
+
         pw = args[0]
         cat = args[1]
 
@@ -597,13 +602,13 @@ Syntax:
         if selected_password:
             dst_branch.addNode(selected_password)
             self.getCwd().removeNode(selected_password)
-            self.tryToSave()                
+            self.tryToSave()
         else:
             print "No password selected"
 
     def do_rmdir(self, arg):
-        '''delete a category (directory)
-        
+        '''Delete a category (directory)
+
 Syntax:
     rmdir <category>
 
@@ -621,6 +626,37 @@ Deletes a password category and ALL it\'s entries
             print "rmdir: cateogry \"%s\" and all it's entries were deleted." % arg
             self.tryToSave()
 
+    def do_patterns(self, arg):
+        '''Edit pareser patterns. Will open default text editor in order to
+edit.'''
+
+        disclaimer = '''# Here you can teach Ked Password Manager how to
+# extract useful password information from your emails. For more
+# information on format of these patterns please refer to KedPM
+# documentation.
+#
+# Basic rules are:
+#  {field} - matches password field;
+#  { } - matches arbitrary number of spaces or nothing;
+#  {~regexp} - matches arbitrary regular expression;
+# 
+# One line is one pattern. Empty lines and Lines starting with simbol "#" will
+# be ignored.
+
+'''
+
+        pattern_text = '\n'.join(self.conf.patterns)
+        text = self.getEditorInput(disclaimer+pattern_text)
+        cr = '\n' # XXX This is possible unixism
+        patterns = []
+        for line in text.split(cr):
+            line = line.strip()
+            if line.startswith("#") or not line:
+                continue
+            patterns.append(line)
+        self.conf.patterns = patterns
+        self.conf.save()
+
     def mainLoop(self):
         self.updatePrompt()
         try:
@@ -630,5 +666,5 @@ Deletes a password category and ALL it\'s entries
 
     def showMessage(self, message):
         print message
-        
+
 

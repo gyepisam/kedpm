@@ -15,7 +15,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: __init__.py,v 1.13 2003/10/27 13:39:08 kedder Exp $
+# $Id: __init__.py,v 1.14 2004/01/18 16:29:20 kedder Exp $
 
 ''' KED Password Manager 
 
@@ -24,7 +24,7 @@ Simple to use, extensible and secure password manager
 
 import os
 
-__version__ = '0.3.1'
+__version__ = '0.3.1-cvs'
 
 data_files_dir = None
 

@@ -14,11 +14,13 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: dialogs.py,v 1.17 2003/10/25 19:51:45 kedder Exp $
+# $Id: dialogs.py,v 1.18 2004/01/18 16:29:20 kedder Exp $
 
 '''Dialog classes'''
 
 import gtk
+import gobject
+from gtk import keysyms
 
 from base import Dialog, processEvents
 from kedpm.exceptions import WrongPassword
@@ -181,9 +183,9 @@ class PasswordEditDialog(Dialog):
             props = {}
             for field, entry in self.entries.items():
                 if self.password.getField(field)['type'] == password.TYPE_TEXT:
-                    buffer = entry.get_buffer()
-                    b_start, b_end = buffer.get_bounds()
-                    value = buffer.get_text(b_start, b_end, gtk.FALSE)
+                    buf = entry.get_buffer()
+                    b_start, b_end = buf.get_bounds()
+                    value = buf.get_text(b_start, b_end, gtk.FALSE)
                 else:
                     value = entry.get_text()
                 props[field] = value
@@ -234,17 +236,101 @@ class ParsePasswordDialog(Dialog):
     parseddict = {}
     
     def process(self):
-        buffer = self['text'].get_buffer()
-        b_start, b_end = buffer.get_bounds()
-        text = buffer.get_text(b_start, b_end, gtk.FALSE)
-        self.parseddict = parseMessage(text)
+        patterns = globals.app.conf.patterns
+        buf = self['text'].get_buffer()
+        b_start, b_end = buf.get_bounds()
+        text = buf.get_text(b_start, b_end, gtk.FALSE)
+        self.parseddict = parseMessage(text, patterns)
 
 class AsPlainTextDialog(Dialog):
     name="dlg_as_plain_text"
     
     def showPassword(self, pswd):
-        buffer = self['text'].get_buffer()
-        buffer.set_text(pswd.asText())
+        buf = self['text'].get_buffer()
+        buf.set_text(pswd.asText())
+
+class EditParserPatterns(Dialog):
+    name="dlg_patterns"
+    patterns = None
+    editing = None
+
+    def __init__(self):
+        super(EditParserPatterns, self).__init__()
+        self.patterns = globals.app.conf.patterns
+        #self.patterns = ["Hello", "World"]
+        self.populate()
+
+    def populate(self):
+        plist = self['patterns']
+        store = gtk.ListStore(gobject.TYPE_STRING, gobject.TYPE_INT)
+        renderer = gtk.CellRendererText()
+        col = gtk.TreeViewColumn('Pattern', renderer)
+        col.add_attribute(renderer, 'text', 0)
+        plist.append_column(col)
+
+        # Connect selection changed event
+        selection = plist.get_selection()
+        selection.connect('changed', self.on_patterns_selection_changed)
+
+        count = 0
+        for pattern in self.patterns:
+            pat = store.append(None)
+            store.set(pat, 0, pattern)
+            count += 1
+        plist.set_model(store)
+
+
+    def clearEntry(self):
+        self['delete_pattern'].set_sensitive(False)
+        self['pattern_entry'].set_text("")
+        self['pattern_entry'].grab_focus()
+        self['edit_pattern'].set_label(gtk.STOCK_ADD)
+
+    def clearPatternsSelection(self):
+        sel = self['patterns'].get_selection()
+        sel.unselect_all()
+        self.clearEntry()
+        
+    def on_patterns_selection_changed(self, selection):
+        plist = self['patterns']
+        store, cur_iter = selection.get_selected()
+        pattern_entry = self['pattern_entry']
+        if cur_iter is None:
+            self.editing = None
+            self.clearEntry()
+        else:
+            # Enable delete button
+            self['delete_pattern'].set_sensitive(True)
+            self.editing = cur_iter
+            pattern = store.get_value(cur_iter, 0)
+            pattern_entry.set_text(pattern)
+            self['edit_pattern'].set_label(gtk.STOCK_APPLY)
+
+    def on_edit_pattern_clicked(self, widget):
+        store = self['patterns'].get_model()
+        pattern = self['pattern_entry'].get_text()
+        if not pattern:
+            return
+        if self.editing is None:
+            # Add new pattern
+            store.set(store.append(), 0, pattern)
+            self.clearPatternsSelection()
+        else:
+            # Edit selected pattern
+            store.set(self.editing, 0, pattern)
+            self['pattern_entry'].grab_focus()
+
+    def on_pattern_entry_changed(self, widget):
+        self['edit_pattern'].set_sensitive(widget.get_text()!="")
+
+    def on_new_pattern_clicked(self, widget):
+        self.clearPatternsSelection()
+
+    def on_delete_pattern_clicked(self, widget):
+        if self.editing:
+            store = self['patterns'].get_model()
+            store.remove(self.editing)
+
 
 def errorMessageDialog(message):
     dialog = gtk.MessageDialog(globals.app.wnd_main.window,

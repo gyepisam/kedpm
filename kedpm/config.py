@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: config.py,v 1.7 2004/01/04 17:07:16 kedder Exp $
+# $Id: config.py,v 1.8 2004/01/18 16:29:20 kedder Exp $
 
 """Configuration for Ked Password Manager"""
 import os
@@ -59,7 +59,7 @@ class SelectOption (Option):
         """constraint is a non-empty list of possible option values"""
         if type(constraint) != type([]) or not constraint:
             raise ValueError, "constraint must be a non-empty list"
-        self.__constraint = constraint            
+        self.__constraint = constraint
         Option.__init__(self, default, doc)
     
     def set(self, value):
@@ -100,7 +100,14 @@ class Configuration:
 Changes will take effect after kedpm restart."""),
     })
 
-    patterns = {}
+    default_patterns = [
+        "User{~(name)?}/Pass{~(word)?}{ }:{ }{user}/{password}",
+        "User{~(name)?}{ }:{ }{user}",
+        "Pass{~(word)?}{ }:{ }{password}",
+        "Host{~(name)?}{ }:{ }{url}",
+        "Server{ }:{ }{url}"
+    ]
+    patterns = []
 
     def __init__(self):
         #self.options = Options()
@@ -135,6 +142,7 @@ Changes will take effect after kedpm restart."""),
             except KeyError:
                 # Ignore unrecognized options
                 pass
+                
         # Read patterns
         tag = doc.getElementsByTagName('patterns')[0]
         items = tag.getElementsByTagName('pattern')
@@ -143,7 +151,9 @@ Changes will take effect after kedpm restart."""),
             item_value = ""
             for child in item.childNodes:
                 item_value += child.data
-            self.patterns[item_id] = item_value
+            self.patterns.append(item_value)
+        if not self.patterns:
+            self.patterns = self.default_patterns
 
     def save(self):
         """Save configuration to xml file"""
@@ -169,17 +179,24 @@ Changes will take effect after kedpm restart."""),
         document= domimpl.createDocument("http://kedpm.sourceforge.net/xml/fpm", "config", None)
         root = document.documentElement
         root.setAttribute('verion', __version__)
-        options = document.createElement('options')
-        root.appendChild(options)
-        patterns = document.createElement('patterns')
-        root.appendChild(patterns)
         
         # Add options
+        options = document.createElement('options')
+        root.appendChild(options)
         for optname, optvalue in self.options.items():
-            option = document.createElement('option')
-            option.setAttribute('name', optname)
-            option.appendChild(document.createTextNode(optvalue.get()))
-            options.appendChild(option)
+            opt_node = document.createElement('option')
+            opt_node.setAttribute('name', optname)
+            opt_node.appendChild(document.createTextNode(optvalue.get()))
+            options.appendChild(opt_node)
+            
+        root.appendChild(document.createTextNode('\n'))
+        # Add patterns
+        patterns = document.createElement('patterns')
+        root.appendChild(patterns)
+        for pattern in self.patterns:
+            pat_node = document.createElement('pattern')
+            pat_node.appendChild(document.createTextNode(pattern))
+            patterns.appendChild(pat_node)
             
         return document
         

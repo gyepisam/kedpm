@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: wnd_main.py,v 1.25 2004/01/02 21:08:14 kedder Exp $
+# $Id: wnd_main.py,v 1.26 2004/01/18 16:29:20 kedder Exp $
 
 '''Main KedPM window'''
 
@@ -276,7 +276,7 @@ class MainWindow(Window):
         path, column = category_tree.get_cursor()#path, column)
 
         cur_iter = store.get_iter(path)
-        pass_path = store.get_value(store.get_iter(path), 1)
+        pass_path = store.get_value(cur_iter, 1)
         self.cwtree = self.password_tree.getTreeFromPath(pass_path.split('/'))
         self.setupPasswords()
 
@@ -440,3 +440,7 @@ class MainWindow(Window):
         if widget.get_active() != self.flat_view:
             self.toggleFlatView()
 
+    def on_edit_parser_patterns_activate(self, widget):
+        dlg = dialogs.EditParserPatterns()
+        dlg.run()
+        globals.app.conf.save()
