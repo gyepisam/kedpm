@@ -14,17 +14,18 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: parser.py,v 1.5 2003/10/25 16:12:34 kedder Exp $
+# $Id: parser.py,v 1.6 2003/10/25 17:21:50 kedder Exp $
 
 """Password pattern functions"""
 
 import re
 
 patterns = [
-    "User{~(name)?}/Pass{~(word)?}:{ }{user}/{password}",
-    "User{~(name)?}:{ }{user}",
-    "Pass{~(word)?}:{ }{password}",
-    "Host{~(name)?}:{ }{url}"
+    "User{~(name)?}/Pass{~(word)?}{ }:{ }{user}/{password}",
+    "User{~(name)?}{ }:{ }{user}",
+    "Pass{~(word)?}{ }:{ }{password}",
+    "Host{~(name)?}{ }:{ }{url}",
+    "Server{ }:{ }{url}"
 ]
 
 def parse(pattern, text):
@@ -70,7 +71,7 @@ def regularize(pattern):
     #return expr
     return "(^|.*\s)"+expr+"($|\s)"
 
-def parseMessage(text, patterns):
+def parseMessage(text, patterns = patterns):
     """Extract valuable password information from text and return filled
     password and return dictionary with gathered information."""
 

@@ -1852,7 +1852,7 @@ Ked Password Manager will try to parse it and fill some of the password fields a
 	      <property name="window_placement">GTK_CORNER_TOP_LEFT</property>
 
 	      <child>
-		<widget class="GtkTextView" id="textview2">
+		<widget class="GtkTextView" id="text">
 		  <property name="visible">True</property>
 		  <property name="can_focus">True</property>
 		  <property name="editable">True</property>

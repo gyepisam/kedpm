@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: wnd_main.py,v 1.20 2003/10/23 21:11:46 kedder Exp $
+# $Id: wnd_main.py,v 1.21 2003/10/25 17:21:50 kedder Exp $
 
 '''Main KedPM window'''
 
@@ -34,7 +34,7 @@ from kedpm.plugins.pdb_figaro import FigaroPassword # FIXME: this should be para
 
 class MainWindow(Window):
     '''Main window of Ked Password Manager'''
-    
+
     name = "wnd_main"
     #menu_names = ['menu_category']
     menu_category = None
@@ -47,7 +47,7 @@ class MainWindow(Window):
     selected_text = ''      # Current selection
     cwtree = None           # Current working tree
     search_text = ''        # Current password filter
-    
+
 
     def __init__(self):
         super(MainWindow, self).__init__()
@@ -57,13 +57,13 @@ class MainWindow(Window):
         self.setupPasswords()
         pl_selection = self["password_list"].get_selection()
         pl_selection.connect("changed", self.on_password_list_selection_changed)
-        
+
         self['category_tree'].grab_focus()
         self.window.selection_add_target("PRIMARY", "STRING", 1)
         self.window.selection_add_target("CLIPBOARD", "STRING", 1)
         self.menu_category = self.getGladeWidget('menu_category')
         #self.menu_password = self.getGladeWidget('menu_password')
-        
+
         self.statusbar = self['statusbar']
         self.setModified(False)
 
@@ -91,14 +91,14 @@ class MainWindow(Window):
 
     def buildCategoryTree(self, store, root_iter, tree_branch, path):
         for cat_name in tree_branch.getBranches():
-            sub_iter = store.append(root_iter) 
+            sub_iter = store.append(root_iter)
             store.set(sub_iter, 0, cat_name, 1, path+cat_name+'/')
             if tree_branch[cat_name].getBranches():
                 self.buildCategoryTree(store, sub_iter, tree_branch[cat_name], path+cat_name+'/')
 
     def setupPasswords(self):
         """Rebuild and redraw password list.
-        
+
         This function should be called every time password database changed."""
 
         password_list = self['password_list']
@@ -106,7 +106,7 @@ class MainWindow(Window):
         # first, clear all columns in TreeView
         for column in password_list.get_columns():
             password_list.remove_column(column)
-        
+
         passwords = self.cwtree.locate(self.search_text)
 
         if passwords:
@@ -121,7 +121,7 @@ class MainWindow(Window):
                 count += 1
 
             store = apply(gtk.ListStore,  [gobject.TYPE_INT] + [gobject.TYPE_STRING] * count)
-            
+
             pidx = 0
             for pwd in passwords:
                 iter = store.append()
@@ -139,12 +139,12 @@ class MainWindow(Window):
 
     def updateControls(self):
         """Update controls according to current status.
-        
+
         Set the sensitive property of widgets, that are meaningless in current
         program state"""
-        
+
         # Check if any password is currently selected
-        pwd_controls = ["tb_edit", "tb_delete", "mi_edit_password", 
+        pwd_controls = ["tb_edit", "tb_delete", "mi_edit_password",
             "mi_delete_password"]
         pwd_sensitive = False
         if self.getSelectedPassword():
@@ -211,12 +211,26 @@ class MainWindow(Window):
 
     def doSaveDatabase(self):
         """Actually save password database and display indication in statusbar"""
-        cid = self.statusbar.get_context_id('toolbar') 
+        cid = self.statusbar.get_context_id('toolbar')
         self.pdb.save()
         self.statusbar.pop(cid)
         self.statusbar.push(cid, "Password database saved.")
         self.setModified(False)
+
+    def addPasswordInteractively(self, pswd = FigaroPassword()):
+        """Add the given password to the current category interactively. 
         
+        Let user deside add the password or not and let him correct information
+        before adding."""
+        
+        dlg = dialogs.PasswordEditDialog(pswd)
+        response = dlg.run()
+        if response == gtk.RESPONSE_OK:
+            self.cwtree.addNode(pswd)
+            self.setupPasswords()
+            self.tryToSave()        
+
+    #################################################################
     # Signal handlers
     def on_wnd_main_destroy(self, widget):
         if self.modified:
@@ -225,7 +239,7 @@ class MainWindow(Window):
         gtk.main_quit() #make the program quit
 
     def on_mi_quit_activate(self, widget):
-        '''Menu: File->Quit'''        
+        '''Menu: File->Quit'''
         self.on_wnd_main_destroy(widget)
 
     def on_mi_about_activate(self, widget):
@@ -299,6 +313,8 @@ class MainWindow(Window):
 
     def on_tb_add_clicked(self, widget):
         '''Toolbar 'Add' button clicked'''
+        self.addPasswordInteractively()
+        return
         pswd = FigaroPassword()
         dlg = dialogs.PasswordEditDialog(pswd)
         response = dlg.run()
@@ -375,7 +391,7 @@ class MainWindow(Window):
             # Delete password
             self.cwtree.removeNode(sel_pswd)
             self.setupPasswords()
-            cid = self.statusbar.get_context_id('toolbar') 
+            cid = self.statusbar.get_context_id('toolbar')
             self.statusbar.pop(cid)
             self.statusbar.push(cid, "Password deleted.")
             self.tryToSave()
@@ -385,4 +401,8 @@ class MainWindow(Window):
 
     def on_mi_parse_password_activate(self, widget):
         dlg = dialogs.ParsePasswordDialog()
-        result = dlg.run()
+        response = dlg.run()
+        if response == gtk.RESPONSE_OK:
+            pswd = FigaroPassword()
+            pswd.update(dlg.parseddict)
+            self.addPasswordInteractively(pswd)

@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: test_parser.py,v 1.5 2003/10/25 16:12:35 kedder Exp $
+# $Id: test_parser.py,v 1.6 2003/10/25 17:21:50 kedder Exp $
 
 import unittest
 
@@ -97,8 +97,8 @@ $'''
 
     def test_parseMessage(self):
         texts = ["username/password: actualuser/actualpassword",
-        """Username: actualuser
-        Password: actualpassword""",
+        """Username : actualuser
+        Password    : actualpassword""",
         "user: actualuser pass:actualpassword"
         ]
         result = {'password': 'actualpassword', 'user': 'actualuser'}

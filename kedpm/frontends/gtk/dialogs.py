@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: dialogs.py,v 1.14 2003/10/23 21:11:45 kedder Exp $
+# $Id: dialogs.py,v 1.15 2003/10/25 17:21:50 kedder Exp $
 
 '''Dialog classes'''
 
@@ -22,6 +22,7 @@ import gtk
 
 from base import Dialog, processEvents
 from kedpm.exceptions import WrongPassword
+from kedpm.parser import parseMessage
 from kedpm import password, __version__
 import globals
 
@@ -230,6 +231,13 @@ class AddCategoryDialog(Dialog):
 
 class ParsePasswordDialog(Dialog):
     name="dlg_parse"
+    parseddict = {}
+    
+    def process(self):
+        buffer = self['text'].get_buffer()
+        b_start, b_end = buffer.get_bounds()
+        text = buffer.get_text(b_start, b_end, gtk.FALSE)
+        self.parseddict = parseMessage(text)
 
 def errorMessageDialog(message):
     dialog = gtk.MessageDialog(globals.app.wnd_main.window,

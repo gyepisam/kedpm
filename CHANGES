@@ -10,10 +10,13 @@ Version 0.3.0 (??)
 
     * Deleting of passwords implemented.
 
-    * Various GUI usability enhancements.
-
     * ``rmdir`` and ``mv`` commands were added to CLI (Patch #825957).
-    Thanks indygena!  
+    Thanks indygena!
+
+    * Parser feature added. It will help you incorporate passwords from
+    your mails to password database more efficiently.
+
+    * Various GUI usability enhancements.
 
 Version 0.2.5 (2003-09-21)
 
