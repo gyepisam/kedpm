@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: cli.py,v 1.2 2003/08/06 20:25:13 kedder Exp $
+# $Id: cli.py,v 1.3 2003/08/07 19:07:24 kedder Exp $
 
 from kedpm import __version__
 from kedpm.plugins.pdb_figaro import PDBFigaro
@@ -153,16 +153,19 @@ try 'help' for brief description of available commands
         if not passwords:
             print "No passwords matching \"%s\" found" % arg
             return
-        self.listPasswords(passwords, 1)
-        print "Enter number to show. 0 returns to command prompt"
-        showstr = raw_input('show: ')
-        try:
-            shownr = int(showstr)
-            if not shownr:
+        if len(passwords) > 1:
+            self.listPasswords(passwords, 1)
+            print "Enter number to show. 0 returns to command prompt"
+            showstr = raw_input('show: ')
+            try:
+                shownr = int(showstr)
+                if not shownr:
+                    return
+                selected_password = passwords[shownr-1]
+            except (ValueError, IndexError):
                 return
-            selected_password = passwords[shownr-1]
-        except (ValueError, IndexError):
-            return
+        else:
+            selected_password = passwords[0]
         print selected_password.asText()
     
     def run(self):
