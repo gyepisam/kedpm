@@ -12,6 +12,8 @@ Version 0.4.0 (??)
     * Location of FPM password database file is configurable in options
     ('fpm-database' setting).
 
+    * KedPM has got icons! Thanks to Eugene Morozov.
+
 Version 0.3.1 (2003-10-27)
 
     * Fixed password database initialization problem. New databases
