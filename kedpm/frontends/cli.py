@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: cli.py,v 1.14 2003/09/12 18:19:53 kedder Exp $
+# $Id: cli.py,v 1.15 2003/09/12 18:37:26 kedder Exp $
 
 "Command line interface for Ked Password Manager"
 
@@ -244,7 +244,7 @@ Syntax:
                 print "ls: %s:  No such catalog" % arg
                 return
         print "=== Directories ==="
-        for (bname) in tree.getBranches():
+        for bname in tree.getBranches().keys():
             print bname+"/"
         print "==== Passwords ===="
         self.listPasswords(tree.getNodes())
