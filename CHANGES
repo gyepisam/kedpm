@@ -19,6 +19,9 @@ Version 0.3.0 (??)
     * Support for fpm-0.58 databases with longer passwords (up to
     256 characters). Not tested yet.
 
+    * GUI now can display password as plain text. It is useful when you
+    need to send password to someone.
+
     * Various GUI usability enhancements.
 
 Version 0.2.5 (2003-09-21)

@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: wnd_main.py,v 1.21 2003/10/25 17:21:50 kedder Exp $
+# $Id: wnd_main.py,v 1.22 2003/10/25 19:39:03 kedder Exp $
 
 '''Main KedPM window'''
 
@@ -406,3 +406,10 @@ class MainWindow(Window):
             pswd = FigaroPassword()
             pswd.update(dlg.parseddict)
             self.addPasswordInteractively(pswd)
+
+    def on_mi_as_plain_text_activate(self, widget):
+        sel_pswd = self.getSelectedPassword()
+        if sel_pswd:
+            dlg = dialogs.AsPlainTextDialog()
+            dlg.showPassword(sel_pswd)
+            dlg.run()

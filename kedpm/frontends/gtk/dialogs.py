@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: dialogs.py,v 1.15 2003/10/25 17:21:50 kedder Exp $
+# $Id: dialogs.py,v 1.16 2003/10/25 19:39:03 kedder Exp $
 
 '''Dialog classes'''
 
@@ -239,11 +239,18 @@ class ParsePasswordDialog(Dialog):
         text = buffer.get_text(b_start, b_end, gtk.FALSE)
         self.parseddict = parseMessage(text)
 
+class AsPlainTextDialog(Dialog):
+    name="dlg_as_plain_text"
+    
+    def showPassword(self, pswd):
+        buffer = self['text'].get_buffer()
+        buffer.set_text(pswd.asText())
+
 def errorMessageDialog(message):
     dialog = gtk.MessageDialog(globals.app.wnd_main.window,
                                   gtk.DIALOG_DESTROY_WITH_PARENT,
                                   gtk.MESSAGE_ERROR,
                                   gtk.BUTTONS_CLOSE,
-                                  message);
-    dialog.run();
-    dialog.destroy();
+                                  message)
+    dialog.run()
+    dialog.destroy()
