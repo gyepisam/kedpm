@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: parser.py,v 1.3 2003/10/03 22:08:56 kedder Exp $
+# $Id: parser.py,v 1.4 2003/10/23 21:11:45 kedder Exp $
 
 """Password pattern functions"""
 
@@ -65,3 +65,16 @@ def regularize(pattern):
     expr = re.sub(r"\{(\S*?)\}", r"(?P<\1>.*?)", expr)
     #return expr
     return "(^|.*\s)"+expr+"($|\s)"
+
+def parseMessage(text, patterns):
+    """Extract valuable password information from text and return filled
+    password and return dictionary with gathered information."""
+
+    choosendict = {}
+    for pattern in patterns:
+        regexp = regularize(pattern)
+        passdict = parse(regexp, text)
+        if len(passdict) > len(choosendict):
+            choosendict = passdict
+
+    return choosendict

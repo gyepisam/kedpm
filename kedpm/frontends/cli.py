@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: cli.py,v 1.25 2003/10/22 21:33:25 kedder Exp $
+# $Id: cli.py,v 1.26 2003/10/23 21:11:45 kedder Exp $
 
 "Command line interface for Ked Password Manager"
 
@@ -250,18 +250,6 @@ long password correctly."""
         os.remove(tmpfname)
         return text
 
-    def parseMessage(self, text, pwd):
-        """Extract valuable password information from text and return filled password"""
-        choosendict = {}
-        for pattern in parser.patterns:
-            regexp = parser.regularize(pattern)
-            passdict = parser.parse(regexp, text)
-            if len(passdict) > len(choosendict):
-                choosendict = passdict
-
-        print "Choosen dict: %s" % str(choosendict)    
-        pwd.update(choosendict)
-
     def getAbsolutePath(self, arg):
         """Return absolute path from potentially relative (cat)"""
         root = self.pdb.getTree()
@@ -400,7 +388,8 @@ Syntax:
 
         if "-p" in argv:
             text = self.getEditorInput()
-            self.parseMessage(text, new_pass)
+            choosendict = parser.parseMessage(text, parser.patterns)
+            new_pass.update(choosendict)
         
         try:
             self.editPassword(new_pass)
@@ -409,7 +398,6 @@ Syntax:
         else:
             tree = self.getPwd()
             tree.addNode(new_pass)
-            #self.modified = 1
             self.tryToSave()
 
     def do_save(self, arg):

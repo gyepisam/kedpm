@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: wnd_main.py,v 1.19 2003/10/18 22:08:14 kedder Exp $
+# $Id: wnd_main.py,v 1.20 2003/10/23 21:11:46 kedder Exp $
 
 '''Main KedPM window'''
 
@@ -27,7 +27,7 @@ from kedpm.password import TYPE_STRING
 from kedpm.exceptions import RenameError
 
 from base import Window, processEvents
-from dialogs import AboutDialog, PasswordEditDialog, AddCategoryDialog
+import dialogs
 from preferences import PreferencesDialog
 from dialogs import errorMessageDialog
 from kedpm.plugins.pdb_figaro import FigaroPassword # FIXME: this should be parametrized
@@ -230,7 +230,7 @@ class MainWindow(Window):
 
     def on_mi_about_activate(self, widget):
         '''Menu: Help->About'''
-        dlg = AboutDialog()
+        dlg = dialogs.AboutDialog()
         dlg.run()
 
     def on_category_tree_cursor_changed(self, data):
@@ -283,7 +283,7 @@ class MainWindow(Window):
     def on_tb_edit_clicked(self, widget):
         sel_pswd = self.getSelectedPassword()
         if sel_pswd:
-            dlg = PasswordEditDialog(sel_pswd)
+            dlg = dialogs.PasswordEditDialog(sel_pswd)
             response = dlg.run()
             if response == gtk.RESPONSE_OK:
                 self.setupPasswords()
@@ -300,7 +300,7 @@ class MainWindow(Window):
     def on_tb_add_clicked(self, widget):
         '''Toolbar 'Add' button clicked'''
         pswd = FigaroPassword()
-        dlg = PasswordEditDialog(pswd)
+        dlg = dialogs.PasswordEditDialog(pswd)
         response = dlg.run()
         if response == gtk.RESPONSE_OK:
             self.cwtree.addNode(pswd)
@@ -313,7 +313,7 @@ class MainWindow(Window):
 
     def on_mi_add_category_activate(self, widget):
         '''Main menu 'Add category' item activated'''
-        dlg = AddCategoryDialog()
+        dlg = dialogs.AddCategoryDialog()
         response = dlg.run()
         if response == gtk.RESPONSE_OK and dlg.category_name!='':
             try:
@@ -382,3 +382,7 @@ class MainWindow(Window):
 
     def on_password_list_selection_changed(self, widget):
         self.updateControls()
+
+    def on_mi_parse_password_activate(self, widget):
+        dlg = dialogs.ParsePasswordDialog()
+        result = dlg.run()

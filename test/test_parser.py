@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: test_parser.py,v 1.3 2003/10/03 22:08:57 kedder Exp $
+# $Id: test_parser.py,v 1.4 2003/10/23 21:11:46 kedder Exp $
 
 import unittest
 
@@ -94,6 +94,16 @@ $'''
         for case in self.cases:
             match = parser.parse(expr, case["text"])
             self.assertEqual(match, case["match"])
+
+    def test_parseMessage(self):
+        texts = ["username/password: actualuser/actualpassword",
+        """Username:   actualuser
+Password: actualpassword"""
+        ]
+        result = {'password': 'actualpassword', 'user': 'actualuser'}
+        for text in texts:
+            dict = parser.parseMessage(text, parser.patterns)
+            self.assertEqual(dict, result)
             
 
 def suite():

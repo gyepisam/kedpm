@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: dialogs.py,v 1.13 2003/10/14 21:30:42 kedder Exp $
+# $Id: dialogs.py,v 1.14 2003/10/23 21:11:45 kedder Exp $
 
 '''Dialog classes'''
 
@@ -227,6 +227,9 @@ class AddCategoryDialog(Dialog):
     
     def process(self):
         self.category_name = self['category_name'].get_text()
+
+class ParsePasswordDialog(Dialog):
+    name="dlg_parse"
 
 def errorMessageDialog(message):
     dialog = gtk.MessageDialog(globals.app.wnd_main.window,
