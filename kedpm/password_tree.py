@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: password_tree.py,v 1.10 2003/09/22 20:20:32 kedder Exp $
+# $Id: password_tree.py,v 1.11 2003/10/03 22:08:56 kedder Exp $
 
 """Password items organized in recursive tree."""
 
@@ -115,7 +115,8 @@ class PasswordTree:
         return results
 
     def getTreeFromPath(self, path):
-        """Return password tree from given path
+        """Return password tree from given path.
+
         path is list of path items."""
         path = self.normalizePath(path)
         tree = self
@@ -127,7 +128,7 @@ class PasswordTree:
 
     def renameBranch(self, path, newname):
         """Set new name for the given branch. Do not rename tree root - just
-        leave it as is. Tree rood don't have any name anyway."""
+        leave it as is. Tree root don't have any name anyway."""
         path = self.normalizePath(path)
         if not path:
             return
@@ -145,7 +146,8 @@ class PasswordTree:
         branches[newname] = cat
 
     def normalizePath(self, path):
-        """Reduce .. and . items from path
+        """Reduce .. and . items from path.
+
         path is list of path items."""
         normal = []
         for pathitem in path:

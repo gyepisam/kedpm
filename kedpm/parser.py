@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: parser.py,v 1.2 2003/09/30 21:02:43 kedder Exp $
+# $Id: parser.py,v 1.3 2003/10/03 22:08:56 kedder Exp $
 
 """Password pattern functions"""
 
@@ -32,7 +32,7 @@ def parse(pattern, text):
     
     Return dictionary of password properties.
     """
-    match = re.match(pattern, text, re.MULTILINE | re.DOTALL)
+    match = re.match(pattern, text, re.MULTILINE | re.DOTALL | re.IGNORECASE)
     if match is None:
         return {}
     groupdict = match.groupdict()

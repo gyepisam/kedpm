@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config version="0.1">
+	<options>
+		<option name="save-mode">ask</option>
+	</options>
+	<patterns>
+		<pattern name="sample1">Username/Password: {user}/{password}</pattern>
+		<pattern name="sample2">Username: {user}
+Password: {password}</pattern>
+	</patterns>
+</config>

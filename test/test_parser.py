@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: test_parser.py,v 1.2 2003/09/30 21:02:45 kedder Exp $
+# $Id: test_parser.py,v 1.3 2003/10/03 22:08:57 kedder Exp $
 
 import unittest
 
@@ -32,7 +32,7 @@ class ParserTestCase(unittest.TestCase):
         Some other line''',
         "match": {'password': 'longpassword', 'user': 'longusername'}},
 
-        {"text": 'Username/Password: the username/!@#%^^&*(',
+        {"text": 'USERNAME/PASSWORD: the username/!@#%^^&*(',
         "match": {'password': '!@#%^^&*(', 'user': 'the username'}},
     ]
 
