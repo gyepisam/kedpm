@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: wnd_main.py,v 1.13 2003/10/11 21:03:56 kedder Exp $
+# $Id: wnd_main.py,v 1.14 2003/10/12 20:39:49 kedder Exp $
 
 '''Main KedPM window'''
 
@@ -240,11 +240,10 @@ class MainWindow(Window):
                 self.setupPasswords()
                 self.tryToSave()
 
-                
     def on_pmi_edit_activate(self, widget):
         '''password list popup 'Edit' item clicked'''
         self.on_tb_edit_clicked(widget)
-    
+
     def on_tb_add_clicked(self, widget):
         '''Toolbar 'Add' button clicked'''
         pswd = FigaroPassword()
@@ -274,7 +273,7 @@ class MainWindow(Window):
                 errorMessageDialog('Directory "%s" already exists!' % dlg.category_name);
             else:
                 self.updateCategories()
-                
+
     def on_category_tree_popup_menu(self, wodget):
         '''Shift-F10 pressed in category tree'''
         self.menu_category.popup(None, None, None, 0, gtk.get_current_event_time())
@@ -283,7 +282,7 @@ class MainWindow(Window):
         '''Shift-F10 pressed in password tree'''
         password_menu = self.generatePasswordPopup()
         password_menu.popup(None, None, None, 0, gtk.get_current_event_time())
-        
+
     def on_category_edited(self, renderer, path, newname):
         category_tree = self['category_tree']
         store =  category_tree.get_model()

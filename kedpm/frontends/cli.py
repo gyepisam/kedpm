@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: cli.py,v 1.20 2003/10/11 17:41:05 kedder Exp $
+# $Id: cli.py,v 1.21 2003/10/12 20:39:49 kedder Exp $
 
 "Command line interface for Ked Password Manager"
 
@@ -23,6 +23,7 @@ from kedpm.plugins.pdb_figaro import PDBFigaro, FigaroPassword, FigaroPasswordTo
 from kedpm.passdb import DatabaseNotExist
 from kedpm.exceptions import WrongPassword, RenameError
 from kedpm.frontends.frontend import Frontend
+from kedpm.config import OptionError
 from kedpm import password
 from kedpm import parser
 from getpass import getpass
@@ -491,7 +492,10 @@ enter help set <option> for more info on particular option."""
             print "%s = %s" % (opt_name, opt_value)
         else:
             # set the value
-            opts[opt_name] = ' '.join(tokens[1:])
+            try:
+                opts[opt_name] = ' '.join(tokens[1:])
+            except OptionError, e:
+                print "set: %s" % e
         
     def complete_set(self, text, line, begidx, endidx):
         compl = []

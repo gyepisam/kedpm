@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: dialogs.py,v 1.10 2003/10/11 21:03:56 kedder Exp $
+# $Id: dialogs.py,v 1.11 2003/10/12 20:39:49 kedder Exp $
 
 '''Dialog classes'''
 
@@ -232,6 +232,7 @@ class AddCategoryDialog(Dialog):
 class PreferencesDialog(Dialog):
     name="dlg_preferences"
     def run(self):
+        self.options = globals.app.conf.options
         self.setUp()
         res = self.window.run()
         self.saveConfig()
@@ -243,6 +244,12 @@ class PreferencesDialog(Dialog):
         for opt in options.keys():
             wdg = self["wdg_" + opt]
             self.tooltips.set_tip(wdg, options.getOption(opt).doc)
+            wdg.connect("changed", self.on_option_widget_changed, opt)
+    
+    def on_option_widget_changed(self, widget, option):
+        print "Changed: ", option
+        # Figure out property value
+        print self.options[option]
 
     def saveConfig(self):
         pass

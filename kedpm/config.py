@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: config.py,v 1.3 2003/10/11 17:41:05 kedder Exp $
+# $Id: config.py,v 1.4 2003/10/12 20:39:49 kedder Exp $
 
 """Configuration for Ked Password Manager"""
 from xml.dom import minidom
@@ -23,23 +23,44 @@ from UserDict import UserDict
 # Configuration version
 __version__ = "0.1"
 
+class OptionError(ValueError):
+    """Raised when option value validation fails"""
+    pass
+
 class Option:
     """Base class for all option types"""
 
-    __value = None
+    _value = None
     doc = ""
     def __init__(self, default=None, doc=""):
-        self.__value = default
+        self.set(default)
         self.doc = doc
 
     def __str__(self):
-        return str(self.__value)
+        return str(self._value)
 
     def get(self):
-        return self.__value
+        return self._value
 
     def set(self, value):
-        self.__value = value
+        self._value = value
+
+class SelectOption (Option):
+    """Option that can be set to value from known list of possible values"""
+
+    __constraint = []
+    
+    def __init__(self, constraint, default = None, doc = ""):
+        """constraint is a non-empty list of possible option values"""
+        if type(constraint) != type([]) or not constraint:
+            raise ValueError, "constraint must be a non-empty list"
+        self.__constraint = constraint            
+        Option.__init__(self, default, doc)
+    
+    def set(self, value):
+        if value not in self.__constraint:
+            raise OptionError, "Value must be one of %s" % self.__constraint
+        self._value = value
 
 class Options (UserDict):
     """List of self-validationg options"""
@@ -64,7 +85,7 @@ class Configuration:
     }
 
     options = Options({
-        "save-mode": Option('ask', """One of three values:
+        "save-mode": SelectOption(['ask', 'no', 'auto'], 'ask', """One of three values:
     "ask": Ask user whether save or not when database changes;
     "no": Do not save modified database automatically;
     "auto": Save database automatically after every change."""),

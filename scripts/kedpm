@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: kedpm,v 1.2 2003/10/09 21:12:06 kedder Exp $
+# $Id: kedpm,v 1.3 2003/10/12 20:39:49 kedder Exp $
 
 from kedpm.frontends import frontendFactory
 from getopt import getopt, GetoptError
@@ -55,13 +55,13 @@ def main(argv):
 
     try:
         app = frontendFactory(frontend)
-        app.run()
     except ValueError, e:
         print e[0]
         print '''Supported frontends are:
     cli: Command line interface;
     gtk: GTK2 graphical interface;'''
         sys.exit(1)
+    app.run()
 
 if __name__ == "__main__":
     main(sys.argv[1:])

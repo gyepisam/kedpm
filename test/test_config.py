@@ -14,11 +14,11 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: test_config.py,v 1.3 2003/10/11 17:41:05 kedder Exp $
+# $Id: test_config.py,v 1.4 2003/10/12 20:39:49 kedder Exp $
 
 import unittest
 
-from kedpm.config import Configuration, Options, Option
+from kedpm.config import Configuration, Options, Option, SelectOption
 
 class ConfigTestCase(unittest.TestCase):
     def setUp(self):
@@ -44,6 +44,14 @@ class OptionsTestCase(unittest.TestCase):
         #import pdb; pdb.set_trace() 
         self.assertEqual(options['save-mode'], 'ask')
         self.assertEqual(options.getOption('save-mode').doc, 'Doc string')
+
+    def test_selectOption(self):
+        self.assertRaises(ValueError, SelectOption, [])
+        opt = SelectOption(["ask", "no", "auto"], 'ask', "Doc string")
+        self.assertRaises(ValueError, opt.set, "bad")
+        opt.set("auto")
+        self.assertEqual(opt.get(), "auto")
+        
 
 def suite():
     l = [
