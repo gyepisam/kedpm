@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: pdb_figaro.py,v 1.15 2004/01/04 17:07:16 kedder Exp $
+# $Id: pdb_figaro.py,v 1.16 2004/02/24 22:58:46 kedder Exp $
 
 """ Figaro password manager database plugin """
 
@@ -94,7 +94,7 @@ class PDBFigaro (PasswordDatabase):
         generator = fpm.documentElement.getAttribute('generator')
         if generator.startswith('kedpm'):
             self.native=1
-        self.convDomToTree(fpm) 
+        self.convDomToTree(fpm)
 
     def convDomToTree(self, fpm):
         'Read figaro xml database and create password tree from it'
@@ -130,9 +130,14 @@ class PDBFigaro (PasswordDatabase):
             if category=="":
                 branch = self._pass_tree
             else:
-                branch = self._pass_tree.get(category)
-                if not branch:
-                    branch = self._pass_tree.addBranch(category)
+                branch = self._pass_tree
+                path = category.split('/')
+                for pelem in path:
+                    subbranch = branch.get(pelem)
+                    if not subbranch:
+                        branch = branch.addBranch(pelem)
+                    else:
+                        branch = subbranch
             branch.addNode(self._getPasswordFromNode(node))
 
     def save(self, fname=""):
@@ -195,7 +200,7 @@ class PDBFigaro (PasswordDatabase):
             pwitem.appendChild(password)
 
             category = document.createElement('category')
-            text = document.createTextNode(self.encrypt(iter.getCurrentCategory()))
+            text = document.createTextNode(self.encrypt('/'.join(iter.getCurrentCategory())))
             category.appendChild(text)
             pwitem.appendChild(category)
 

@@ -11,11 +11,16 @@ Version 0.4.0 (??)
     * Location of FPM password database file is configurable in options
     ('fpm-database' setting).
 
-    * KedPM has got icons! Thanks to Eugene Morozov.
+    * KedPM has got icons! Artworks made by Eugene Morozov. Thanks
+    Eugene!
 
     * Parser patterns editor added.
 
     * CLI frontend remembers command history between runs.
+
+    * Support for password trees of arbitrary depth in Figaro
+    databases. This feature is not supported by FPM itself, although
+    databases with subcategories should still be readable by FPM.
 
 Version 0.3.1 (2003-10-27)
 

@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: test_figaro.py,v 1.10 2003/10/25 18:47:59 kedder Exp $
+# $Id: test_figaro.py,v 1.11 2004/02/24 22:58:46 kedder Exp $
 
 import os
 import unittest
@@ -131,9 +131,9 @@ class SavedFigaroTestCase(PDBFigaroTestCase):
     def test_tooLongPassword(self):
         pwd = FigaroPassword()
         longpswd = "1234567890"*3;
-        self.assertRaises(FigaroPasswordTooLongError, pwd.__setitem__, 
+        self.assertRaises(FigaroPasswordTooLongError, pwd.__setitem__,
             'password', longpswd)
-        self.assertRaises(FigaroPasswordTooLongError, pwd.update, 
+        self.assertRaises(FigaroPasswordTooLongError, pwd.update,
             {'password': longpswd})
         pwd.store_long_password = 1
         pwd['title'] = "Long password"

@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: test_password_tree.py,v 1.8 2003/10/26 16:58:50 kedder Exp $
+# $Id: test_password_tree.py,v 1.9 2004/02/24 22:58:46 kedder Exp $
 
 import unittest
 from kedpm.password_tree import PasswordTree
@@ -138,7 +138,7 @@ class PasswordTreeIteratorTestCase(unittest.TestCase):
 
         ptree = PasswordTree()
         br1 = ptree.addBranch('br1')
-        br11 = br1.addBranch('br2')
+        br11 = br1.addBranch('br11')
         br11.addNode(self.pwds[0])
         br11.addNode(self.pwds[1])
         br1.addNode(self.pwds[2])
@@ -152,31 +152,31 @@ class PasswordTreeIteratorTestCase(unittest.TestCase):
         br22.addNode(self.pwds[5])
         br22.addNode(self.pwds[6])
         ptree.addNode(self.pwds[8])
-        ptree.addNode(self.pwds[9])       
+        ptree.addNode(self.pwds[9])
         
         self.ptree = ptree
-
+       
     def test_getCurrentCategory(self):
         iter = self.ptree.getIterator()
-        iter.next() # pw0
-        self.assertEqual(iter.getCurrentCategory(), 'br1')
-        iter.next() # pw1
-        iter.next() # pw2
-        self.assertEqual(iter.getCurrentCategory(), 'br1')
-        iter.next() # pw3
-        iter.next() # pw4
-        iter.next() # pw5
-        iter.next() # pw6
-        self.assertEqual(iter.getCurrentCategory(), 'br2')
-        iter.next() # pw7
-        iter.next() # pw8
-        self.assertEqual(iter.getCurrentCategory(), '')
+        pwds = {}
+        pwd = iter.next()
+        while pwd:
+            pwds[pwd] = iter.getCurrentCategory()
+            pwd = iter.next()
+
+        self.assertEqual(pwds[self.pwds[1]], ['br1', 'br11'])
+        self.assertEqual(pwds[self.pwds[3]], ['br1'])
+        self.assertEqual(pwds[self.pwds[4]], ['br2', 'br21'])
+        self.assertEqual(pwds[self.pwds[9]], [])
 
     def test_order(self):
         iter = self.ptree.getIterator()
+        pwds = []
         for i in range(10):
-            pwd = iter.next()
-            self.assertEqual(pwd, self.pwds[i])
+            pwds.append(iter.next())
+        for i in range(10):
+            self.assertEqual(pwds.count(self.pwds[i]), 1)
+
         pwd = iter.next()
         self.assertEqual(pwd, None)
         pwd = iter.next()

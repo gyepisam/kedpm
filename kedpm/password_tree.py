@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: password_tree.py,v 1.14 2003/10/26 16:58:50 kedder Exp $
+# $Id: password_tree.py,v 1.15 2004/02/24 22:58:45 kedder Exp $
 
 """Password items organized in recursive tree."""
 
@@ -24,6 +24,54 @@ from password import Password
 from exceptions import RenameError
 
 class PasswordTreeIterator:
+    def __init__(self, tree, parent=None):
+        self.path = []
+        self.tree = tree
+        self.flat=self.buildFlatTree(tree) + [[]]
+        self.tree_index=0
+        self.pass_index=0
+
+    def buildFlatTree(self, tree, path=[]):
+        flat = []
+        for name, subtree in tree.getBranches().items():
+            flat.append(path+[name])
+            flat += self.buildFlatTree(subtree, path+[name])
+        return flat
+
+    def getCurrentTree(self):
+        return self.tree.getTreeFromPath(self.flat[self.tree_index])
+
+    def getCurrentCategory(self):
+        if self.tree_index >= len(self.flat):
+            return None
+        return self.flat[self.tree_index]
+
+    def next(self):
+        """This will iterate through whole password tree. next() method will
+        consequently return every item in password tree.
+        
+        Return None if no more passwords exists."""
+        if self.tree_index >= len(self.flat):
+            return None
+
+        while 1:
+            curtree = self.getCurrentTree()
+            if len(curtree.getNodes()) > self.pass_index:
+                pwd = curtree.getNodes()[self.pass_index]
+                self.pass_index += 1
+                return pwd
+            else:
+                # next tree
+                self.pass_index = 0
+                self.tree_index += 1
+                if self.tree_index >= len(self.flat):
+                    return None
+        return None
+            
+        
+        
+
+class _PasswordTreeIterator:
     def __init__(self, tree, parent=None):
         self.parent = None
         self.pass_index = 0
@@ -174,7 +222,7 @@ class PasswordTree:
             if pwd is None:
                 break
             result.addNode(pwd)
-        return result        
+        return result
     
     def asString(self, indent = 0):
         output = ""
