@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: wnd_main.py,v 1.16 2003/10/14 21:30:42 kedder Exp $
+# $Id: wnd_main.py,v 1.17 2003/10/15 20:25:34 kedder Exp $
 
 '''Main KedPM window'''
 
@@ -60,6 +60,8 @@ class MainWindow(Window):
         self.window.selection_add_target("CLIPBOARD", "STRING", 1)
         self.menu_category = self.getGladeWidget('menu_category')
         #self.menu_password = self.getGladeWidget('menu_password')
+        
+        self.statusbar = self['statusbar']
 
     def setupCategories(self):
         category_tree = self['category_tree']
@@ -174,11 +176,10 @@ class MainWindow(Window):
 
     def doSaveDatabase(self):
         """Actually save password database and display indication in statusbar"""
-        sb = self['statusbar']
-        cid = sb.get_context_id('status') 
+        cid = self.statusbar.get_context_id('toolbar') 
         self.pdb.save()
-        sb.pop(cid)
-        sb.push(cid, "Password database saved.")
+        self.statusbar.pop(cid)
+        self.statusbar.push(cid, "Password database saved.")
         
     # Signal handlers
     def on_wnd_main_destroy(self, widget):
@@ -309,3 +310,12 @@ class MainWindow(Window):
     def on_mi_preferences_activate(self, widget):
         dlg = PreferencesDialog()
         dlg.run()
+
+    def on_search_entry_focus_in_event(self, widget, focus):
+        cid = self.statusbar.get_context_id('search')
+        self.statusbar.push(cid, "You can use regular expressions to search passwords.")
+
+    def on_search_entry_focus_out_event(self, widget, focus):
+        cid = self.statusbar.get_context_id('search')
+        self.statusbar.pop(cid)
+
