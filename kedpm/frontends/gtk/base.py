@@ -14,10 +14,15 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: base.py,v 1.1 2003/08/24 09:35:10 kedder Exp $
+# $Id: base.py,v 1.2 2003/08/24 14:01:45 kedder Exp $
 
 import gtk
+import gtk.glade
 import globals
+
+def processEvents():
+    while gtk.events_pending():
+        gtk.main_iteration_do(gtk.FALSE)
 
 class Window(object):
     '''Base class for all KedPM windows.
@@ -34,17 +39,21 @@ class Window(object):
         signals = {}
         for item in dir(self):
             if item.startswith('on_'):
-                print "connecting %s" % item
                 signals[item] = getattr(self, item)
         self.widgetTree.signal_autoconnect(signals)
         self.window = self.widgetTree.get_widget(self.name)
 
+    def __getitem__(self, name):
+        return self.widgetTree.get_widget(name) 
+
 class Dialog(Window):
-    def __init__(self, transient_for=None):
+    def __init__(self, transient_for="main"):
         super(Dialog, self).__init__()
         #Window.__init__(self)
-        transient_for = transient_for or globals.app.wnd_main.window
-        self.window.set_transient_for(transient_for)
+        if transient_for:
+            if transient_for=="main":
+                transient_for = globals.app.wnd_main.window
+            self.window.set_transient_for(transient_for)
 
     def run(self):
         response = self.window.run()

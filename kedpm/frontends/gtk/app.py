@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: app.py,v 1.2 2003/08/24 09:35:10 kedder Exp $
+# $Id: app.py,v 1.3 2003/08/24 14:01:45 kedder Exp $
 
 ''' Gtk Frontend Application class '''
 
@@ -23,42 +23,31 @@ import pygtk
 pygtk.require("2.0");
 
 import gtk
-import gtk.glade
 import sys
+
+from kedpm.plugins.pdb_figaro import PDBFigaro
 
 import globals
 from wnd_main import MainWindow
-from kedpm.plugins.pdb_figaro import PDBFigaro
+from dialogs import LoginDialog
 
 class Application(object):
     pdb = None
     wnd_main = None
     
-    def __init__(self):
-        #self.widgetTree = gtk.glade.XML("glade/kedpm.glade")
-        pass
-
     def openDatabase(self):
         self.pdb = PDBFigaro()
-        dlg_login = gtk.glade.XML(globals.glade_file, 'dlg_login')
-        dlg = dlg_login.get_widget('dlg_login')
-        password = dlg_login.get_widget('password')
+        dlg = LoginDialog(pdb = self.pdb)
+        password = dlg['password']
+        #while 1:
         res = dlg.run()
-        if res == gtk.RESPONSE_OK:
-            print "res is %s" % res
-            print "password is", password.get_text()
-        else:
+        '''    print "returned"'''
+        if res != gtk.RESPONSE_OK:
             print "Good bye."
             sys.exit(1)
-        dlg.destroy()
-        while gtk.events_pending(): 
-            gtk.main_iteration()
-        self.pdb.open(password.get_text())
-        print "Passwords Loaded"
-            
+                
     def run(self):
-        globals.app = self
-        #self.openDatabase()
+        globals.app = self # Make application instance available to all modules
+        self.openDatabase()
         self.wnd_main = MainWindow()
         gtk.main()
-        
