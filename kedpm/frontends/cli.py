@@ -14,8 +14,9 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: cli.py,v 1.1 2003/08/05 18:32:18 kedder Exp $
+# $Id: cli.py,v 1.2 2003/08/06 20:25:13 kedder Exp $
 
+from kedpm import __version__
 from kedpm.plugins.pdb_figaro import PDBFigaro
 from kedpm.exceptions import WrongPassword
 from getpass import getpass
@@ -25,9 +26,9 @@ import sys
 class Frontend (Cmd):
     PS1 = "kedpm:%s> " # prompt template
     pwd = []
-    intro = """KED Password Manager is ready for operation.
+    intro = """KED Password Manager (version %s) is ready for operation.
 try 'help' for brief description of available commands
-"""
+""" % __version__
     
     def openDatabase(self):
         ''' Open database amd prompt for password if nesessary '''
