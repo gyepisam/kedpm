@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: wnd_main.py,v 1.12 2003/09/05 21:24:46 kedder Exp $
+# $Id: wnd_main.py,v 1.13 2003/10/11 21:03:56 kedder Exp $
 
 '''Main KedPM window'''
 
@@ -27,7 +27,7 @@ from kedpm.password import TYPE_STRING
 from kedpm.exceptions import RenameError
 
 from base import Window
-from dialogs import AboutDialog, PasswordEditDialog, AddCategoryDialog
+from dialogs import AboutDialog, PasswordEditDialog, AddCategoryDialog, PreferencesDialog
 from dialogs import errorMessageDialog
 from kedpm.plugins.pdb_figaro import FigaroPassword # FIXME: this should be parametrized
 
@@ -299,3 +299,6 @@ class MainWindow(Window):
             self.updateCategories()
             self.tryToSave()
 
+    def on_mi_preferences_activate(self, widget):
+        dlg = PreferencesDialog()
+        dlg.run()
