@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: password_tree.py,v 1.5 2003/08/16 21:11:20 kedder Exp $
+# $Id: password_tree.py,v 1.6 2003/08/24 21:51:59 kedder Exp $
 
 """ Password items organized in recursive tree """
 
@@ -129,11 +129,11 @@ class PasswordTree:
         path is list of path items'''
         normal = []
         for pathitem in path:
-            if pathitem == ".":
+            if pathitem == "." or pathitem == "":
                 continue
             if pathitem == "..":
                 normal = normal[:-1]
-                continue
+                continue            
             normal.append(pathitem)
         return normal
     
