@@ -12,6 +12,9 @@ Version 0.3.0 (??)
 
     * Various GUI usability enhancements.
 
+    * ``rmdir`` and ``mv`` commands were added to CLI (Patch #825957).
+    Thanks indygena!  
+
 Version 0.2.5 (2003-09-21)
 
     * Fixed fpm long password bug. Figaro password manager can't handle

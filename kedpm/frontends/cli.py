@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: cli.py,v 1.24 2003/10/18 20:26:36 kedder Exp $
+# $Id: cli.py,v 1.25 2003/10/22 21:33:25 kedder Exp $
 
 "Command line interface for Ked Password Manager"
 
@@ -134,7 +134,11 @@ try 'help' for brief description of available commands
         if len(passwords) > 1:
             self.listPasswords(passwords, 1)
             print "Enter number. Enter 0 to cancel."
-            showstr = raw_input('show: ')
+            try:
+                showstr = raw_input('show: ')
+            except (KeyboardInterrupt, EOFError):
+                # user has cancelled selection
+                showstr = "0"
             try:
                 shownr = int(showstr)
                 if not shownr:
@@ -257,6 +261,15 @@ long password correctly."""
 
         print "Choosen dict: %s" % str(choosendict)    
         pwd.update(choosendict)
+
+    def getAbsolutePath(self, arg):
+        """Return absolute path from potentially relative (cat)"""
+        root = self.pdb.getTree()
+        if(arg[0] == '/'):
+            path = root.normalizePath(arg.split('/'))
+        else:
+            path = root.normalizePath(self.pwd + arg.split('/'))
+        return path
     
     ##########################################
     # Command implementations below.         #
@@ -311,8 +324,8 @@ Syntax:
 Syntax:
     cd <category>
 '''
-        root =  self.pdb.getTree()
-        cdpath = root.normalizePath(arg.split('/'))
+        root = self.pdb.getTree()
+        cdpath = self.getAbsolutePath(arg)
         try:
             newpath = root.getTreeFromPath(cdpath)
         except KeyError:
@@ -547,6 +560,60 @@ be prompted to choose one from the list."""
             self.tryToSave()
         else:
             print "Password was not deleted."
+
+    def do_mv(self, arg):
+        '''move a password
+        
+Syntax:
+    mv <regexp> <category>
+'''
+        args = arg.split()
+        if len(args) != 2:
+            print '''Syntax:
+            mv <regexp> <category>
+'''
+            return
+   
+        pw = args[0]
+        cat = args[1]
+
+        # get destination category branch
+        root = self.pdb.getTree()
+        cat_path = self.getAbsolutePath(cat)
+        try:
+            dst_branch = root.getTreeFromPath(cat_path)
+        except KeyError:
+            print "mv: %s: No such catalog" % cat
+            return
+
+        # select password from user
+        selected_password = self.pickPassword(pw)
+        if selected_password:
+            dst_branch.addNode(selected_password)
+            self.getPwd().removeNode(selected_password)
+            self.tryToSave()                
+        else:
+            print "No password selected"
+
+    def do_rmdir(self, arg):
+        '''delete a category (directory)
+        
+Syntax:
+    rmdir <category>
+
+Deletes a password category and ALL it\'s entries
+'''
+        if not arg:
+            print "rmdir: too few arguments"
+            print "try 'help rmdir' for more information"
+            return
+
+        pwd = self.getPwd()
+        answer = raw_input("Are you sure you want to delete category '" + arg + " and ALL it's entries? [y/N]: ")
+        if answer.lower().startswith('y'):
+            pwd.removeBranch(arg.strip())
+            print "rmdir: cateogry \"%s\" and all it's entries were deleted." % arg
+            self.tryToSave()
 
     def mainLoop(self):
         self.updatePrompt()

@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: password_tree.py,v 1.12 2003/10/15 21:29:06 kedder Exp $
+# $Id: password_tree.py,v 1.13 2003/10/22 21:33:25 kedder Exp $
 
 """Password items organized in recursive tree."""
 
@@ -177,4 +177,10 @@ class PasswordTree:
         return self.asString()
 
     def removeNode(self, node):
+        """Removes a node from the tree."""
         self._nodes.remove(node)
+
+    def removeBranch(self, name):
+        """Removes a branch from the tree."""
+        del(self._branches[name])
+        
