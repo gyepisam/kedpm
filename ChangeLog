@@ -1,3 +1,32 @@
+2003-09-21 23:44  Andrey Lebedev <andrey@micro.lt>
+
+	* NEWS: paraphrase news
+
+2003-09-21 23:05  Andrey Lebedev <andrey@micro.lt>
+
+	* setup.py, kedpm/__init__.py: added GTK trove classifier, version
+	increase
+
+2003-09-21 22:39  Andrey Lebedev <andrey@micro.lt>
+
+	* CHANGES, Makefile, kedpm-cli, kedpm-gtk, glade/kedpm.glade,
+	kedpm/frontends/cli.py, kedpm/frontends/frontend.py,
+	kedpm/frontends/gtk/app.py, kedpm/frontends/gtk/dialogs.py: GUI now
+	can initialise Figaro database.
+
+2003-09-21 21:18  Andrey Lebedev <andrey@micro.lt>
+
+	* CHANGES, kedpm/password.py, kedpm/password_tree.py,
+	kedpm/frontends/cli.py, kedpm/frontends/gtk/dialogs.py,
+	kedpm/plugins/pdb_figaro.py, test/test_figaro.py: fixed fpm long
+	password bug
+
+2003-09-14 15:15  Andrey Lebedev <andrey@micro.lt>
+
+	* CHANGES, ChangeLog, INSTALL, MANIFEST.in, NEWS, README,
+	ReleasePlan.txt, setup.py, glade/kedpm.glade, kedpm/__init__.py,
+	kedpm/frontends/gtk/dialogs.py: prerelease machinations
+
 2003-09-12 21:48  Andrey Lebedev <andrey@micro.lt>
 
 	* kedpm/frontends/frontend.py: missed frontend abstraction added

@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: password_tree.py,v 1.9 2003/09/21 18:18:08 kedder Exp $
+# $Id: password_tree.py,v 1.10 2003/09/22 20:20:32 kedder Exp $
 
 """Password items organized in recursive tree."""
 
@@ -104,7 +104,7 @@ class PasswordTree:
 
     def locate(self, pattern):
         """Return list of passwords, matching pattern."""
-        re_search = re.compile(".*"+pattern+".*")
+        re_search = re.compile(".*"+pattern+".*", re.IGNORECASE)
         results = []
         for password in self._nodes:
             for field in password.getSearhableFields():

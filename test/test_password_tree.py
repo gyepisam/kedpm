@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: test_password_tree.py,v 1.5 2003/09/04 20:28:59 kedder Exp $
+# $Id: test_password_tree.py,v 1.6 2003/09/22 20:20:32 kedder Exp $
 
 import unittest
 from kedpm.password_tree import PasswordTree
@@ -61,6 +61,9 @@ class PasswordTreeTestCase(unittest.TestCase):
         self.assertEqual(found, [self.pass1])
         found = self.ptree.locate('sword')
         self.assertEqual(found, [])
+        # try case insensitive searching
+        found = self.ptree.locate('NaMe')
+        self.assertEqual(found, [self.pass1, self.pass2])
 
     def test_normalizePath(self):
         testpath1 = ['dir', 'subdir', 'subsubdir']

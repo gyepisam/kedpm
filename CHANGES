@@ -1,7 +1,11 @@
 Noteworthy changes in Ked Password Manager. Most recent changes are at
 the top.
 
-Version 0.2.5 (??)
+Version 0.3.0 (??)
+
+    * Searching is case insensitive (as it should be).
+
+Version 0.2.5 (2003-09-21)
 
     * Fixed fpm long password bug. Figaro password manager can't handle
     passwords longer that 24 characters. Ked Password manager will allow
