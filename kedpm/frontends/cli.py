@@ -14,15 +14,19 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: cli.py,v 1.9 2003/08/17 10:20:07 kedder Exp $
-    
+# $Id: cli.py,v 1.10 2003/08/17 18:56:18 kedder Exp $
+
+"Command line interface for Ked Password Manager"
+
 from kedpm import __version__
 from kedpm.plugins.pdb_figaro import PDBFigaro, FigaroPassword
+from kedpm.passdb import DatabaseNotExist
 from kedpm.exceptions import WrongPassword
 from kedpm import password
 from getpass import getpass
 from cmd import Cmd
 import sys
+from shutil import copyfile
 
 class Frontend (Cmd):
     PS1 = "kedpm:%s> " # prompt template
@@ -47,17 +51,31 @@ try 'help' for brief description of available commands
                     print "Error! Wrong password."
                 else: 
                     print "Provide password to access the database (Ctrl-C to exit)"
-                try:
-                    password = getpass("Password: ")
-                except (EOFError, KeyboardInterrupt):
-                    print
-                    print "Good bye."
-                    sys.exit(1)
+                password = getpass("Password: ")
+            except DatabaseNotExist:
+                password = self.createNewDatabase()
+        print "Password accepted."
+
+    def createNewDatabase(self):
+        'Create new password database and return password for created database'
+        print "Creating new password database."
+        pass1 = pass2 = ""
+        while pass1 != pass2 or pass1 == "":
+            pass1 = getpass("Provide password: ")
+            pass2 = getpass("Repeat password: ")
+            if pass1 == '':
+                print "Empty passwords are really insecure. You shoud create one."
+            if pass1!=pass2:
+                print "Passwords don't match! Please repeat."
+
+        self.pdb.create(pass1)
+        return pass1
 
     def updatePrompt(self):
         self.prompt = self.PS1 % ('/'+'/'.join(self.pwd))
 
     def getPwd(self):
+        'Return current password tree instance'
         return self.pdb.getTree().getTreeFromPath(self.pwd)
 
     def listPasswords(self, passwords, show_numbers=0):
@@ -272,6 +290,7 @@ This will prompt you for editing of a password item in current category. If
 several items matched by <regexp>, list of them will be printed and you will be
 prompted to enter a number, pointing to password you want to edit.  After
 receiving that number, you will be able to edit picked password.  
+
 '''
 
         selected_password = self.pickPassword(arg)
@@ -303,7 +322,21 @@ fields.'''
         self.modified = 0
 
     def run(self):
-        self.openDatabase()
+        try:
+            self.openDatabase()
+        except (EOFError, KeyboardInterrupt):
+            print
+            print "Good bye."
+            sys.exit(1)
+        print 
+        if not self.pdb.native:
+            # Do backup
+            backupfile = self.pdb.default_db_filename+'.kedpm.bak'
+            print "WARNING! KedPM has detected original FPM password database."
+            print "Backing it up to %s" % backupfile
+            print
+            copyfile(self.pdb.default_db_filename, backupfile)
+        
         self.updatePrompt()
         self.cmdloop()
 

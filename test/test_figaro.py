@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: test_figaro.py,v 1.7 2003/08/16 21:11:20 kedder Exp $
+# $Id: test_figaro.py,v 1.8 2003/08/17 18:56:18 kedder Exp $
 
 import os
 import unittest
@@ -90,6 +90,9 @@ class PDBFigaroTestCase(unittest.TestCase):
         decrypted = self.pdb.decrypt(encrypted)
         self.assertEqual(pwdstr, decrypted)
 
+    def test_native(self):
+        self.assertEqual(self.pdb.native, 0)
+
 
 class SavedFigaroTestCase(PDBFigaroTestCase):
     def setUp(self):
@@ -98,6 +101,9 @@ class SavedFigaroTestCase(PDBFigaroTestCase):
         pdb.save(fname="fpm.saved")
         self.pdb = PDBFigaro()
         self.pdb.open(self.password, fname='fpm.saved')
+
+    def tearDown(self):
+        os.remove('fpm.saved')
 
     def test_catlessPassword(self):
         'Saving and loading password without category'
@@ -114,8 +120,9 @@ class SavedFigaroTestCase(PDBFigaroTestCase):
         self.assertEqual(tlnodes[0]['password'], 'CLPass')
         self.assertEqual(tlnodes[0]['url'], '')
 
-    def tearDown(self):
-        os.remove('fpm.saved')
+    def test_native(self):
+        self.assertEqual(self.pdb.native, 1)
+
         
 
 class FigaroCryptoTestCase(unittest.TestCase):

@@ -14,11 +14,14 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: passdb.py,v 1.2 2003/08/15 20:43:22 kedder Exp $
+# $Id: passdb.py,v 1.3 2003/08/17 18:56:18 kedder Exp $
 
 """ Password Database """
 
 from password_tree import PasswordTree
+
+class DatabaseNotExist(IOError):
+    pass
 
 class PasswordDatabase:
     """ Base class for password databases.
@@ -34,6 +37,10 @@ class PasswordDatabase:
 
     def save(self, fname=""):
         """ Save database to external source """
+        pass
+
+    def create(self, password, fname=""):
+        """Create new password database"""
         pass
 
     def keys(self):

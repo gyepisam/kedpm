@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: pdb_figaro.py,v 1.8 2003/08/16 21:11:20 kedder Exp $
+# $Id: pdb_figaro.py,v 1.9 2003/08/17 18:56:18 kedder Exp $
 
 """ Figaro password manager database plugin """
 
@@ -28,7 +28,7 @@ from Crypto.Hash import MD5
 from random import randint
 
 from kedpm.exceptions import WrongPassword
-from kedpm.passdb import PasswordDatabase
+from kedpm.passdb import PasswordDatabase, DatabaseNotExist
 from kedpm.password_tree import PasswordTree
 from kedpm.password import Password, TYPE_STRING, TYPE_TEXT, TYPE_PASSWORD
 
@@ -54,6 +54,9 @@ class FigaroPassword (Password):
 class PDBFigaro (PasswordDatabase):
 
     default_db_filename = os.getenv('HOME') + '/.fpm/fpm'
+    launcherlist = None
+    filename = None
+    native = 0
     #default_db_filename = 'test/fpm.sample'
 
     def open(self, password, fname=""):
@@ -61,7 +64,21 @@ class PDBFigaro (PasswordDatabase):
         
         self._password = password
         self.filename = fname or self.default_db_filename
+
+        # Check existance of database file
+        if not os.access(self.filename, os.F_OK):
+            raise DatabaseNotExist, 'File %s is not found' % self.filename
+
         fpm = minidom.parse(self.filename)
+
+        generator = fpm.documentElement.getAttribute('generator')
+        if generator.startswith('kedpm'):
+            self.native=1
+        self.convDomToTree(fpm) 
+
+    def convDomToTree(self, fpm):
+        'Read figaro xml database and create password tree from it'
+        
         keyinfo = fpm.documentElement.getElementsByTagName("KeyInfo")[0]
         self._salt = keyinfo.getAttribute('salt')
         vstring = keyinfo.getAttribute('vstring')
@@ -87,16 +104,25 @@ class PDBFigaro (PasswordDatabase):
                     branch = self._pass_tree.addBranch(category)
             branch.addNode(self._getPasswordFromNode(node))
 
-    def save(self, fname="fpm.kedpm-saved"):
+    def save(self, fname=""):
         '''Save figaro password database'''
     
-        doc = self.buildPasswordTree()
-        f = open(fname, 'w')
+        # Create new salt for each save
+        self._salt = self.generateSalt()
+        doc = self.convTreeToDom()
+        filename = fname or self.filename or self.default_db_filename
+        f = open(filename, 'w')
         f.write(doc.toxml())
         f.close()
-        
 
-    def buildPasswordTree(self):
+    def generateSalt(self):
+        '''Generate salt, that consists of 8 small latin characters'''
+        salt = ""
+        for i in range(8):
+            salt += chr(randint(ord('a'), ord('z')))
+        return salt
+        
+    def convTreeToDom(self):
         '''Build and return DOM document from current password tree'''
         
         domimpl = minidom.getDOMImplementation()
@@ -105,6 +131,7 @@ class PDBFigaro (PasswordDatabase):
         root.setAttribute('full_version', '00.53.00')
         root.setAttribute('min_version', '00.50.00')
         root.setAttribute('display_version', '0.53')
+        root.setAttribute('generator', 'kedpm')
         # KeyInfo tag
         keyinfo = document.createElement('KeyInfo')
         keyinfo.setAttribute('salt', self._salt)
@@ -112,7 +139,8 @@ class PDBFigaro (PasswordDatabase):
         root.appendChild(keyinfo)
         
         # Add LauncherList for fpm compatibility
-        root.appendChild(self.launcherlist)
+        if self.launcherlist:
+            root.appendChild(self.launcherlist)
 
         # PasswordList tag
         passwordlist = document.createElement('PasswordList')
@@ -152,7 +180,11 @@ class PDBFigaro (PasswordDatabase):
         root.appendChild(passwordlist)
 
         return document
-        
+    
+    def create(self, password, fname=""):
+        newdb = PDBFigaro()
+        newdb._password = password
+        newdb.save(fname)
     
     def _getPasswordFromNode(self, node):
         ''' Create password instance from given fpm node '''

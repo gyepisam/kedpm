@@ -1,9 +1,11 @@
-Noteworthy changes in Ked Password Manager. Most recent changes at the
-top.
+Noteworthy changes in Ked Password Manager. Most recent changes are at
+the top.
 
 Version 0.1.0 (??)
 
     * Added ability to save password database in fpm-compatible format.
+    If KedPM detects that it had opened database saved by FPM, it makes
+    a backup to ~/.fpm/fpm.kedpm.bak.
     
     * Improved command line interface: added simple completion to 'cd'
     and 'ls' commands; 'new', 'edit' and 'save' commands implemented.
