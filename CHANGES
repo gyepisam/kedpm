@@ -1,6 +1,11 @@
 Noteworthy changes in Ked Password Manager. Most recent changes are at
 the top.
 
+Version 0.3.1 (2003-10-27)
+
+    * Fixed password database initialization problem. New databases
+    should be created normally now.
+
 Version 0.3.0 (2003-10-26)
 
     * Searching is case insensitive (as it should be).
