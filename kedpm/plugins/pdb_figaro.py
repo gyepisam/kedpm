@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: pdb_figaro.py,v 1.3 2003/08/07 22:26:11 kedder Exp $
+# $Id: pdb_figaro.py,v 1.4 2003/08/11 20:14:30 kedder Exp $
 
 """ Figaro password manager database plugin """
 
@@ -111,10 +111,10 @@ class PDBFigaro (PasswordDatabase):
             for i in range(blocksize):
                 tmp[i*num_blocks+b] = field[b*blocksize+i]
 
-        for c in tmp.values():
-            if c == chr(0):
+        for c in range(len(tmp)):
+            if tmp[c] == chr(0):
                 break
-            plaintext = plaintext + c
+            plaintext = plaintext + tmp[c]
         return str(plaintext)
 
 

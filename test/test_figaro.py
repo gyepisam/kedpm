@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: test_figaro.py,v 1.2 2003/08/06 20:37:28 kedder Exp $
+# $Id: test_figaro.py,v 1.3 2003/08/11 20:14:30 kedder Exp $
 
 import unittest
 from kedpm.plugins.pdb_figaro import PDBFigaro
@@ -31,7 +31,9 @@ class PDBFigaroTestCase(unittest.TestCase):
     def test_tree(self):
         ptree = self.pdb.getTree()
         branches = ptree.getBranches()
-        self.assertEqual(branches.keys(), ['Test', 'Kedder'])
+        bkeys = branches.keys()
+        bkeys.sort()
+        self.assertEqual(bkeys, ['Kedder', 'Test'])
         tree_test = ptree['Test']
         assert tree_test
         self.assertEqual(len(tree_test.getNodes()), 2)
@@ -45,10 +47,19 @@ class PDBFigaroTestCase(unittest.TestCase):
         self.assertEqual(len(pwds), 2)
         pwd_test2 = tree_test.locate('test2')
         self.assertEqual(pwd_test2[0].password, 'test2 password')
-        
+
+class FigaroCryptoTestCase(unittest.TestCase):
+    def test_unrotate(self):
+        pdb = PDBFigaro()
+        unrotated = pdb._unrotate('FIGARO\x00\xe3')
+        self.assertEqual(unrotated, 'FIGARO')
 
 def suite():
-    return unittest.makeSuite(PDBFigaroTestCase, 'test')
+    l = [
+        unittest.makeSuite(PDBFigaroTestCase, 'test'),
+        unittest.makeSuite(FigaroCryptoTestCase, 'test')
+    ]
+    return unittest.TestSuite(l)
 
 if __name__ == "__main__":
     unittest.main()
