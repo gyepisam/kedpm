@@ -19,7 +19,7 @@ Running tests
 
 The KedPM distribution contains unit tests. If you want, you can check
 the integrity of almost all KedPM components by running ``run_tests``
-script in project's root directory. After successeful passing of all
+script in project's root directory. After successful passing of all
 tests you will see something like this::
 
 	.................................
@@ -38,7 +38,7 @@ Installation
 To install the KedPM support code into your Python tree and
 KedPM scripts into /usr/local/bin (substitute that path for whatever is
 appropriate on your system). You need to have write permissions
-for these locations, eg. being root on unix::
+for these locations, e.g. being root on Unix::
 
     python setup.py install
 

@@ -54,15 +54,15 @@ Command Line Interface
 Currently KedPM supports only command line interface (no GUI for now,
 but its going to change soon).
 
-However, CLI should be quite intuitive for those, who has expirience
-with linux shell. Password are placed in categories, like files
+However, CLI should be quite intuitive for those, who has experience
+with Linux shell. Password are placed in categories, like files
 are placed in directories. You can move between categories with ``cd``
 command, show contents of category with ``ls`` command, and so on. 
 
 There is one difference however: passwords in database don't have unique
 identifiers, like files in filesystem. Passwords in KedPM identified by
 their contents. For example, lets say you have a saved a password for
-ftp login to your site ``www.homepage.org``. To display that password
+FTP login to your site ``www.homepage.org``. To display that password
 all you need to type is ``show homepage``. This command will find the
 password, that contain word ``homepage`` in one of its fields, and
 display it to you. If KedPM has found several different password records
