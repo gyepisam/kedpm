@@ -14,11 +14,12 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: setup.py,v 1.7 2003/09/21 20:05:35 kedder Exp $
+# $Id: setup.py,v 1.8 2004/02/29 11:45:48 kedder Exp $
 
 from distutils.core import setup
 from kedpm import __version__
 import os, sys
+from glob import glob
 
 # patch distutils if it can't cope with the "classifiers" keyword
 # that's support for python < 2.3
@@ -52,9 +53,12 @@ front-ends."""
         packages=['kedpm', 'kedpm.plugins', 'kedpm.frontends', 'kedpm.frontends.gtk'],
         scripts=['scripts/kedpm'],
         data_files=[(os.path.join('share', 'kedpm'), ['AUTHORS', 'COPYING', 'INSTALL']),
-            (os.path.join('share', 'kedpm', 'glade'), [os.path.join('glade', 'kedpm.glade')])],
+            (os.path.join('share', 'kedpm', 'glade'),
+                [os.path.join('glade', 'kedpm.glade')] +
+                glob(os.path.join('glade', '*.png'))
+                )],
         classifiers = [
-            'Development Status :: 3 - Alpha',
+            'Development Status :: 4 - Beta',
             'Environment :: Console',
             'Environment :: X11 Applications :: GTK',
             'Intended Audience :: Developers',
@@ -66,6 +70,7 @@ front-ends."""
             'Topic :: Utilities'
         ]
     )
+
 
 if __name__ == '__main__':
     main()

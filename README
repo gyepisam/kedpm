@@ -127,6 +127,36 @@ Parser feature is available in GUI from "Edit->Parse password" menu
 item. In command line mode you can use ``new -p`` command - it will
 fire up your favorite text editor for you to provide mail text.
 
+Parser patterns
+---------------
+
+Starting from KedPM-0.4.0 you can edit patterns, used by parser to parse
+text. This allows you to better adopt parser to your particular needs.
+The format of patterns is:
+
+    =============  =========================================
+    ``{field}``    matches password field;
+    ``{ }``        matches arbitrary number of spaces or nothing;
+    ``{~regexp}``  matches arbitrary regular expression;
+    =============  =========================================
+
+For example, pattern::
+
+    User{~(name)?}{ }:{ }{user}
+
+Will find string, starting with ``user`` or ``username``, followed by
+colon and put string after colon to ``user`` field of password. This
+pattern will recognize the following patterns in your mails::
+
+    username: andrey
+
+or::
+
+    user    : andrey
+
+and automatically fill ``user`` field of password with string
+``andrey``.
+
 Check out parser! Tell me what you think.
 
 .. vim: tw=72 nocindent et

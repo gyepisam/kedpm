@@ -1,9 +1,26 @@
-==== 
-NEWS
-====
+==========================
+Ked Password Manager: NEWS
+==========================
 
 Ked Password Manager project news. For more detailed list of changes,
 see CHANGES file.
+
+
+KedPM-0.4.0: Everybody must get stoned
+======================================
+
+2004.02.29. After a long idling, I've finally found some time to work on
+KedPM. 
+
+With this release I've decided to change project status from
+alpha to beta. I've used the program quite a lot and it performed great,
+so I think its ready for public testing.
+
+Apart bug fixing, this release introduces parser's pattern editor
+(without much documentation yet), subcategories of arbitrary depth and
+various usability improvements. Figaro Password Manager compatibility is
+still in place:)
+
 
 KedPM-0.3.1
 ===========
@@ -68,4 +85,4 @@ out. Make sure you've backed up your ~/.fpm/fpm though.
 
 
 
-vim: tw=72 et fo=t nocindent
+.. vim: tw=72 et fo=t nocindent

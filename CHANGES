@@ -1,100 +1,111 @@
+============================= 
+Ked Password Manager: CHANGES 
+=============================
+
 Noteworthy changes in Ked Password Manager. Most recent changes are at
 the top.
 
 Version 0.4.0 (??)
+==================
 
     * Search entry automatically gets focus when switching to flat view.
 
     * First password in root category creation bug fixed. GTK warnings
-    should be gone too. (SF BUG #862551)
+      should be gone too. (SF BUG #862551)
 
     * Location of FPM password database file is configurable in options
-    ('fpm-database' setting).
+      ('fpm-database' setting).
 
     * KedPM has got icons! Artworks made by Eugene Morozov. Thanks
-    Eugene!
+      Eugene!
 
     * Parser patterns editor added.
 
     * CLI frontend remembers command history between runs.
 
     * Support for password trees of arbitrary depth in Figaro
-    databases. This feature is not supported by FPM itself, although
-    databases with subcategories should still be readable by FPM. (SF
-    BUG #845305)
+      databases. This feature is not supported by FPM itself, although
+      databases with subcategories should still be readable by FPM. (SF
+      BUG #845305)
 
     * Saving history of searches in GUI. The feature is similar to
-    browser url bar history.
+      browser url bar history.
 
     * Better completion in CLI.
 
     * Password list columns in GUI are now sortable and resizable.
 
 Version 0.3.1 (2003-10-27)
+==========================
 
     * Fixed password database initialization problem. New databases
-    should be created normally now.
+      should be created normally now.
 
 Version 0.3.0 (2003-10-26)
+==========================
 
     * Searching is case insensitive (as it should be).
 
     * Configuration infrastructure implemented. For now only one
-    configuration option exists: ``save-mode``.
+      configuration option exists: ``save-mode``.
 
     * Deleting of passwords implemented.
 
     * ``rmdir`` and ``mv`` commands were added to CLI (Patch #825957).
-    Thanks indygena!
+      Thanks indygena!
 
     * Parser feature added. It will help you incorporate passwords from
-    your mails to database more efficiently.
+      your mails to database more efficiently.
 
     * Support for fpm-0.58 databases with longer passwords (up to
-    256 characters). Not tested yet.
+      256 characters). Not tested yet.
 
     * GUI now can display password as plain text. It is useful when you
-    need to send password to someone.
+      need to send password to someone.
 
     * Added ability to search whole password tree in one operation. The
-    feature accessed through "Flatten" button in GUI and through "-r"
-    flag in "show" command in CLI.
+      feature accessed through "Flatten" button in GUI and through "-r"
+      flag in "show" command in CLI.
 
     * Various CLI and GUI usability enhancements.
 
 Version 0.2.5 (2003-09-21)
+==========================
 
     * Fixed fpm long password bug. Figaro password manager can't handle
-    passwords longer that 24 characters. Ked Password manager will allow
-    you to save such long passwords, but it will break fpm compatibility
-    - fpm will not handle such passwords correctly.
+      passwords longer that 24 characters. Ked Password manager will
+      allow you to save such long passwords, but it will break fpm
+      compatibility - fpm will not handle such passwords correctly.
 
     * GUI now can initialize Figaro database.
 
 Version 0.2.0 (2003-09-14)
+==========================
 
     * Added graphical user interface (GUI) frontend
 
     * Added ability to rename password categories
 
     * ``kedpm-cli`` script renamed to ``kedpm``. To run GUI, use 
-    ``kedpm -g``; to run CLI, use ``kedpm -c``.
+      ``kedpm -g``; to run CLI, use ``kedpm -c``.
 
 Version 0.1.0 (2003-08-20)
+==========================
 
     * Added ability to save password database in fpm-compatible format.
-    If KedPM detects that it had opened database saved by FPM, it makes
-    a backup to ~/.fpm/fpm.kedpm.bak;
+      If KedPM detects that it had opened database saved by FPM, it
+      makes a backup to ~/.fpm/fpm.kedpm.bak;
     
     * Improved command line interface: overall usability improvements; 
     
     * New cli commands: 'mkdir', 'new', 'edit' and 'save';
 
 Version 0.0.2 (2003-08-05)
+==========================
 
     * First public release. All it can do is read Figaro Password
-    Manager database files and display passwords to user via cli
-    interface;
+      Manager database files and display passwords to user via cli
+      interface;
 
 
- vim: tw=72 et fo=ta nocindent
+.. vim: tw=72 et fo=ta nocindent

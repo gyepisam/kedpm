@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: pdb_figaro.py,v 1.17 2004/02/28 16:34:57 kedder Exp $
+# $Id: pdb_figaro.py,v 1.18 2004/02/29 11:45:48 kedder Exp $
 
 """ Figaro password manager database plugin """
 
@@ -221,7 +221,6 @@ class PDBFigaro (PasswordDatabase):
     def create(self, password, fname=""):
         filename = fname or self.default_db_filename
         dirname, fname = os.path.split(filename)
-        print dirname
         if not os.access(dirname, os.F_OK):
             print "Creating directory %s" % dirname
             os.mkdir(dirname, 0700)
