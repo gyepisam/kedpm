@@ -5,6 +5,21 @@ NEWS
 Ked Password Manager project news. For more detailed list of changes,
 see CHANGES file.
 
+KedPM-0.3.0: Meet Parser
+========================
+
+2003.10.26 Two major features added in this release. The first is the
+Parser feature, that will help you incorporate passwords from your mails
+to database more efficiently. Second: ability to search password tree
+recursively. It will allow you to search all your passwords in one
+operation.
+
+Other updates include experimental fpm-0.58 format support (with it's
+longer passwords), basic configuration options, deleting and moving
+passwords, ability to display password as plain text in GUI, various
+usability enhancements.
+
+
 KedPM-0.2.5: How long your passwords are?
 =========================================
 
