@@ -14,11 +14,19 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: setup.py,v 1.5 2003/09/12 17:47:47 kedder Exp $
+# $Id: setup.py,v 1.6 2003/09/14 12:15:57 kedder Exp $
 
 from distutils.core import setup
 from kedpm import __version__
 import os, sys
+
+# patch distutils if it can't cope with the "classifiers" keyword
+# that's support for python < 2.3
+from distutils.dist import DistributionMetadata
+if not hasattr(DistributionMetadata, 'classifiers'):
+    DistributionMetadata.classifiers = None
+    DistributionMetadata.download_url = None
+
 
 def main():
     
@@ -28,7 +36,8 @@ entering password data.
 
 Ked-PM written as extensible framework, which allows to plug in custom password
 database back-ends and custom user interface front-ends. Currently only Figaro
-PM back-end and command line interface front-end supported."""
+PM back-end. To control KedPM user can choose between  CLI and GTK2 based GUI
+front-ends."""
     
     setup(
         name="kedpm",
@@ -37,6 +46,8 @@ PM back-end and command line interface front-end supported."""
         long_description = long_description,
         author="Andrey Lebedev",
         author_email="andrey@users.sourceforge.net",
+        license="GPL",
+        platforms="POSIX",
         url="http://kedpm.sourceforge.net/",
         packages=['kedpm', 'kedpm.plugins', 'kedpm.frontends', 'kedpm.frontends.gtk'],
         scripts=['scripts/kedpm'],

@@ -1,0 +1,31 @@
+Noteworthy changes in Ked Password Manager. Most recent changes are at
+the top.
+
+Version 0.2.0 (2003-09-14)
+
+    * Added graphical user interface (GUI) frontend
+
+    * Added ability to rename password categories
+
+    * ``kedpm-cli`` script renamed to ``kedpm``. To run GUI, use 
+    ``kedpm -g``; to run CLI, use ``kedpm -c``.
+
+Version 0.1.0 (2003-08-20)
+
+    * Added ability to save password database in fpm-compatible format.
+    If KedPM detects that it had opened database saved by FPM, it makes
+    a backup to ~/.fpm/fpm.kedpm.bak;
+    
+    * Improved command line interface: overall usability improvements; 
+    
+    * New cli commands: 'mkdir', 'new', 'edit' and 'save';
+
+
+Version 0.0.2 (2003-08-05)
+
+    * First public release. All it can do is read Figaro Password
+    Manager database files and display passwords to user via cli
+    interface;
+
+
+ vim: tw=72 et fo=ta

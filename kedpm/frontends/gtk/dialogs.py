@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: dialogs.py,v 1.6 2003/09/05 21:24:46 kedder Exp $
+# $Id: dialogs.py,v 1.7 2003/09/14 12:15:57 kedder Exp $
 
 '''Dialog classes'''
 
@@ -22,7 +22,7 @@ import gtk
 
 from base import Dialog, processEvents
 from kedpm.exceptions import WrongPassword
-from kedpm import password
+from kedpm import password, __version__
 import globals
 
 class LoginDialog(Dialog):
@@ -60,6 +60,10 @@ class CreditsDialog(Dialog):
 
 class AboutDialog(Dialog):
     name = "dlg_about"
+
+    def __init__(self):
+        super(AboutDialog, self).__init__()
+        self['kedpm-version'].set_markup(self['kedpm-version'].get_label() % __version__)
 
     def run(self):
         self.window.show()

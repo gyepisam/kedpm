@@ -54,6 +54,27 @@ If you have no Figaro Password Manager database at the moment, KedPM
 will try to create one for you. It will ask you for a password to
 encrypt password data with. Then KedPM will create empty FPM database.
 
+Graphical User Interface
+========================
+
+GUI is implemented using GTK2 widget library. It means GUI will fit
+nicely in Gnome2 environment, but does not require it for normal
+operation.
+
+To speed up your work with KedPM, GUI provides couple of keyboard
+shortcuts:
+
+    ===========  ==============================================
+    Ctrl+K       Put keyboard focus on filter entry field.
+    Ctrl+Escape  Clear filter and show all passwords in current
+                 category.
+    ===========  ==============================================
+
+You can quickly copy to clipboard any of password information by
+right-clicking on a password in the list and choosing respective item in
+popped up menu.
+
+
 Command Line Interface
 ======================
 
@@ -75,4 +96,4 @@ Full list of commands can be retrieved with ``help`` command. You can get
 help on particular command using ``help <command>``.
 
 
-.. vim: tw=72 nocindent
+.. vim: tw=72 nocindent et

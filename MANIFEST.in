@@ -1,4 +1,4 @@
-include AUTHORS COPYING INSTALL NEWS ChangeLog MANIFEST.in
+include AUTHORS COPYING INSTALL NEWS CHANGES ChangeLog MANIFEST.in
 include scripts/kedpm kedpm-cli kedpm-gtk
 include run_tests
 include test/fpm.sample

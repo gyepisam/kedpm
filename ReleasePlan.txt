@@ -1,0 +1,9 @@
+Release plan for Ked Password Manager
+
+1. Write announce;
+2. Review docs, update homepage;
+3. Make distribution tarball, check it;
+4. Publish homepage;
+5. Add release to sourceforge.net;
+6. Add release to freshmeat.net;
+7. Add release to PyPI;
