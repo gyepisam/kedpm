@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: pdb_figaro.py,v 1.11 2003/09/21 18:18:08 kedder Exp $
+# $Id: pdb_figaro.py,v 1.12 2003/10/14 21:30:43 kedder Exp $
 
 """ Figaro password manager database plugin """
 
@@ -59,6 +59,7 @@ class FigaroPassword (Password):
         if key=='password' and len(value) > FPM_PASSWORD_LEN and not self.store_long_password:
             raise FigaroPasswordTooLongError, "Password is too long"
         Password.__setitem__(self, key, value)
+
 
 class PDBFigaro (PasswordDatabase):
 
@@ -190,7 +191,7 @@ class PDBFigaro (PasswordDatabase):
         root.appendChild(passwordlist)
 
         return document
-    
+
     def create(self, password, fname=""):
         filename = fname or self.default_db_filename
         dirname, fname = os.path.split(filename)
@@ -201,7 +202,7 @@ class PDBFigaro (PasswordDatabase):
         newdb = PDBFigaro()
         newdb._password = password
         newdb.save(filename)
-    
+
     def _getPasswordFromNode(self, node):
         """ Create password instance from given fpm node """
         fields = ["title", "user", "url", "notes", "password"]

@@ -14,9 +14,10 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: config.py,v 1.5 2003/10/13 21:09:40 kedder Exp $
+# $Id: config.py,v 1.6 2003/10/14 21:30:42 kedder Exp $
 
 """Configuration for Ked Password Manager"""
+import os
 from xml.dom import minidom
 from UserDict import UserDict
 
@@ -82,11 +83,8 @@ class Configuration:
     """Configuration file interface"""
 
     # Configuration file name
-    filename = "doc/sample_config.xml"
-
-    _options = {
-        "save-mode": "ask"
-    }
+    #filename = "doc/sample_config.xml"
+    filename = os.getenv('HOME') + '/.kedpm/config.xml'
 
     options = Options({
         "save-mode": SelectOption(['ask', 'no', 'auto'], 'ask', """One of three values:
@@ -101,11 +99,14 @@ class Configuration:
         #self.options = Options()
         pass
     
-    def open(self, fname = ""):
+    def open(self):
         """Open and parse configuration xml file"""
-
-        filename = fname or self.filename
-        xml = minidom.parse(filename)
+        # Check if config file is readable
+        if not os.access(self.filename, os.R_OK):
+            # Config isn't readable. Try to create default one
+            self.create()
+            
+        xml = minidom.parse(self.filename)
         doc = xml.documentElement
 
         sections = [
@@ -139,5 +140,39 @@ class Configuration:
 
     def save(self):
         """Save configuration to xml file"""
-        pass
+        document = self.buildDOM()
+        configfile = open(self.filename, "w")
+        configfile.write(document.toxml())
+        configfile.close()
 
+    def create(self):
+        """Initialise new configuration
+        
+        Create dot-directory in homedir and save initial configuration."""
+
+        dirname, fname = os.path.split(self.filename)
+        if not os.access(dirname, os.F_OK):
+            print "Creating directory %s" % dirname
+            os.mkdir(dirname, 0700)
+        self.save()
+
+    def buildDOM(self):
+        """Build DOM object for current configuration"""
+        domimpl = minidom.getDOMImplementation()
+        document= domimpl.createDocument("http://kedpm.sourceforge.net/xml/fpm", "config", None)
+        root = document.documentElement
+        root.setAttribute('verion', __version__)
+        options = document.createElement('options')
+        root.appendChild(options)
+        patterns = document.createElement('patterns')
+        root.appendChild(patterns)
+        
+        # Add options
+        for optname, optvalue in self.options.items():
+            option = document.createElement('option')
+            option.setAttribute('name', optname)
+            option.appendChild(document.createTextNode(optvalue.get()))
+            options.appendChild(option)
+            
+        return document
+        

@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: dialogs.py,v 1.12 2003/10/13 21:09:40 kedder Exp $
+# $Id: dialogs.py,v 1.13 2003/10/14 21:30:42 kedder Exp $
 
 '''Dialog classes'''
 
@@ -178,7 +178,6 @@ class PasswordEditDialog(Dialog):
         if True:
         #if response_id == gtk.RESPONSE_OK:
             props = {}
-            print "Accepting data"
             for field, entry in self.entries.items():
                 if self.password.getField(field)['type'] == password.TYPE_TEXT:
                     buffer = entry.get_buffer()

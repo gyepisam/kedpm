@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: wnd_main.py,v 1.15 2003/10/13 21:09:40 kedder Exp $
+# $Id: wnd_main.py,v 1.16 2003/10/14 21:30:42 kedder Exp $
 
 '''Main KedPM window'''
 
@@ -156,19 +156,30 @@ class MainWindow(Window):
 
     def tryToSave(self):
         self.modified = True
-        dialog = gtk.MessageDialog(self.window,
-                                  gtk.DIALOG_DESTROY_WITH_PARENT,
-                                  gtk.MESSAGE_QUESTION,
-                                  gtk.BUTTONS_YES_NO,
-                                  "Password database has changed.\nDo you want to save it now?");
-        #import pdb; pdb.set_trace()
-        response = dialog.run();
+        savemode = globals.app.conf.options["save-mode"]
+        if savemode == 'no':
+            return
+        response = gtk.RESPONSE_YES
+        if savemode == 'ask':
+            dialog = gtk.MessageDialog(self.window,
+                                      gtk.DIALOG_DESTROY_WITH_PARENT,
+                                      gtk.MESSAGE_QUESTION,
+                                      gtk.BUTTONS_YES_NO,
+                                      "Password database has changed.\nDo you want to save it now?");
+            response = dialog.run();
+            dialog.destroy();
         if response == gtk.RESPONSE_YES:
-            self.pdb.save()
+            self.doSaveDatabase()
             self.modified = False
-        dialog.destroy();
 
-
+    def doSaveDatabase(self):
+        """Actually save password database and display indication in statusbar"""
+        sb = self['statusbar']
+        cid = sb.get_context_id('status') 
+        self.pdb.save()
+        sb.pop(cid)
+        sb.push(cid, "Password database saved.")
+        
     # Signal handlers
     def on_wnd_main_destroy(self, widget):
         if self.modified:
@@ -257,11 +268,7 @@ class MainWindow(Window):
 
     def on_mi_save_activate(self, widget):
         '''Main menu 'Save' item activated'''
-        self.pdb.save()
-        sb = self['statusbar']
-        cid = sb.get_context_id('status') 
-        sb.pop(cid)
-        sb.push(cid, "Saved.")
+        self.doSaveDatabase()
 
     def on_mi_add_category_activate(self, widget):
         '''Main menu 'Add category' item activated'''

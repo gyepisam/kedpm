@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: test_config.py,v 1.4 2003/10/12 20:39:49 kedder Exp $
+# $Id: test_config.py,v 1.5 2003/10/14 21:30:43 kedder Exp $
 
 import unittest
 
@@ -23,13 +23,17 @@ from kedpm.config import Configuration, Options, Option, SelectOption
 class ConfigTestCase(unittest.TestCase):
     def setUp(self):
         self.conf = Configuration()
-        self.conf.open(fname="test/sample_config.xml")
+        self.conf.filename = "test/sample_config.xml"
+        self.conf.open()
         
     def test_readConfig(self):
         self.assertEqual(self.conf.options["save-mode"], "ask")
         self.assertEqual(len(self.conf.patterns), 2)
         self.assertEqual(self.conf.patterns["sample1"], 
                 "Username/Password: {user}/{password}")
+
+    def test_save(self):
+        self.conf.save()
 
 class OptionsTestCase(unittest.TestCase):
     def test_option(self):

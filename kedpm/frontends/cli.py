@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: cli.py,v 1.21 2003/10/12 20:39:49 kedder Exp $
+# $Id: cli.py,v 1.22 2003/10/14 21:30:42 kedder Exp $
 
 "Command line interface for Ked Password Manager"
 
@@ -496,6 +496,8 @@ enter help set <option> for more info on particular option."""
                 opts[opt_name] = ' '.join(tokens[1:])
             except OptionError, e:
                 print "set: %s" % e
+        # save confuguration file
+        self.conf.save()
         
     def complete_set(self, text, line, begidx, endidx):
         compl = []
