@@ -6,9 +6,11 @@ Version 0.3.0 (??)
     * Searching is case insensitive (as it should be).
 
     * Configuration infrastructure implemented. For now only one
-    configuration option exists: save-mode.
+    configuration option exists: ``save-mode``.
 
     * Deleting of passwords implemented.
+
+    * Various GUI usability enhancements.
 
 Version 0.2.5 (2003-09-21)
 
@@ -17,7 +19,7 @@ Version 0.2.5 (2003-09-21)
     you to save such long passwords, but it will break fpm compatibility
     - fpm will not handle such passwords correctly.
 
-    * GUI now can initialise Figaro database.
+    * GUI now can initialize Figaro database.
 
 Version 0.2.0 (2003-09-14)
 

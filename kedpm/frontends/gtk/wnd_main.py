@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: wnd_main.py,v 1.18 2003/10/18 20:26:36 kedder Exp $
+# $Id: wnd_main.py,v 1.19 2003/10/18 22:08:14 kedder Exp $
 
 '''Main KedPM window'''
 
@@ -26,7 +26,7 @@ import globals
 from kedpm.password import TYPE_STRING
 from kedpm.exceptions import RenameError
 
-from base import Window
+from base import Window, processEvents
 from dialogs import AboutDialog, PasswordEditDialog, AddCategoryDialog
 from preferences import PreferencesDialog
 from dialogs import errorMessageDialog
@@ -55,6 +55,9 @@ class MainWindow(Window):
         self.cwtree = self.password_tree = globals.app.pdb.getTree()
         self.setupCategories()
         self.setupPasswords()
+        pl_selection = self["password_list"].get_selection()
+        pl_selection.connect("changed", self.on_password_list_selection_changed)
+        
         self['category_tree'].grab_focus()
         self.window.selection_add_target("PRIMARY", "STRING", 1)
         self.window.selection_add_target("CLIPBOARD", "STRING", 1)
@@ -62,6 +65,7 @@ class MainWindow(Window):
         #self.menu_password = self.getGladeWidget('menu_password')
         
         self.statusbar = self['statusbar']
+        self.setModified(False)
 
     def setupCategories(self):
         category_tree = self['category_tree']
@@ -131,6 +135,28 @@ class MainWindow(Window):
             store = gtk.ListStore(gobject.TYPE_STRING)
         self.passwords = passwords
         password_list.set_model(store)
+        self.updateControls()
+
+    def updateControls(self):
+        """Update controls according to current status.
+        
+        Set the sensitive property of widgets, that are meaningless in current
+        program state"""
+        
+        # Check if any password is currently selected
+        pwd_controls = ["tb_edit", "tb_delete", "mi_edit_password", 
+            "mi_delete_password"]
+        pwd_sensitive = False
+        if self.getSelectedPassword():
+            pwd_sensitive = True
+        for control in pwd_controls:
+            self[control].set_sensitive(pwd_sensitive)
+        # Disable "Clear" button if search entry is empty
+        search_text = self['search_entry'].get_text()
+        #clear_sensitive = False
+        #if search_text:
+        #    clear_sensitive = True
+        self["clear_button"].set_sensitive(search_text and True or False)
 
     def generatePasswordPopup(self):
         #menu_password = self.menu_password
@@ -160,12 +186,18 @@ class MainWindow(Window):
         else:
             return None
 
+    def setModified(self, modified):
+        """Set modified flag and update related widgets"""
+        self.modified = modified
+        self["tb_save"].set_sensitive(modified)
+        self["mi_save"].set_sensitive(modified)
+
     def tryToSave(self):
-        self.modified = True
+        self.setModified(True)
         savemode = globals.app.conf.options["save-mode"]
-        if savemode == 'no':
-            return
         response = gtk.RESPONSE_YES
+        if savemode == 'no':
+            response = gtk.RESPONSE_NO
         if savemode == 'ask':
             dialog = gtk.MessageDialog(self.window,
                                       gtk.DIALOG_DESTROY_WITH_PARENT,
@@ -176,7 +208,6 @@ class MainWindow(Window):
             dialog.destroy();
         if response == gtk.RESPONSE_YES:
             self.doSaveDatabase()
-            self.modified = False
 
     def doSaveDatabase(self):
         """Actually save password database and display indication in statusbar"""
@@ -184,6 +215,7 @@ class MainWindow(Window):
         self.pdb.save()
         self.statusbar.pop(cid)
         self.statusbar.push(cid, "Password database saved.")
+        self.setModified(False)
         
     # Signal handlers
     def on_wnd_main_destroy(self, widget):
@@ -347,3 +379,6 @@ class MainWindow(Window):
             self.statusbar.pop(cid)
             self.statusbar.push(cid, "Password deleted.")
             self.tryToSave()
+
+    def on_password_list_selection_changed(self, widget):
+        self.updateControls()
