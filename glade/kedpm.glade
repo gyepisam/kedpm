@@ -903,7 +903,7 @@
 	  <child>
 	    <widget class="GtkLabel" id="label6">
 	      <property name="visible">True</property>
-	      <property name="label" translatable="yes">&lt;small&gt;Copyright © 2003 Andrey Lebedev &amp;lt;andrey@micro.lt&amp;gt;&lt;/small&gt;</property>
+	      <property name="label" translatable="yes">&lt;small&gt;Copyright (c) 2003 Andrey Lebedev &amp;lt;andrey@micro.lt&amp;gt;&lt;/small&gt;</property>
 	      <property name="use_underline">False</property>
 	      <property name="use_markup">True</property>
 	      <property name="justify">GTK_JUSTIFY_LEFT</property>

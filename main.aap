@@ -15,12 +15,13 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: main.aap,v 1.1 2004/02/29 22:38:52 kedder Exp $
+# $Id: main.aap,v 1.2 2004/03/01 22:35:20 kedder Exp $
 
 :tree kedpm {filename = .*\.py}
-	_recipe.PythonSource += $name
+	_recipe.PYTHON_SOURCE += $name
 
 POT = po/messages.pot
+GLADE_STRINGS = glade/glade-msg.c
 TRANSLATIONS = `glob('po/*.po')`
 
 
@@ -36,8 +37,9 @@ $MODIRS:
 
 $TRANSLATIONS: $POT
 
-$POT: $PythonSource
-	:system pygettext -o $target $source
+$POT: $PYTHON_SOURCE $GLADE_STRINGS
+	:system pygettext -o $target $PYTHON_SOURCE
+	:system xgettext -a -j -o $target $GLADE_STRINGS 
 
 #translations: $Translations
 :filetype

@@ -5,6 +5,13 @@ Ked Password Manager: CHANGES
 Noteworthy changes in Ked Password Manager. Most recent changes are at
 the top.
 
+Version 0.5.0 (Upcoming)
+========================
+
+    * Translation infrastructure and russian translation added. Now it
+      is possible to translate KedPM to any language using usual gettext
+      tools.
+
 Version 0.4.0 (2004.02.29) 
 ==========================
 
