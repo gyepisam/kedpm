@@ -14,6 +14,11 @@
   <property name="resizable">True</property>
   <property name="destroy_with_parent">False</property>
   <property name="icon">cloud16.png</property>
+  <property name="decorated">True</property>
+  <property name="skip_taskbar_hint">False</property>
+  <property name="skip_pager_hint">False</property>
+  <property name="type_hint">GDK_WINDOW_TYPE_HINT_NORMAL</property>
+  <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
   <signal name="destroy" handler="on_wnd_main_destroy" last_modification_time="Thu, 21 Aug 2003 19:46:30 GMT"/>
   <signal name="selection_clear_event" handler="on_wnd_main_selection_clear_event" last_modification_time="Tue, 26 Aug 2003 21:07:23 GMT"/>
   <signal name="selection_get" handler="on_wnd_main_selection_get" last_modification_time="Tue, 26 Aug 2003 21:08:47 GMT"/>
@@ -295,67 +300,120 @@
 	  <property name="orientation">GTK_ORIENTATION_HORIZONTAL</property>
 	  <property name="toolbar_style">GTK_TOOLBAR_BOTH_HORIZ</property>
 	  <property name="tooltips">True</property>
+	  <property name="show_arrow">True</property>
 
 	  <child>
-	    <widget class="button" id="tb_save">
+	    <widget class="GtkToolButton" id="tb_save">
 	      <property name="visible">True</property>
 	      <property name="tooltip" translatable="yes">Save password database</property>
 	      <property name="label" translatable="yes">Save</property>
 	      <property name="use_underline">True</property>
-	      <property name="stock_pixmap">gtk-save</property>
+	      <property name="stock_id">gtk-save</property>
+	      <property name="visible_horizontal">True</property>
+	      <property name="visible_vertical">True</property>
+	      <property name="is_important">False</property>
 	      <signal name="clicked" handler="on_mi_save_activate" last_modification_time="Sun, 31 Aug 2003 17:53:42 GMT"/>
 	    </widget>
-	  </child>
-
-	  <child>
-	    <widget class="button" id="tb_add">
-	      <property name="visible">True</property>
-	      <property name="tooltip" translatable="yes">Add password to current category</property>
-	      <property name="label" translatable="yes">Add</property>
-	      <property name="use_underline">True</property>
-	      <property name="stock_pixmap">gtk-add</property>
-	      <property name="new_group">True</property>
-	      <signal name="clicked" handler="on_tb_add_clicked" last_modification_time="Sat, 30 Aug 2003 16:20:06 GMT"/>
-	    </widget>
 	    <packing>
-	      <property name="new_group">True</property>
+	      <property name="expand">False</property>
+	      <property name="homogeneous">True</property>
 	    </packing>
 	  </child>
 
 	  <child>
-	    <widget class="button" id="tb_edit">
+	    <widget class="GtkSeparatorToolItem" id="separatortoolitem1">
+	      <property name="visible">True</property>
+	      <property name="draw">True</property>
+	      <property name="visible_horizontal">True</property>
+	      <property name="visible_vertical">True</property>
+	    </widget>
+	    <packing>
+	      <property name="expand">False</property>
+	      <property name="homogeneous">False</property>
+	    </packing>
+	  </child>
+
+	  <child>
+	    <widget class="GtkToolButton" id="tb_add">
+	      <property name="visible">True</property>
+	      <property name="tooltip" translatable="yes">Add password to current category</property>
+	      <property name="label" translatable="yes">Add</property>
+	      <property name="use_underline">True</property>
+	      <property name="stock_id">gtk-add</property>
+	      <property name="visible_horizontal">True</property>
+	      <property name="visible_vertical">True</property>
+	      <property name="is_important">True</property>
+	      <signal name="clicked" handler="on_tb_add_clicked" last_modification_time="Sat, 30 Aug 2003 16:20:06 GMT"/>
+	    </widget>
+	    <packing>
+	      <property name="expand">False</property>
+	      <property name="homogeneous">True</property>
+	    </packing>
+	  </child>
+
+	  <child>
+	    <widget class="GtkToolButton" id="tb_edit">
 	      <property name="visible">True</property>
 	      <property name="tooltip" translatable="yes">Edit selected password</property>
 	      <property name="label" translatable="yes">Edit</property>
 	      <property name="use_underline">True</property>
-	      <property name="stock_pixmap">gtk-index</property>
+	      <property name="stock_id">gtk-index</property>
+	      <property name="visible_horizontal">True</property>
+	      <property name="visible_vertical">True</property>
+	      <property name="is_important">True</property>
 	      <signal name="clicked" handler="on_tb_edit_clicked" last_modification_time="Sat, 30 Aug 2003 16:20:12 GMT"/>
 	    </widget>
+	    <packing>
+	      <property name="expand">False</property>
+	      <property name="homogeneous">True</property>
+	    </packing>
 	  </child>
 
 	  <child>
-	    <widget class="button" id="tb_delete">
+	    <widget class="GtkToolButton" id="tb_delete">
 	      <property name="visible">True</property>
 	      <property name="label" translatable="yes">Delete</property>
 	      <property name="use_underline">True</property>
-	      <property name="stock_pixmap">gtk-delete</property>
+	      <property name="stock_id">gtk-delete</property>
+	      <property name="visible_horizontal">True</property>
+	      <property name="visible_vertical">True</property>
+	      <property name="is_important">False</property>
 	      <signal name="clicked" handler="on_tb_delete_clicked" last_modification_time="Sat, 18 Oct 2003 19:58:00 GMT"/>
 	    </widget>
+	    <packing>
+	      <property name="expand">False</property>
+	      <property name="homogeneous">True</property>
+	    </packing>
 	  </child>
 
 	  <child>
-	    <widget class="toggle" id="tb_flat_tree">
+	    <widget class="GtkSeparatorToolItem" id="separatortoolitem2">
+	      <property name="visible">True</property>
+	      <property name="draw">True</property>
+	      <property name="visible_horizontal">True</property>
+	      <property name="visible_vertical">True</property>
+	    </widget>
+	    <packing>
+	      <property name="expand">False</property>
+	      <property name="homogeneous">False</property>
+	    </packing>
+	  </child>
+
+	  <child>
+	    <widget class="GtkToggleToolButton" id="tb_flat_tree">
 	      <property name="visible">True</property>
 	      <property name="label" translatable="yes">Flatten</property>
 	      <property name="use_underline">True</property>
-	      <property name="stock_pixmap">gtk-sort-ascending</property>
+	      <property name="stock_id">gtk-sort-ascending</property>
+	      <property name="visible_horizontal">True</property>
+	      <property name="visible_vertical">True</property>
+	      <property name="is_important">True</property>
 	      <property name="active">False</property>
-	      <property name="inconsistent">False</property>
-	      <property name="new_group">True</property>
 	      <signal name="toggled" handler="on_tb_flat_tree_toggled" last_modification_time="Sun, 26 Oct 2003 15:49:09 GMT"/>
 	    </widget>
 	    <packing>
-	      <property name="new_group">True</property>
+	      <property name="expand">False</property>
+	      <property name="homogeneous">True</property>
 	    </packing>
 	  </child>
 	</widget>
@@ -432,7 +490,7 @@
 			  <property name="max_length">0</property>
 			  <property name="text" translatable="yes"></property>
 			  <property name="has_frame">True</property>
-			  <property name="invisible_char" translatable="yes">*</property>
+			  <property name="invisible_char">*</property>
 			  <property name="activates_default">True</property>
 			  <signal name="focus_in_event" handler="on_search_entry_focus_in_event" last_modification_time="Wed, 15 Oct 2003 20:09:54 GMT"/>
 			  <signal name="focus_out_event" handler="on_search_entry_focus_out_event" last_modification_time="Wed, 15 Oct 2003 20:12:17 GMT"/>
@@ -465,6 +523,7 @@
 		      <property name="label" translatable="yes">Find now</property>
 		      <property name="use_underline">True</property>
 		      <property name="relief">GTK_RELIEF_NORMAL</property>
+		      <property name="focus_on_click">True</property>
 		      <signal name="activate" handler="on_find_button_activate" last_modification_time="Wed, 27 Aug 2003 19:00:13 GMT"/>
 		      <signal name="clicked" handler="on_find_button_activate" last_modification_time="Wed, 27 Aug 2003 19:53:18 GMT"/>
 		    </widget>
@@ -484,6 +543,7 @@
 		      <property name="label" translatable="yes">Clear</property>
 		      <property name="use_underline">True</property>
 		      <property name="relief">GTK_RELIEF_NORMAL</property>
+		      <property name="focus_on_click">True</property>
 		      <signal name="activate" handler="on_clear_button_activate" last_modification_time="Wed, 27 Aug 2003 19:56:37 GMT"/>
 		      <signal name="clicked" handler="on_clear_button_activate" last_modification_time="Wed, 27 Aug 2003 19:58:56 GMT"/>
 		      <accelerator key="Escape" modifiers="GDK_CONTROL_MASK" signal="activate"/>
@@ -569,6 +629,11 @@
   <property name="resizable">False</property>
   <property name="destroy_with_parent">False</property>
   <property name="icon">cloud16.png</property>
+  <property name="decorated">True</property>
+  <property name="skip_taskbar_hint">False</property>
+  <property name="skip_pager_hint">False</property>
+  <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
+  <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
   <property name="has_separator">True</property>
   <signal name="response" handler="on_dlg_login_response" last_modification_time="Sun, 24 Aug 2003 12:45:20 GMT"/>
 
@@ -591,6 +656,7 @@
 	      <property name="label">gtk-cancel</property>
 	      <property name="use_stock">True</property>
 	      <property name="relief">GTK_RELIEF_NORMAL</property>
+	      <property name="focus_on_click">True</property>
 	      <property name="response_id">-6</property>
 	    </widget>
 	  </child>
@@ -604,6 +670,7 @@
 	      <property name="label">gtk-ok</property>
 	      <property name="use_stock">True</property>
 	      <property name="relief">GTK_RELIEF_NORMAL</property>
+	      <property name="focus_on_click">True</property>
 	      <property name="response_id">-5</property>
 	    </widget>
 	  </child>
@@ -745,7 +812,7 @@
 		      <property name="max_length">0</property>
 		      <property name="text" translatable="yes"></property>
 		      <property name="has_frame">True</property>
-		      <property name="invisible_char" translatable="yes">*</property>
+		      <property name="invisible_char">*</property>
 		      <property name="activates_default">True</property>
 		    </widget>
 		    <packing>
@@ -787,6 +854,11 @@
   <property name="modal">True</property>
   <property name="resizable">False</property>
   <property name="destroy_with_parent">False</property>
+  <property name="decorated">True</property>
+  <property name="skip_taskbar_hint">False</property>
+  <property name="skip_pager_hint">False</property>
+  <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
+  <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
   <property name="has_separator">True</property>
   <signal name="response" handler="on_dlg_about_response" last_modification_time="Sat, 23 Aug 2003 12:58:48 GMT"/>
 
@@ -809,6 +881,7 @@
 	      <property name="label" translatable="yes">_Credits</property>
 	      <property name="use_underline">True</property>
 	      <property name="relief">GTK_RELIEF_NORMAL</property>
+	      <property name="focus_on_click">True</property>
 	      <property name="response_id">1</property>
 	    </widget>
 	  </child>
@@ -823,6 +896,7 @@
 	      <property name="label">gtk-ok</property>
 	      <property name="use_stock">True</property>
 	      <property name="relief">GTK_RELIEF_NORMAL</property>
+	      <property name="focus_on_click">True</property>
 	      <property name="response_id">-6</property>
 	    </widget>
 	  </child>
@@ -941,6 +1015,11 @@
   <property name="modal">False</property>
   <property name="resizable">True</property>
   <property name="destroy_with_parent">False</property>
+  <property name="decorated">True</property>
+  <property name="skip_taskbar_hint">False</property>
+  <property name="skip_pager_hint">False</property>
+  <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
+  <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
   <property name="has_separator">True</property>
 
   <child internal-child="vbox">
@@ -964,6 +1043,7 @@
 	      <property name="label">gtk-ok</property>
 	      <property name="use_stock">True</property>
 	      <property name="relief">GTK_RELIEF_NORMAL</property>
+	      <property name="focus_on_click">True</property>
 	      <property name="response_id">-5</property>
 	    </widget>
 	  </child>
@@ -1144,6 +1224,11 @@
   <property name="modal">True</property>
   <property name="resizable">False</property>
   <property name="destroy_with_parent">False</property>
+  <property name="decorated">True</property>
+  <property name="skip_taskbar_hint">False</property>
+  <property name="skip_pager_hint">False</property>
+  <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
+  <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
   <property name="has_separator">True</property>
 
   <child internal-child="vbox">
@@ -1165,6 +1250,7 @@
 	      <property name="label">gtk-cancel</property>
 	      <property name="use_stock">True</property>
 	      <property name="relief">GTK_RELIEF_NORMAL</property>
+	      <property name="focus_on_click">True</property>
 	      <property name="response_id">-6</property>
 	    </widget>
 	  </child>
@@ -1178,6 +1264,7 @@
 	      <property name="label">gtk-ok</property>
 	      <property name="use_stock">True</property>
 	      <property name="relief">GTK_RELIEF_NORMAL</property>
+	      <property name="focus_on_click">True</property>
 	      <property name="response_id">-5</property>
 	    </widget>
 	  </child>
@@ -1270,6 +1357,11 @@
   <property name="modal">True</property>
   <property name="resizable">True</property>
   <property name="destroy_with_parent">False</property>
+  <property name="decorated">True</property>
+  <property name="skip_taskbar_hint">False</property>
+  <property name="skip_pager_hint">False</property>
+  <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
+  <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
   <property name="has_separator">True</property>
 
   <child internal-child="vbox">
@@ -1291,6 +1383,7 @@
 	      <property name="label">gtk-cancel</property>
 	      <property name="use_stock">True</property>
 	      <property name="relief">GTK_RELIEF_NORMAL</property>
+	      <property name="focus_on_click">True</property>
 	      <property name="response_id">-6</property>
 	    </widget>
 	  </child>
@@ -1304,6 +1397,7 @@
 	      <property name="label">gtk-ok</property>
 	      <property name="use_stock">True</property>
 	      <property name="relief">GTK_RELIEF_NORMAL</property>
+	      <property name="focus_on_click">True</property>
 	      <property name="response_id">-5</property>
 	    </widget>
 	  </child>
@@ -1406,7 +1500,7 @@
 		      <property name="max_length">0</property>
 		      <property name="text" translatable="yes"></property>
 		      <property name="has_frame">True</property>
-		      <property name="invisible_char" translatable="yes">*</property>
+		      <property name="invisible_char">*</property>
 		      <property name="activates_default">True</property>
 		    </widget>
 		    <packing>
@@ -1448,6 +1542,11 @@
   <property name="modal">True</property>
   <property name="resizable">False</property>
   <property name="destroy_with_parent">False</property>
+  <property name="decorated">True</property>
+  <property name="skip_taskbar_hint">False</property>
+  <property name="skip_pager_hint">False</property>
+  <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
+  <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
   <property name="has_separator">True</property>
 
   <child internal-child="vbox">
@@ -1468,6 +1567,7 @@
 	      <property name="label">gtk-cancel</property>
 	      <property name="use_stock">True</property>
 	      <property name="relief">GTK_RELIEF_NORMAL</property>
+	      <property name="focus_on_click">True</property>
 	      <property name="response_id">-6</property>
 	    </widget>
 	  </child>
@@ -1481,6 +1581,7 @@
 	      <property name="label">gtk-ok</property>
 	      <property name="use_stock">True</property>
 	      <property name="relief">GTK_RELIEF_NORMAL</property>
+	      <property name="focus_on_click">True</property>
 	      <property name="response_id">-5</property>
 	    </widget>
 	  </child>
@@ -1633,7 +1734,7 @@ Please choose the password which will be used to encrypt your passwords. It is v
 		      <property name="max_length">0</property>
 		      <property name="text" translatable="yes"></property>
 		      <property name="has_frame">True</property>
-		      <property name="invisible_char" translatable="yes">*</property>
+		      <property name="invisible_char">*</property>
 		      <property name="activates_default">True</property>
 		    </widget>
 		    <packing>
@@ -1654,7 +1755,7 @@ Please choose the password which will be used to encrypt your passwords. It is v
 		      <property name="max_length">0</property>
 		      <property name="text" translatable="yes"></property>
 		      <property name="has_frame">True</property>
-		      <property name="invisible_char" translatable="yes">*</property>
+		      <property name="invisible_char">*</property>
 		      <property name="activates_default">True</property>
 		    </widget>
 		    <packing>
@@ -1698,6 +1799,11 @@ Please choose the password which will be used to encrypt your passwords. It is v
   <property name="modal">False</property>
   <property name="resizable">True</property>
   <property name="destroy_with_parent">False</property>
+  <property name="decorated">True</property>
+  <property name="skip_taskbar_hint">False</property>
+  <property name="skip_pager_hint">False</property>
+  <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
+  <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
   <property name="has_separator">True</property>
 
   <child internal-child="vbox">
@@ -1719,6 +1825,7 @@ Please choose the password which will be used to encrypt your passwords. It is v
 	      <property name="label">gtk-close</property>
 	      <property name="use_stock">True</property>
 	      <property name="relief">GTK_RELIEF_NORMAL</property>
+	      <property name="focus_on_click">True</property>
 	      <property name="response_id">-6</property>
 	    </widget>
 	  </child>
@@ -1945,6 +2052,11 @@ Please choose the password which will be used to encrypt your passwords. It is v
   <property name="modal">True</property>
   <property name="resizable">True</property>
   <property name="destroy_with_parent">False</property>
+  <property name="decorated">True</property>
+  <property name="skip_taskbar_hint">False</property>
+  <property name="skip_pager_hint">False</property>
+  <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
+  <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
   <property name="has_separator">True</property>
 
   <child internal-child="vbox">
@@ -1966,6 +2078,7 @@ Please choose the password which will be used to encrypt your passwords. It is v
 	      <property name="label">gtk-cancel</property>
 	      <property name="use_stock">True</property>
 	      <property name="relief">GTK_RELIEF_NORMAL</property>
+	      <property name="focus_on_click">True</property>
 	      <property name="response_id">-6</property>
 	    </widget>
 	  </child>
@@ -1976,6 +2089,7 @@ Please choose the password which will be used to encrypt your passwords. It is v
 	      <property name="can_default">True</property>
 	      <property name="can_focus">True</property>
 	      <property name="relief">GTK_RELIEF_NORMAL</property>
+	      <property name="focus_on_click">True</property>
 	      <property name="response_id">-5</property>
 
 	      <child>
@@ -1987,6 +2101,10 @@ Please choose the password which will be used to encrypt your passwords. It is v
 		  <property name="yalign">0.5</property>
 		  <property name="xscale">0</property>
 		  <property name="yscale">0</property>
+		  <property name="top_padding">0</property>
+		  <property name="bottom_padding">0</property>
+		  <property name="left_padding">0</property>
+		  <property name="right_padding">0</property>
 
 		  <child>
 		    <widget class="GtkHBox" id="hbox9">
@@ -2092,6 +2210,8 @@ Ked Password Manager will try to parse it and fill some of the password fields a
 		  <property name="visible">True</property>
 		  <property name="can_focus">True</property>
 		  <property name="editable">True</property>
+		  <property name="overwrite">False</property>
+		  <property name="accepts_tab">True</property>
 		  <property name="justification">GTK_JUSTIFY_LEFT</property>
 		  <property name="wrap_mode">GTK_WRAP_NONE</property>
 		  <property name="cursor_visible">True</property>
@@ -2130,6 +2250,11 @@ Ked Password Manager will try to parse it and fill some of the password fields a
   <property name="modal">False</property>
   <property name="resizable">True</property>
   <property name="destroy_with_parent">False</property>
+  <property name="decorated">True</property>
+  <property name="skip_taskbar_hint">False</property>
+  <property name="skip_pager_hint">False</property>
+  <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
+  <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
   <property name="has_separator">True</property>
 
   <child internal-child="vbox">
@@ -2152,6 +2277,7 @@ Ked Password Manager will try to parse it and fill some of the password fields a
 	      <property name="label">gtk-ok</property>
 	      <property name="use_stock">True</property>
 	      <property name="relief">GTK_RELIEF_NORMAL</property>
+	      <property name="focus_on_click">True</property>
 	      <property name="response_id">-6</property>
 	    </widget>
 	  </child>
@@ -2187,6 +2313,8 @@ Ked Password Manager will try to parse it and fill some of the password fields a
 		  <property name="visible">True</property>
 		  <property name="can_focus">True</property>
 		  <property name="editable">False</property>
+		  <property name="overwrite">False</property>
+		  <property name="accepts_tab">True</property>
 		  <property name="justification">GTK_JUSTIFY_LEFT</property>
 		  <property name="wrap_mode">GTK_WRAP_NONE</property>
 		  <property name="cursor_visible">False</property>
@@ -2225,6 +2353,11 @@ Ked Password Manager will try to parse it and fill some of the password fields a
   <property name="modal">True</property>
   <property name="resizable">True</property>
   <property name="destroy_with_parent">False</property>
+  <property name="decorated">True</property>
+  <property name="skip_taskbar_hint">False</property>
+  <property name="skip_pager_hint">False</property>
+  <property name="type_hint">GDK_WINDOW_TYPE_HINT_DIALOG</property>
+  <property name="gravity">GDK_GRAVITY_NORTH_WEST</property>
   <property name="has_separator">True</property>
   <signal name="key_press_event" handler="on_dlg_patterns_key_press_event" last_modification_time="Sat, 17 Jan 2004 23:00:07 GMT"/>
 
@@ -2249,6 +2382,7 @@ Ked Password Manager will try to parse it and fill some of the password fields a
 	      <property name="label">gtk-ok</property>
 	      <property name="use_stock">True</property>
 	      <property name="relief">GTK_RELIEF_NORMAL</property>
+	      <property name="focus_on_click">True</property>
 	      <property name="response_id">-5</property>
 	    </widget>
 	  </child>
@@ -2412,7 +2546,7 @@ Ked Password Manager will try to parse it and fill some of the password fields a
 			  <property name="max_length">0</property>
 			  <property name="text" translatable="yes"></property>
 			  <property name="has_frame">True</property>
-			  <property name="invisible_char" translatable="yes">*</property>
+			  <property name="invisible_char">*</property>
 			  <property name="activates_default">True</property>
 			  <signal name="changed" handler="on_pattern_entry_changed" last_modification_time="Sun, 18 Jan 2004 12:15:02 GMT"/>
 			</widget>
@@ -2433,6 +2567,7 @@ Ked Password Manager will try to parse it and fill some of the password fields a
 			  <property name="label">gtk-add</property>
 			  <property name="use_stock">True</property>
 			  <property name="relief">GTK_RELIEF_NORMAL</property>
+			  <property name="focus_on_click">True</property>
 			  <signal name="clicked" handler="on_edit_pattern_clicked" last_modification_time="Sun, 18 Jan 2004 10:30:46 GMT"/>
 			</widget>
 			<packing>
@@ -2470,6 +2605,7 @@ Ked Password Manager will try to parse it and fill some of the password fields a
 		      <property name="label">gtk-new</property>
 		      <property name="use_stock">True</property>
 		      <property name="relief">GTK_RELIEF_NORMAL</property>
+		      <property name="focus_on_click">True</property>
 		      <signal name="clicked" handler="on_new_pattern_clicked" last_modification_time="Sun, 18 Jan 2004 12:52:26 GMT"/>
 		      <accelerator key="Escape" modifiers="0" signal="clicked"/>
 		    </widget>
@@ -2483,6 +2619,7 @@ Ked Password Manager will try to parse it and fill some of the password fields a
 		      <property name="label">gtk-delete</property>
 		      <property name="use_stock">True</property>
 		      <property name="relief">GTK_RELIEF_NORMAL</property>
+		      <property name="focus_on_click">True</property>
 		      <signal name="clicked" handler="on_delete_pattern_clicked" last_modification_time="Sun, 18 Jan 2004 13:14:19 GMT"/>
 		    </widget>
 		  </child>
