@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: cli.py,v 1.31 2004/02/28 18:45:20 kedder Exp $
+# $Id: cli.py,v 1.32 2004/02/29 12:26:24 kedder Exp $
 
 "Command line interface for Ked Password Manager"
 
@@ -236,10 +236,11 @@ long password correctly."""
 
     def complete_dirs(self, text, line, begidx, endidx):
         completing = line[:endidx].split(' ')[-1]
-        abspath = self.getAbsolutePath(completing)
+        base = completing[:completing.rfind('/')+1]
+        abspath = self.getAbsolutePath(base)
         dirs = self.pdb.getTree().getTreeFromPath(abspath).getBranches()
         compl = []
-        for dir in dirs:
+        for dir in dirs.keys():
             if dir.startswith(text):
                 compl.append(dir+'/')
         return compl
@@ -536,11 +537,9 @@ enter help set <option> for more info on particular option."""
 
     def complete_set(self, text, line, begidx, endidx):
         compl = []
-        #print self.conf.options
         for opt in self.conf.options.keys():
             if opt.startswith(text):
                 compl.append(opt)
-        #print compl
         return compl
 
     def help_set(self, arg):
