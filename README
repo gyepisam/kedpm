@@ -12,10 +12,10 @@ Ked Password Manager helps to manage large amounts of passwords and
 related information and simplifies tasks of searching and entering
 password data.
 
-Ked-PM written in python and can be run virtually on any platform python
+KedPM written in python and can be run virtually on any platform python
 interpreter can run.
 
-Ked-PM written as extensible framework, which allows to plug in custom
+KedPM written as extensible framework, which allows to plug in custom
 password database back-ends and custom user interface front-ends.
 Currently only Figaro PM back-end and CLI (Command Line Interface)
 front-end supported.
@@ -33,18 +33,18 @@ To run Ked Password Manager Command Line Interface, run::
 
     kedpm-cli
 
-kedpm-cli program should be located in your PATH.
+``kedpm-cli`` program should be located in your PATH.
 
-If you have Figaro Password Manager database kedpm will try to open
+If you have Figaro Password Manager database KedPM will try to open
 it. To do it properly, KedPM will ask you for valid password. 
 
 After the first run KedPM will make a backup of existing fpm database
-(located in file ~/.fpm/fpm) to file ~/.fpm.kedpm.bak. So if fpm will
-break for some reason, you will be able to restore your old database.
-Note, however, that database, saved by kedpm itself will not be backed
-up.
+(located in file ``~/.fpm/fpm``) to file ``~/.fpm.kedpm.bak``. So if fpm
+will break for some reason, you will be able to restore your old
+database.  Note, however, that database, saved by KedPM itself will not
+be backed up.
 
-If you have no Figaro Password Manager database at the moment, kedpm
+If you have no Figaro Password Manager database at the moment, KedPM
 will try to create one for you. It will ask you for a password to
 encrypt password data with. Then KedPM will create empty FPM database.
 
@@ -54,13 +54,13 @@ Command Line Interface
 Currently KedPM supports only command line interface (no GUI for now,
 but its going to change soon).
 
-However, cli should be quite intuitive for those, who has expirience
+However, CLI should be quite intuitive for those, who has expirience
 with linux shell. Password are placed in categories, like files
-are placed in directories. You can move between categories with 'cd'
-command, show contents of category with 'ls' command, and so on. 
+are placed in directories. You can move between categories with ``cd``
+command, show contents of category with ``ls`` command, and so on. 
 
-Full list of commands can be retrieved with 'help' command. You can get
-help on particular command using 'help <command>'.
+Full list of commands can be retrieved with ``help`` command. You can get
+help on particular command using ``help <command>``.
 
 
 .. vim: tw=72 nocindent
