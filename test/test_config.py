@@ -14,11 +14,11 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: test_config.py,v 1.2 2003/10/09 21:12:06 kedder Exp $
+# $Id: test_config.py,v 1.3 2003/10/11 17:41:05 kedder Exp $
 
 import unittest
 
-from kedpm.config import Configuration
+from kedpm.config import Configuration, Options, Option
 
 class ConfigTestCase(unittest.TestCase):
     def setUp(self):
@@ -26,14 +26,31 @@ class ConfigTestCase(unittest.TestCase):
         self.conf.open(fname="test/sample_config.xml")
         
     def test_readConfig(self):
-        self.assertEqual(self.conf.options["save-mode"].get(), "ask")
+        self.assertEqual(self.conf.options["save-mode"], "ask")
         self.assertEqual(len(self.conf.patterns), 2)
         self.assertEqual(self.conf.patterns["sample1"], 
                 "Username/Password: {user}/{password}")
 
+class OptionsTestCase(unittest.TestCase):
+    def test_option(self):
+        opt = Option('value', 'doc')
+        self.assertEqual(opt.get(), 'value')
+        self.assertEqual(opt.doc, 'doc')
+        
+    def test_options(self):
+        options = Options({
+            "save-mode": Option('ask', "Doc string"),
+        })
+        #import pdb; pdb.set_trace() 
+        self.assertEqual(options['save-mode'], 'ask')
+        self.assertEqual(options.getOption('save-mode').doc, 'Doc string')
 
 def suite():
-    return unittest.makeSuite(ConfigTestCase, 'test')
+    l = [
+        unittest.makeSuite(ConfigTestCase, 'test'),
+        unittest.makeSuite(OptionsTestCase, 'test'),
+    ]
+    return unittest.TestSuite(l)
 
 if __name__ == "__main__":
     unittest.main()

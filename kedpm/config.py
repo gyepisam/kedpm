@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: config.py,v 1.2 2003/10/09 21:12:05 kedder Exp $
+# $Id: config.py,v 1.3 2003/10/11 17:41:05 kedder Exp $
 
 """Configuration for Ked Password Manager"""
 from xml.dom import minidom
@@ -29,7 +29,7 @@ class Option:
     __value = None
     doc = ""
     def __init__(self, default=None, doc=""):
-        self.__value == default
+        self.__value = default
         self.doc = doc
 
     def __str__(self):
@@ -41,15 +41,17 @@ class Option:
     def set(self, value):
         self.__value = value
 
-#class Options (UserDict):
-#    available_options = {
-#        "save-mode": """One of three values:
-#    "ask": Ask user whether save or not when database changes;
-#    "no": Do not save modified database automatically;
-#    "auto": Save database automatically after every change."""
-#    }
-#    """Self-validationg options"""
-#    pass
+class Options (UserDict):
+    """List of self-validationg options"""
+
+    def getOption(self, key):
+        return UserDict.__getitem__(self, key)
+
+    def __getitem__(self, key):
+        return self.getOption(key).get()
+
+    def __setitem__(self, key, value):
+        self.getOption(key).set(value)
 
 class Configuration:
     """Configuration file interface"""
@@ -61,12 +63,12 @@ class Configuration:
         "save-mode": "ask"
     }
 
-    options = {
+    options = Options({
         "save-mode": Option('ask', """One of three values:
     "ask": Ask user whether save or not when database changes;
     "no": Do not save modified database automatically;
     "auto": Save database automatically after every change."""),
-    }
+    })
 
     patterns = {}
 
@@ -95,7 +97,8 @@ class Configuration:
             for child in item.childNodes:
                 item_value += child.data
             try:
-                self.options[item_id].set(item_value)
+                #self.options[item_id].set(item_value)
+                self.options[item_id] = item_value
             except KeyError:
                 # Ignore unrecognized options
                 pass

@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: cli.py,v 1.19 2003/10/09 21:12:06 kedder Exp $
+# $Id: cli.py,v 1.20 2003/10/11 17:41:05 kedder Exp $
 
 "Command line interface for Ked Password Manager"
 
@@ -217,7 +217,7 @@ long password correctly."""
             if answer=='' or answer.lower().startswith('y'):
                 self.do_save('')
     
-    def comlete_dirs(self, text, line, begidx, endidx):
+    def complete_dirs(self, text, line, begidx, endidx):
         dirs=self.pdb.getTree().getBranches()
         compl = []
         for dir in dirs:
@@ -300,7 +300,7 @@ Syntax:
         self.listPasswords(tree.getNodes())
 
     def complete_ls(self, text, line, begidx, endidx):
-        return self.comlete_dirs(text, line, begidx, endidx)
+        return self.complete_dirs(text, line, begidx, endidx)
     
     def do_cd(self, arg):
         '''change directory (catalog)
@@ -319,7 +319,7 @@ Syntax:
             self.updatePrompt()
 
     def complete_cd(self, text, line, begidx, endidx):
-        return self.comlete_dirs(text, line, begidx, endidx)
+        return self.complete_dirs(text, line, begidx, endidx)
     
     def do_pwd(self, arg):
         '''print name of current/working directory'''
@@ -330,7 +330,7 @@ Syntax:
         
 Syntax:
     show <regexp>
-            
+
 This will display contents of a password item in current category. If
 several items matched by <regexp>, list of them will be printed and you will be
 prompted to enter a number, pointing to password you want to look at.
@@ -445,7 +445,7 @@ Syntax:
         self.tryToSave()
 
     def complete_rename(self, text, line, begidx, endidx):
-        return self.comlete_dirs(text, line, begidx, endidx)
+        return self.complete_dirs(text, line, begidx, endidx)
 
     def do_help(self, arg):
         """Print help topic"""
@@ -480,26 +480,34 @@ enter help set <option> for more info on particular option."""
                 print "%s = %s" % (opt, value)
             return
         tokens = arg.split('=')
-        optname = tokens[0]
+        opt_name = tokens[0]
         try:
-            option = opts[optname]
+            opt_value = opts[opt_name]
         except KeyError:
             print "set: no such option: %s" % arg
             return
         if len(tokens) == 1:
             # show value of option
-            print "%s = %s" % (optname, option.get())
+            print "%s = %s" % (opt_name, opt_value)
         else:
             # set the value
-            option.set(' '.join(tokens[1:]))
+            opts[opt_name] = ' '.join(tokens[1:])
         
+    def complete_set(self, text, line, begidx, endidx):
+        compl = []
+        #print self.conf.options
+        for opt in self.conf.options.keys():
+            if opt.startswith(text):
+                compl.append(opt)
+        #print compl
+        return compl
 
     def help_set(self, arg):
         if not arg:
             print self.do_set.__doc__
             return
         try:
-            option = self.conf.options[arg]
+            option = self.conf.options.getOption(arg)
             print "%s: %s" % (arg, option.doc)
         except KeyError:
             print "set: no such option: %s" % arg
