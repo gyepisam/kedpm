@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: test_figaro.py,v 1.1 2003/08/06 20:25:14 kedder Exp $
+# $Id: test_figaro.py,v 1.2 2003/08/06 20:37:28 kedder Exp $
 
 import unittest
 from kedpm.plugins.pdb_figaro import PDBFigaro
@@ -38,6 +38,14 @@ class PDBFigaroTestCase(unittest.TestCase):
         tree_kedder = ptree['Kedder']
         assert tree_kedder
         self.assertEqual(len(tree_kedder.getNodes()), 1)
+
+    def test_decription(self):
+        tree_test = self.pdb.getTree()['Test']
+        pwds = tree_test.locate('url')
+        self.assertEqual(len(pwds), 2)
+        pwd_test2 = tree_test.locate('test2')
+        self.assertEqual(pwd_test2[0].password, 'test2 password')
+        
 
 def suite():
     return unittest.makeSuite(PDBFigaroTestCase, 'test')

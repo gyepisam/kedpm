@@ -1,2 +1,3 @@
 include AUTHORS COPYING INSTALL MANIFEST.in
 include kedpm-cli run_tests
+include test/fpm.sample
