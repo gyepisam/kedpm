@@ -8,6 +8,8 @@ Version 0.2.5 (??)
     you to save such long passwords, but it will break fpm compatibility
     - fpm will not handle such passwords correctly.
 
+    * GUI now can initialise Figaro database.
+
 Version 0.2.0 (2003-09-14)
 
     * Added graphical user interface (GUI) frontend

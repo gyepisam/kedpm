@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: cli.py,v 1.16 2003/09/21 18:18:08 kedder Exp $
+# $Id: cli.py,v 1.17 2003/09/21 19:39:16 kedder Exp $
 
 "Command line interface for Ked Password Manager"
 
@@ -229,7 +229,7 @@ long password correctly."""
         '''Quit KED Password Manager'''
         self.tryToSave()
         print "Exiting."
-        sys.exit()
+        sys.exit(0)
 
     def do_EOF(self, arg):
         '''The same as 'exit' command'''

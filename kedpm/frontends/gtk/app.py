@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: app.py,v 1.5 2003/09/12 18:19:53 kedder Exp $
+# $Id: app.py,v 1.6 2003/09/21 19:39:16 kedder Exp $
 
 ''' Gtk Frontend Application class '''
 
@@ -26,10 +26,11 @@ import gtk
 import sys
 
 from kedpm.plugins.pdb_figaro import PDBFigaro
+from kedpm.passdb import DatabaseNotExist
 
 import globals
 from wnd_main import MainWindow
-from dialogs import LoginDialog
+from dialogs import NewDatabaseDialog, LoginDialog
 from kedpm.frontends.frontend import Frontend
 
 class Application(object, Frontend):
@@ -41,11 +42,25 @@ class Application(object, Frontend):
         dlg = LoginDialog(pdb = self.pdb)
         password = dlg['password']
         #while 1:
-        res = dlg.run()
-        '''    print "returned"'''
-        if res != gtk.RESPONSE_OK:
-            print "Good bye."
-            sys.exit(1)
+        try:
+            res = dlg.run()
+            if res != gtk.RESPONSE_OK:
+                print "Good bye."
+                sys.exit(1)
+        except DatabaseNotExist:
+            dlg.destroyDialog()
+            newpass = self.createNewDatabase()
+            if newpass is None:
+                sys.exit(1)
+            self.pdb.open(newpass)
+
+    def createNewDatabase(self):
+        """Create new password database and return password for created
+        database"""
+        dlg = NewDatabaseDialog()
+        newpass = dlg.run()
+        self.pdb.create(newpass)
+        return newpass
 
     def mainLoop(self):
         globals.app = self # Make application instance available to all modules

@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: dialogs.py,v 1.8 2003/09/21 18:18:08 kedder Exp $
+# $Id: dialogs.py,v 1.9 2003/09/21 19:39:16 kedder Exp $
 
 '''Dialog classes'''
 
@@ -25,6 +25,28 @@ from kedpm.exceptions import WrongPassword
 from kedpm import password, __version__
 import globals
 
+class NewDatabaseDialog(Dialog):
+    name = "dlg_new_database"
+    def __init__(self):
+        super(NewDatabaseDialog, self).__init__(transient_for=None)
+
+    def run(self):
+        """Return new selected password. None if Cancel button pressed."""
+        while 1:
+            res = self.window.run()
+            if res != gtk.RESPONSE_OK:
+                return None
+            self['message'].show()
+            if self['password'].get_text() != self['repeat'].get_text():
+                self['message'].set_markup('<span color="red"><b>Passwords don\'t match. Please try again.</b></span>')
+            elif self['password'].get_text() == "":
+                self['message'].set_markup('<span color="red"><b>Password should not be empty.</b></span>')
+            else:
+                newpass = self['password'].get_text()
+                self.destroyDialog()
+                return newpass
+            
+            
 class LoginDialog(Dialog):
     name = "dlg_login"
     def __init__(self, pdb):
@@ -35,16 +57,16 @@ class LoginDialog(Dialog):
         password = self['password']
         self.message = self['message']
         while 1:
-            res = self.window.run()
-            if res != gtk.RESPONSE_OK:
-                return res
-            self.message.show()
             try:
                 self.pdb.open(password.get_text())
                 break
             except WrongPassword:
                 self.message.set_markup('<span color="red"><b>Password incorrect. Please try again</b></span>')
                 password.select_region(0, len(password.get_text()))
+            res = self.window.run()
+            if res != gtk.RESPONSE_OK:
+                return res
+            self.message.show()
         self.destroyDialog()
         return res
 

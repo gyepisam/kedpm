@@ -7,6 +7,7 @@ test:
 	
 clean:
 	./setup.py clean
+	rm -r build
 	
 install:
 	./setup.py install

@@ -14,11 +14,12 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: frontend.py,v 1.1 2003/09/12 18:48:28 kedder Exp $
+# $Id: frontend.py,v 1.2 2003/09/21 19:39:16 kedder Exp $
 
 '''Ked Password Manager frontend abstraction.'''
 
 from shutil import copyfile
+import sys
 
 class Frontend:
     def mainLoop(self):
