@@ -1,3 +1,10 @@
+2003-08-17 21:56  Andrey Lebedev <andrey@micro.lt>
+
+	* ChangeLog, kedpm/passdb.py, kedpm/frontends/cli.py,
+	kedpm/plugins/pdb_figaro.py, test/test_figaro.py, NEWS: If KedPM
+	detects that it had opened database saved by FPM, it makes a
+	backup.
+
 2003-08-17 13:20  Andrey Lebedev <andrey@micro.lt>
 
 	* kedpm/frontends/cli.py: password editing improved

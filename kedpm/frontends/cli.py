@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: cli.py,v 1.10 2003/08/17 18:56:18 kedder Exp $
+# $Id: cli.py,v 1.11 2003/08/17 19:38:28 kedder Exp $
 
 "Command line interface for Ked Password Manager"
 
@@ -190,6 +190,12 @@ try 'help' for brief description of available commands
 
         pwd.update(input)
         #return pwd
+
+    def tryToSave(self):        
+        if self.modified:
+            answer = raw_input("Database was modified. Do you want to save it now? [Y/n]: ")
+            if answer=='' or answer.lower().startswith('y'):
+                self.do_save('')
     
     def comlete_dirs(self, text, line, begidx, endidx):
         dirs=self.pdb.getTree().getBranches()
@@ -207,6 +213,7 @@ try 'help' for brief description of available commands
     
     def do_exit(self, arg):
         '''Quit KED Password Manager'''
+        self.tryToSave()
         print "Exiting."
         sys.exit()
 
@@ -302,6 +309,7 @@ receiving that number, you will be able to edit picked password.
         else:
             print "No password selected"
         self.modified = 1
+        self.tryToSave()
 
     def do_new(self, arg):
         '''Add new password to current category. You will be prompted to enter
@@ -315,10 +323,14 @@ fields.'''
             tree = self.getPwd()
             tree.addNode(new_pass)
             self.modified = 1
+        self.tryToSave()
 
     def do_save(self, arg):
         '''Save current password tree to a file'''
+        sys.stdout.write("Saving...")
+        sys.stdout.flush()
         self.pdb.save()
+        print "OK"
         self.modified = 0
 
     def run(self):
@@ -338,5 +350,8 @@ fields.'''
             copyfile(self.pdb.default_db_filename, backupfile)
         
         self.updatePrompt()
-        self.cmdloop()
+        try:
+            self.cmdloop()
+        except KeyboardInterrupt:
+            self.do_exit("")
 
