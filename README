@@ -84,7 +84,7 @@ directories. You can move between categories with ``cd`` command, show
 contents of category with ``ls`` command, and so on. 
 
 There is one difference however: passwords in database don't have unique
-identifiers, like files in filesystem. Passwords in KedPM identified by
+identifiers, like files in file-system. Passwords in KedPM identified by
 their contents. For example, lets say you have a saved a password for
 FTP login to your site ``www.homepage.org``. To display that password
 all you need to type is ``show homepage``. This command will find the
@@ -95,5 +95,36 @@ with that word, you will be able to choose one from the presented list.
 Full list of commands can be retrieved with ``help`` command. You can get
 help on particular command using ``help <command>``.
 
+
+The "Parser" feature
+====================
+
+One of the essential functions of the password manager is helping you
+to retrieve your passwords. On the other hand, password manager should
+let you input new passwords to the database in convenient way. 
+
+The simplest way to enter the password that comes in mind is simple
+dialog with password data fields. Today the substantial amount of
+passwords come by email and entering such passwords is not very
+convenient: you need to copy and paste several times, switching between
+two programs after every operation.
+
+The Parser feature of Ked Password manager try to solve that problem (at
+least make it smaller). Parser asks you for a mail and tries to figure
+out what information can be useful for storing in database. Parser
+recognizes several common patterns, which can occur in password mails.
+For example::
+
+    username/password: kedder/secret
+
+or::
+
+    user    : kedder
+    password: secret
+    hostname: kedpm.sourceforge.net
+
+Parser feature is available in GUI from "Edit->Parse password" menu
+item. In command line mode you can use ``new -p`` command - it will
+fire up your favorite text editor for you to provide mail text.
 
 .. vim: tw=72 nocindent et

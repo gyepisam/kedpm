@@ -13,8 +13,7 @@ Version 0.3.0 (??)
     * ``rmdir`` and ``mv`` commands were added to CLI (Patch #825957).
     Thanks indygena!
 
-    * Parser feature added. It will help you incorporate passwords from
-    your mails to database more efficiently.
+    * Parser feature added.H
 
     * Support for fpm-0.58 databases with longer passwords (up to
     256 characters). Not tested yet.
