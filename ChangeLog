@@ -1,0 +1,82 @@
+2003-08-14 01:01  Andrey Lebedev <andrey@micro.lt>
+
+	* kedpm/password_tree.py, kedpm/plugins/pdb_figaro.py,
+	test/test_figaro.py, test/test_password_tree.py: basic fpm xml
+	restoring from tree implemented
+
+2003-08-13 01:08  Andrey Lebedev <andrey@micro.lt>
+
+	* kedpm/plugins/pdb_figaro.py, test/test_figaro.py: preparing for
+	figaro saving implementation
+
+2003-08-12 23:02  Andrey Lebedev <andrey@micro.lt>
+
+	* kedpm/frontends/cli.py: ls on nonexistant direcrory doesn't fail
+
+2003-08-12 00:29  Andrey Lebedev <andrey@micro.lt>
+
+	* kedpm/password.py, kedpm/frontends/cli.py, test/test_password.py:
+	Basic password editing support in cli. No saving implemented yet
+	though.
+
+2003-08-11 23:14  Andrey Lebedev <andrey@micro.lt>
+
+	* INSTALL, kedpm/plugins/pdb_figaro.py, test/test_figaro.py:
+	support for python-2.1 added
+
+2003-08-08 01:26  Andrey Lebedev <andrey@micro.lt>
+
+	* .cvsignore, kedpm/password.py, kedpm/password_tree.py,
+	kedpm/frontends/cli.py, kedpm/plugins/pdb_figaro.py,
+	test/test_password.py, test/test_password_tree.py: Moved to new
+	password infrastructure. Password field are now defined in
+	structure
+
+2003-08-07 22:07  Andrey Lebedev <andrey@micro.lt>
+
+	* kedpm/frontends/cli.py: show password immediately if only one to
+	show
+
+2003-08-07 21:56  Andrey Lebedev <andrey@micro.lt>
+
+	* kedpm-cli, kedpm/plugins/pdb_figaro.py: xml parsing bug in fpm
+	plugin fixed
+
+2003-08-06 23:37  Andrey Lebedev <andrey@micro.lt>
+
+	* MANIFEST.in, test/test_figaro.py: one more figaro test for
+	decription quality
+
+2003-08-06 23:25  Andrey Lebedev <andrey@micro.lt>
+
+	* kedpm/frontends/cli.py, test/fpm.sample, test/test_figaro.py:
+	added simple figaro unittest
+
+2003-08-06 22:55  Andrey Lebedev <andrey@micro.lt>
+
+	* kedpm/__init__.py: increment version
+
+2003-08-05 22:03  Andrey Lebedev <andrey@micro.lt>
+
+	* .cvsignore: ignoring distribution files
+
+2003-08-05 21:32  Andrey Lebedev <andrey@micro.lt>
+
+	* AUTHORS, MANIFEST.in, Makefile, README, kedpm-cli, run_tests,
+	INSTALL, setup.py, COPYING, kedpm/__init__.py, kedpm/crypt.py,
+	kedpm/exceptions.py, kedpm/passdb.py, kedpm/password.py,
+	kedpm/password_tree.py, kedpm/frontends/__init__.py,
+	kedpm/frontends/cli.py, kedpm/plugins/__init__.py,
+	kedpm/plugins/pdb_figaro.py, test/__init__.py,
+	test/test_password_tree.py: initial checkin
+
+2003-08-05 21:32  Andrey Lebedev <andrey@micro.lt>
+
+	* AUTHORS, MANIFEST.in, Makefile, README, kedpm-cli, run_tests,
+	INSTALL, setup.py, COPYING, kedpm/__init__.py, kedpm/crypt.py,
+	kedpm/exceptions.py, kedpm/passdb.py, kedpm/password.py,
+	kedpm/password_tree.py, kedpm/frontends/__init__.py,
+	kedpm/frontends/cli.py, kedpm/plugins/__init__.py,
+	kedpm/plugins/pdb_figaro.py, test/__init__.py,
+	test/test_password_tree.py: Initial revision
+

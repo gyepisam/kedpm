@@ -1,0 +1,7 @@
+2003-08-05 0.0.2
+
+  * First public release. All it can do is read Figaro Password Manager
+    database files and display passwords to user via cli interface.
+
+
+ vim: tw=72
