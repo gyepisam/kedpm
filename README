@@ -2,7 +2,7 @@
 Ked Password Manager: README
 ============================
 
-Copyright (c) 2003 Andrey Lebedev <andrey@micro.lt>
+Copyright (c) 2003 Andrey Lebedev <andrey at micro.lt>
 
 
 About
@@ -58,6 +58,15 @@ However, CLI should be quite intuitive for those, who has expirience
 with linux shell. Password are placed in categories, like files
 are placed in directories. You can move between categories with ``cd``
 command, show contents of category with ``ls`` command, and so on. 
+
+There is one difference however: passwords in database don't have unique
+identifiers, like files in filesystem. Passwords in KedPM identified by
+their contents. For example, lets say you have a saved a password for
+ftp login to your site ``www.homepage.org``. To display that password
+all you need to type is ``show homepage``. This command will find the
+password, that contain word ``homepage`` in one of its fields, and
+display it to you. If KedPM has found several different password records
+with that word, you will be able to choose one from the presented list.
 
 Full list of commands can be retrieved with ``help`` command. You can get
 help on particular command using ``help <command>``.

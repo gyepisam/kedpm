@@ -2,7 +2,7 @@
 Ked Password Manager
 ====================
 
-Copyright (c) 2003 Andrey Lebedev <andrey@micro.lt>
+Copyright (c) 2003 Andrey Lebedev <andrey at micro.lt>
 
 
 Prerequisites
@@ -37,4 +37,4 @@ choose to do this, take note of the message at the end of installation
 and modify the python path accordingly.
 
 
- vim: tw=72
+.. vim: tw=72
