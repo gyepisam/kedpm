@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: pdb_figaro.py,v 1.13 2003/10/25 18:47:59 kedder Exp $
+# $Id: pdb_figaro.py,v 1.14 2003/10/27 13:29:43 kedder Exp $
 
 """ Figaro password manager database plugin """
 
@@ -68,6 +68,11 @@ class PDBFigaro (PasswordDatabase):
     filename = None
     native = 0
     #default_db_filename = 'test/fpm.sample'
+
+    # default versions
+    FULL_VERSION = "00.53.00"
+    DISPLAY_VERSION = "0.53"
+    MIN_VERSION = "00.50.00"
 
     def open(self, password, fname=""):
         """ Open figaro password database and construct password tree """
