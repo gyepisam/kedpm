@@ -16,6 +16,9 @@ Version 0.3.0 (??)
     * Parser feature added. It will help you incorporate passwords from
     your mails to password database more efficiently.
 
+    * Support for fpm-0.58 databases with longer passwords (up to
+    256 characters).
+
     * Various GUI usability enhancements.
 
 Version 0.2.5 (2003-09-21)
@@ -54,4 +57,4 @@ Version 0.0.2 (2003-08-05)
     interface;
 
 
- vim: tw=72 et fo=ta
+ vim: tw=72 et fo=ta nocindent

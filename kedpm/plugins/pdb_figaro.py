@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: pdb_figaro.py,v 1.12 2003/10/14 21:30:43 kedder Exp $
+# $Id: pdb_figaro.py,v 1.13 2003/10/25 18:47:59 kedder Exp $
 
 """ Figaro password manager database plugin """
 
@@ -89,6 +89,17 @@ class PDBFigaro (PasswordDatabase):
     def convDomToTree(self, fpm):
         'Read figaro xml database and create password tree from it'
         
+        root = fpm.documentElement
+        # Save version information
+        self.FULL_VERSION = root.getAttribute('full_version')
+        self.MIN_VERSION = root.getAttribute('min_version')
+        self.DISPLAY_VERSION = root.getAttribute('display_version')
+        
+        # Support long passwords of fpm-0.58
+        if self.MIN_VERSION >="00.58.00":
+            global FPM_PASSWORD_LEN
+            FPM_PASSWORD_LEN = 256
+
         keyinfo = fpm.documentElement.getElementsByTagName("KeyInfo")[0]
         self._salt = keyinfo.getAttribute('salt')
         vstring = keyinfo.getAttribute('vstring')
@@ -139,9 +150,9 @@ class PDBFigaro (PasswordDatabase):
         domimpl = minidom.getDOMImplementation()
         document= domimpl.createDocument("http://kedpm.sourceforge.net/xml/fpm", "FPM", None)
         root = document.documentElement
-        root.setAttribute('full_version', '00.53.00')
-        root.setAttribute('min_version', '00.50.00')
-        root.setAttribute('display_version', '0.53')
+        root.setAttribute('full_version', self.FULL_VERSION)
+        root.setAttribute('min_version', self.MIN_VERSION)
+        root.setAttribute('display_version', self.DISPLAY_VERSION)
         root.setAttribute('generator', 'kedpm')
         # KeyInfo tag
         keyinfo = document.createElement('KeyInfo')

@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: test_figaro.py,v 1.9 2003/09/21 18:18:08 kedder Exp $
+# $Id: test_figaro.py,v 1.10 2003/10/25 18:47:59 kedder Exp $
 
 import os
 import unittest
@@ -93,6 +93,10 @@ class PDBFigaroTestCase(unittest.TestCase):
     def test_native(self):
         self.assertEqual(self.pdb.native, 0)
 
+    def test_versions(self):
+        self.assertEqual(self.pdb.FULL_VERSION, '00.53.00')
+        self.assertEqual(self.pdb.MIN_VERSION, '00.50.00')
+        self.assertEqual(self.pdb.DISPLAY_VERSION, '0.53')
 
 
 class SavedFigaroTestCase(PDBFigaroTestCase):
