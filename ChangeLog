@@ -1,3 +1,29 @@
+2003-08-23 00:53  Andrey Lebedev <andrey@micro.lt>
+
+	* kedpm-gtk, glade/kedpm.glade, glade/kedpm.gladep,
+	kedpm/frontends/gtk/__init__.py, kedpm/frontends/gtk/app.py:
+	starting gui support
+
+2003-08-20 22:36  Andrey Lebedev <andrey@micro.lt>
+
+	* NEWS: Date of release updated
+
+2003-08-20 22:32  Andrey Lebedev <andrey@micro.lt>
+
+	* setup.py: trove added
+
+2003-08-20 22:13  Andrey Lebedev <andrey@micro.lt>
+
+	* NEWS: paraphrase
+
+2003-08-20 21:59  Andrey Lebedev <andrey@micro.lt>
+
+	* INSTALL, README: typo fixes
+
+2003-08-20 21:55  Andrey Lebedev <andrey@micro.lt>
+
+	* ChangeLog, INSTALL: info about running tests
+
 2003-08-20 00:19  Andrey Lebedev <andrey@micro.lt>
 
 	* kedpm/__init__.py: incrementing version
