@@ -14,13 +14,55 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: password_tree.py,v 1.2 2003/08/07 22:26:11 kedder Exp $
+# $Id: password_tree.py,v 1.3 2003/08/13 22:01:59 kedder Exp $
 
 """ Password items organized in recursive tree """
 
 import re
 
 from kedpm.password import Password
+
+class PasswordTreeIterator:
+    def __init__(self, tree, parent=None):
+        self.parent = None
+        self.pass_index = 0
+        self.branch_index = 0
+        self.branches = tree.getBranches().keys()
+        self.branches.sort()
+        self.br_iterator = None
+        self.stopped = 0
+        self.tree = tree
+
+    def getCurrentCategory(self):
+        return self.branches[self.branch_index]
+        
+    def next(self):
+
+        '''This will iterate through whole password tree. next() method will
+        consequently return every item in password tree.'''
+        
+        if len(self.branches) > self.branch_index:
+            if self.br_iterator:
+                nxt = self.br_iterator.next()
+                if nxt:
+                    return nxt
+                self.branch_index += 1
+                self.br_iterator = None
+                return self.next()
+            else:
+                self.br_iterator = self.tree[self.branches[self.branch_index]].getIterator()
+                return self.next()
+
+        else:
+            # iterate on passwords
+            nodes = self.tree.getNodes()
+            if len(nodes) > self.pass_index:
+                pwd = nodes[self.pass_index]
+                self.pass_index += 1
+                return pwd
+            else:
+                return None
+                
 
 class PasswordTree:
     _nodes = []
@@ -92,7 +134,10 @@ class PasswordTree:
                 continue
             normal.append(pathitem)
         return normal
-        
+    
+    def getIterator(self):
+        return PasswordTreeIterator(self)
+    
     def asString(self, indent = 0):
         output = ""
         indstr = " " * (indent*4)

@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: test_figaro.py,v 1.4 2003/08/12 22:08:47 kedder Exp $
+# $Id: test_figaro.py,v 1.5 2003/08/13 22:02:00 kedder Exp $
 
 import unittest
 from kedpm.plugins.pdb_figaro import PDBFigaro
@@ -62,6 +62,16 @@ class PDBFigaroTestCase(unittest.TestCase):
         
         unrotated = self.pdb._unrotate(bin)
         self.assertEqual(str, unrotated)
+
+    def test_encription(self):
+        strings = ["FIGARO ENCRYPTION TEST", "small"]
+        for str in strings:
+            encrypted = self.pdb.encrypt(str)
+            decrypted = self.pdb.decrypt(encrypted)
+            self.assertEqual(str, decrypted)
+
+    def test_buildPasswordTree(self):
+        self.pdb.buildPasswordTree()
 
 class FigaroCryptoTestCase(unittest.TestCase):
     def test_unrotate(self):

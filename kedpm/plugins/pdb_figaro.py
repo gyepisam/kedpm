@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: pdb_figaro.py,v 1.5 2003/08/12 22:08:47 kedder Exp $
+# $Id: pdb_figaro.py,v 1.6 2003/08/13 22:02:00 kedder Exp $
 
 """ Figaro password manager database plugin """
 
@@ -53,8 +53,8 @@ class PDBFigaro (PasswordDatabase):
         self._salt = keyinfo.getAttribute('salt')
         vstring = keyinfo.getAttribute('vstring')
         if self.decrypt(vstring) != "FIGARO":
-           raise WrongPassword, "Wrong password"
-       
+            raise WrongPassword, "Wrong password"
+
         nodes = fpm.documentElement.getElementsByTagName("PasswordItem")
         for node in nodes:
             category = self._getTagData(node, "category")
@@ -62,6 +62,45 @@ class PDBFigaro (PasswordDatabase):
             if not branch:
                 branch = self._pass_tree.addBranch(category)
             branch.addNode(self._getPasswordFromNode(node))
+
+    def buildPasswordTree(self):
+        domimpl = minidom.getDOMImplementation()
+        document= domimpl.createDocument("http://kedpm.sourceforge.net/xml/fpm", "FPM", None)
+        root = document.documentElement
+        root.setAttribute('full_version', '00.53.00')
+        root.setAttribute('min_version', '00.50.00')
+        root.setAttribute('display_version', '0.53')
+        # KeyInfo tag
+        keyinfo = document.createElement('KeyInfo')
+        keyinfo.setAttribute('salt', self._salt)
+        keyinfo.setAttribute('vstring', self.encrypt('FiGARO'))
+        root.appendChild(keyinfo)
+        # PasswordList tag
+        passwordlist = document.createElement('PasswordList')
+        props = ['title', 'user', 'url', 'notes', 'password']
+        iter = self._pass_tree.getIterator()
+        while 1:
+            pwd = iter.next()
+            if pwd is None:
+                break
+            pwitem = document.createElement('PasswordItem')
+            for prop in props:
+                pr_node_text = document.createTextNode(self.encrypt(pwd[prop]))
+                pr_node = document.createElement(prop)
+                pr_node.appendChild(pr_node_text)
+                pwitem.appendChild(pr_node)
+
+            category = document.createElement('Category')
+            cat_text = document.createTextNode(self.encrypt(iter.getCurrentCategory()))
+            category.appendChild(cat_text)
+            pwitem.appendChild(category)
+            
+            passwordlist.appendChild(pwitem)
+        root.appendChild(passwordlist)
+
+        
+        #print root.toxml()
+        
     
     def _getPasswordFromNode(self, node):
         ''' Create password instance from given fpm node '''
@@ -85,7 +124,15 @@ class PDBFigaro (PasswordDatabase):
 
     def encrypt(self, field):
         ''' Encrypt FPM encoded field '''
-        pass
+        hash=MD5.new()
+        hash.update(self._salt + self._password)
+        key = hash.digest()
+        bf = Blowfish.new(key)
+        noised = self._addNoise(field)
+        rotated = self._rotate(noised)
+        encrypted = bf.encrypt(rotated)
+        hexstr = self._bin_to_hex(encrypted)
+        return hexstr
 
     def decrypt(self, field):
         ''' Decrypt FPM encoded field '''
@@ -93,8 +140,8 @@ class PDBFigaro (PasswordDatabase):
         hash.update(self._salt + self._password)
         key = hash.digest()
         bf = Blowfish.new(key)
-        hexstr = self._hex_to_bin(field)
-        rotated = bf.decrypt(hexstr)
+        binstr = self._hex_to_bin(field)
+        rotated = bf.decrypt(binstr)
         plaintext = self._unrotate(rotated)
         return plaintext
 

@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: test_password_tree.py,v 1.2 2003/08/07 22:26:11 kedder Exp $
+# $Id: test_password_tree.py,v 1.3 2003/08/13 22:02:00 kedder Exp $
 
 import unittest
 from kedpm.password_tree import PasswordTree
@@ -72,9 +72,68 @@ class PasswordTreeTestCase(unittest.TestCase):
         self.assertEqual(root, self.ptree)
         root = self.ptree.getTreeFromPath(['subdir'])
         self.assertEqual(root, self.subdir)
-                            
+
+class PasswordTreeIteratorTestCase(unittest.TestCase):
+    def setUp(self):
+        # We will form such tree here:
+        # root
+        #  +-br1
+        #    +-br1.1
+        #      +-pw0
+        #      +-pw1
+        #    +-pw2
+        #    +-pw3
+        #  +-br2
+        #    +-br2.1
+        #      +-pw4
+        #    +-br2.2
+        #      +-pw5
+        #      +-pw6
+        #    +-pw7
+        #  +-pw8
+        #  +-pw9
+        #
+        self.pwds = []
+        for i in range(10):
+            pwd = Password(host = "host%d" % i, name = "name%d" % i , password = "password%d" % i)
+            self.pwds.append(pwd)
+
+        ptree = PasswordTree()
+        br1 = ptree.addBranch('br1')
+        br11 = br1.addBranch('br2')
+        br11.addNode(self.pwds[0])
+        br11.addNode(self.pwds[1])
+        br1.addNode(self.pwds[2])
+        br1.addNode(self.pwds[3])
+        
+        br2 = ptree.addBranch('br2')
+        br2.addNode(self.pwds[7])
+        br21 = br2.addBranch('br21')
+        br22 = br2.addBranch('br22')
+        br21.addNode(self.pwds[4])
+        br22.addNode(self.pwds[5])
+        br22.addNode(self.pwds[6])
+        ptree.addNode(self.pwds[8])
+        ptree.addNode(self.pwds[9])       
+        
+        self.ptree = ptree
+
+    def test_order(self):
+        iter = self.ptree.getIterator()
+        for i in range(10):
+            pwd = iter.next()
+            self.assertEqual(pwd, self.pwds[i])
+        pwd = iter.next()
+        self.assertEqual(pwd, None)
+        pwd = iter.next()
+        self.assertEqual(pwd, None)
+         
 def suite():
-    return unittest.makeSuite(PasswordTreeTestCase, 'test')
+    l = [
+        unittest.makeSuite(PasswordTreeTestCase, 'test'),
+        unittest.makeSuite(PasswordTreeIteratorTestCase, 'test')
+    ]
+    return unittest.TestSuite(l)
 
 if __name__ == "__main__":
     unittest.main()
