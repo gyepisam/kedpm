@@ -14,13 +14,14 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: password_tree.py,v 1.6 2003/08/24 21:51:59 kedder Exp $
+# $Id: password_tree.py,v 1.7 2003/09/04 20:28:59 kedder Exp $
 
 """ Password items organized in recursive tree """
 
 import re
 
-from kedpm.password import Password
+from password import Password
+from exceptions import RenameError
 
 class PasswordTreeIterator:
     def __init__(self, tree, parent=None):
@@ -123,6 +124,25 @@ class PasswordTree:
         for pathitem in path:
             tree = tree[pathitem]
         return tree
+
+    def renameBranch(self, path, newname):
+        '''Set new name for the given branch. Do not rename tree root - just
+        leave it as is. Tree rood don't have any name anyway'''
+        path = self.normalizePath(path)
+        if not path:
+            return
+        parent_tree = self.getTreeFromPath(path[:-1])
+        oldname = path[-1]
+        try:
+            self.getTreeFromPath(path[:-1] + [newname])
+        except KeyError:
+            pass
+        else:
+            raise RenameError, 'category %s already exists' % newname
+        branches = parent_tree.getBranches()
+        cat = branches[oldname]
+        del branches[oldname]
+        branches[newname] = cat
 
     def normalizePath(self, path):
         '''reduce .. and . items from path

@@ -15,15 +15,17 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: exceptions.py,v 1.1 2003/08/05 18:32:18 kedder Exp $
+# $Id: exceptions.py,v 1.2 2003/09/04 20:28:59 kedder Exp $
 
 
 class DataRequired (Exception):
-    """ Raised when additional data is required for operation
-    """
+    """ Raised when additional data is required for operation"""
     pass
 
 class WrongPassword (DataRequired):
     """ Raised when supplied password is incorrect """
+    pass
 
+class RenameError(KeyError):
+    """Raised when category renamed to something, that already exists"""
     pass

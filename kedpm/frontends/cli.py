@@ -14,14 +14,14 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: cli.py,v 1.12 2003/08/18 18:53:26 kedder Exp $
+# $Id: cli.py,v 1.13 2003/09/04 20:28:59 kedder Exp $
 
 "Command line interface for Ked Password Manager"
 
 from kedpm import __version__
 from kedpm.plugins.pdb_figaro import PDBFigaro, FigaroPassword
 from kedpm.passdb import DatabaseNotExist
-from kedpm.exceptions import WrongPassword
+from kedpm.exceptions import WrongPassword, RenameError
 from kedpm import password
 from getpass import getpass
 from cmd import Cmd
@@ -355,7 +355,33 @@ Creates new password category in current one.
 
         pwd = self.getPwd()
         pwd.addBranch(arg.strip())
+
+    def do_rename(self, arg):
+        '''rename category
         
+Syntax:
+    rename <category> <new_name>
+'''
+        args = arg.split()
+        if len(args) != 2:
+            print '''Syntax:
+    rename <category> <new_name>
+'''
+            return
+        oldname = args[0]
+        newname = args[1]
+        try:
+            self.pdb.getTree().renameBranch(self.pwd+[oldname], newname)
+        except RenameError:
+            print "rename: category %s already exists" % newname
+            return
+        except KeyError:
+            print "rename: %s: no such category" % oldname
+            return
+        self.tryToSave()
+
+    def complete_rename(self, text, line, begidx, endidx):
+        return self.comlete_dirs(text, line, begidx, endidx)
 
     def run(self):
         try:

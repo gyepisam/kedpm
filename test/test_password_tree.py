@@ -14,11 +14,12 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: test_password_tree.py,v 1.4 2003/08/16 21:11:20 kedder Exp $
+# $Id: test_password_tree.py,v 1.5 2003/09/04 20:28:59 kedder Exp $
 
 import unittest
 from kedpm.password_tree import PasswordTree
 from kedpm.password import Password
+from kedpm.exceptions import RenameError
 
 class PasswordTreeTestCase(unittest.TestCase):
     def setUp(self):
@@ -45,6 +46,13 @@ class PasswordTreeTestCase(unittest.TestCase):
         self.assertRaises(AttributeError, self.ptree.addBranch, 'subdir')
         subdir = self.ptree['subdir']
         self.assertEqual(subdir.getNodes(), [self.pass3])
+
+    def test_rename(self):
+        cat1 = self.ptree.getTreeFromPath(['subdir'])
+        self.ptree.renameBranch(['subdir'], 'renamed')
+        cat2 = self.ptree.getTreeFromPath(['renamed'])
+        self.assertEqual(cat1, cat2)
+        self.assertRaises(RenameError, self.ptree.renameBranch, ['renamed'], 'renamed')
 
     def test_locate(self):
         found = self.ptree.locate('name')

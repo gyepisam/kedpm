@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: wnd_main.py,v 1.9 2003/09/02 21:40:48 kedder Exp $
+# $Id: wnd_main.py,v 1.10 2003/09/04 20:28:59 kedder Exp $
 
 '''Main KedPM window'''
 
@@ -24,6 +24,7 @@ import gobject
 import globals
 
 from kedpm.password import TYPE_STRING
+from kedpm.exceptions import RenameError
 
 from base import Window
 from dialogs import AboutDialog, PasswordEditDialog, AddCategoryDialog
@@ -56,17 +57,12 @@ class MainWindow(Window):
     def setupCategories(self):
         category_tree = self['category_tree']
         renderer_cat = gtk.CellRendererText()
+        renderer_cat.set_property("editable", True)
+        renderer_cat.connect('edited', self.on_category_edited)
         col = gtk.TreeViewColumn('Category', renderer_cat)
         col.add_attribute(renderer_cat, 'text', 0)
         category_tree.append_column(col)
-        
-        #store = gtk.TreeStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
-        #root_cat = store.append(None)
-        #store.set(root_cat, 0, 'Root', 1, '/')
-        #for cat_name in self.password_tree.getBranches():
-        #    store.set(store.append(root_cat), 0, cat_name, 1, '/'+cat_name)
-            
-        #category_tree.set_model(store)
+
         self.updateCategories()
 
     def updateCategories(self):
@@ -258,3 +254,17 @@ class MainWindow(Window):
         self.password_menu = self.generatePasswordPopup()
         self.password_menu.popup(None, None, None, 0, gtk.get_current_event_time())
         
+    def on_category_edited(self, renderer, path, newname):
+        category_tree = self['category_tree']
+        store =  category_tree.get_model()
+        cur_iter = store.get_iter(path)
+        cat_path = store.get_value(store.get_iter(path), 1)
+        path = cat_path.split('/')
+        if path[-2] != newname:
+            try:
+                self.password_tree.renameBranch(cat_path.split('/'), newname)
+            except RenameError, message:
+                print message
+                return 
+            self.updateCategories()
+

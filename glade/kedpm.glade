@@ -295,7 +295,7 @@
 		  <child>
 		    <widget class="GtkButton" id="clear_button">
 		      <property name="visible">True</property>
-		      <property name="tooltip" translatable="yes">Show all passwords (Escape)</property>
+		      <property name="tooltip" translatable="yes">Show all passwords (Ctrl+Escape)</property>
 		      <property name="can_default">True</property>
 		      <property name="can_focus">True</property>
 		      <property name="label" translatable="yes">Clear</property>
@@ -303,7 +303,7 @@
 		      <property name="relief">GTK_RELIEF_NORMAL</property>
 		      <signal name="activate" handler="on_clear_button_activate" last_modification_time="Wed, 27 Aug 2003 19:56:37 GMT"/>
 		      <signal name="clicked" handler="on_clear_button_activate" last_modification_time="Wed, 27 Aug 2003 19:58:56 GMT"/>
-		      <accelerator key="Escape" modifiers="0" signal="activate"/>
+		      <accelerator key="Escape" modifiers="GDK_CONTROL_MASK" signal="activate"/>
 		    </widget>
 		    <packing>
 		      <property name="padding">2</property>
@@ -945,15 +945,14 @@
 <widget class="GtkMenu" id="menu_category">
 
   <child>
-    <widget class="GtkImageMenuItem" id="mi_add_password">
+    <widget class="GtkImageMenuItem" id="mi_add_category">
       <property name="visible">True</property>
-      <property name="tooltip" translatable="yes">Add password to selected category</property>
-      <property name="label" translatable="yes">_Add password here</property>
+      <property name="label" translatable="yes">Add _subcategory</property>
       <property name="use_underline">True</property>
-      <signal name="activate" handler="on_tb_add_clicked" last_modification_time="Mon, 01 Sep 2003 20:02:40 GMT"/>
+      <signal name="activate" handler="on_mi_add_category_activate" last_modification_time="Mon, 01 Sep 2003 20:03:27 GMT"/>
 
       <child internal-child="image">
-	<widget class="GtkImage" id="image43">
+	<widget class="GtkImage" id="image46">
 	  <property name="visible">True</property>
 	  <property name="stock">gtk-add</property>
 	  <property name="icon_size">1</property>
@@ -967,14 +966,30 @@
   </child>
 
   <child>
-    <widget class="GtkImageMenuItem" id="mi_add_category">
+    <widget class="GtkMenuItem" id="mi_edit_category">
       <property name="visible">True</property>
-      <property name="label" translatable="yes">Add _subegory here</property>
+      <property name="label" translatable="yes">_Edit category</property>
       <property name="use_underline">True</property>
-      <signal name="activate" handler="on_mi_add_category_activate" last_modification_time="Mon, 01 Sep 2003 20:03:27 GMT"/>
+      <signal name="activate" handler="on_mi_edit_category_activate" last_modification_time="Thu, 04 Sep 2003 18:28:42 GMT"/>
+    </widget>
+  </child>
+
+  <child>
+    <widget class="GtkMenuItem" id="separator2">
+      <property name="visible">True</property>
+    </widget>
+  </child>
+
+  <child>
+    <widget class="GtkImageMenuItem" id="mi_add_password">
+      <property name="visible">True</property>
+      <property name="tooltip" translatable="yes">Add password to selected category</property>
+      <property name="label" translatable="yes">_Add password</property>
+      <property name="use_underline">True</property>
+      <signal name="activate" handler="on_tb_add_clicked" last_modification_time="Mon, 01 Sep 2003 20:02:40 GMT"/>
 
       <child internal-child="image">
-	<widget class="GtkImage" id="image44">
+	<widget class="GtkImage" id="image47">
 	  <property name="visible">True</property>
 	  <property name="stock">gtk-add</property>
 	  <property name="icon_size">1</property>
