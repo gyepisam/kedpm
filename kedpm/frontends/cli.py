@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: cli.py,v 1.5 2003/08/11 21:29:58 kedder Exp $
+# $Id: cli.py,v 1.6 2003/08/12 20:02:09 kedder Exp $
     
 from kedpm import __version__
 from kedpm.plugins.pdb_figaro import PDBFigaro
@@ -185,15 +185,16 @@ try 'help' for brief description of available commands
             tree = root_tree
         else:
             # list given dir
-            dir = arg
-            tree = root_tree[dir]
+            try:
+                tree = root_tree[arg]
+            except KeyError:
+                print "ls: %s:  No such catalog" % arg
+                return
         print "=== Directories ==="
         for (bname) in tree.getBranches():
             print bname+"/"
         print "==== Passwords ===="
         self.listPasswords(tree.getNodes())
-        #for password in tree.getNodes():
-        #    print password.name
     
     def do_cd(self, arg):
         ''' change directory (catalog)'''
