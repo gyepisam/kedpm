@@ -1,3 +1,33 @@
+2003-08-20 00:19  Andrey Lebedev <andrey@micro.lt>
+
+	* kedpm/__init__.py: incrementing version
+
+2003-08-19 21:56  Andrey Lebedev <andrey@micro.lt>
+
+	* INSTALL, README: doc updates
+
+2003-08-19 21:56  Andrey Lebedev <andrey@micro.lt>
+
+	* kedpm/plugins/pdb_figaro.py: directory for new database created
+	automatically
+
+2003-08-19 11:22  Andrey Lebedev <andrey@micro.lt>
+
+	* README: small rst hacks
+
+2003-08-19 00:43  Andrey Lebedev <andrey@micro.lt>
+
+	* README: more docs
+
+2003-08-18 21:53  Andrey Lebedev <andrey@micro.lt>
+
+	* NEWS, kedpm/frontends/cli.py: cli command 'mkdir' implemented
+
+2003-08-17 22:38  Andrey Lebedev <andrey@micro.lt>
+
+	* ChangeLog, kedpm/frontends/cli.py: Autosaving implemented. KedPM
+	will ask to save everytime db has changed
+
 2003-08-17 21:56  Andrey Lebedev <andrey@micro.lt>
 
 	* ChangeLog, kedpm/passdb.py, kedpm/frontends/cli.py,

@@ -1,6 +1,6 @@
-====================
-Ked Password Manager
-====================
+==================================
+Ked Password Manager: Installation
+==================================
 
 Copyright (c) 2003 Andrey Lebedev <andrey at micro.lt>
 
@@ -14,6 +14,24 @@ To run this software you need:
     * Python Crypto module (http://www.amk.ca/python/code/crypto.html)
 
 
+Running tests
+=============
+
+The KedPM distribution contains unit tests. If you want, you can check
+the integrity of almost all KedPM components by running ``run_tests``
+script in project's root directory. After successeful passing of all
+tests you will see something like this::
+
+	.................................
+	----------------------------------------------------------------------
+	Ran 33 tests in 1.040s
+	 
+	OK
+
+If some of the test failed - tell me about it. Send me output of this
+script and I'll try to fix problem as soon as possible.
+
+	
 Installation
 ============
 
