@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: password_tree.py,v 1.11 2003/10/03 22:08:56 kedder Exp $
+# $Id: password_tree.py,v 1.12 2003/10/15 21:29:06 kedder Exp $
 
 """Password items organized in recursive tree."""
 
@@ -97,6 +97,7 @@ class PasswordTree:
         return self._branches
    
     def get(self, branch, default=None):
+        """Return branch if such exists, or default otherwise"""
         return self._branches.get(branch, default)
    
     def __getitem__(self, key):
@@ -174,3 +175,6 @@ class PasswordTree:
 
     def __str__(self):
         return self.asString()
+
+    def removeNode(self, node):
+        self._nodes.remove(node)

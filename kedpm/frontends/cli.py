@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: cli.py,v 1.22 2003/10/14 21:30:42 kedder Exp $
+# $Id: cli.py,v 1.23 2003/10/15 21:29:07 kedder Exp $
 
 "Command line interface for Ked Password Manager"
 
@@ -208,15 +208,16 @@ long password correctly."""
         #return pwd
 
     def tryToSave(self):
-        if self.modified:
-            savemode = self.conf.options["save-mode"]
-            if savemode == 'no':
-                return
-            answer = 'y'
-            if self.conf.options["save-mode"] == "ask":
-                answer = raw_input("Database was modified. Do you want to save it now? [Y/n]: ")            
-            if answer=='' or answer.lower().startswith('y'):
-                self.do_save('')
+        
+        self.modified = 1
+        savemode = self.conf.options["save-mode"]
+        if savemode == 'no':
+            return
+        answer = 'y'
+        if self.conf.options["save-mode"] == "ask":
+            answer = raw_input("Database was modified. Do you want to save it now? [Y/n]: ")            
+        if answer=='' or answer.lower().startswith('y'):
+            self.do_save('')
     
     def complete_dirs(self, text, line, begidx, endidx):
         dirs=self.pdb.getTree().getBranches()
@@ -265,7 +266,8 @@ long password correctly."""
     
     def do_exit(self, arg):
         '''Quit KED Password Manager'''
-        self.tryToSave()
+        if self.modified:
+            self.tryToSave()
         print "Exiting."
         sys.exit(0)
 
@@ -363,12 +365,12 @@ receiving that number, you will be able to edit picked password.
         if selected_password:
             try:
                 self.editPassword(selected_password)
+                #self.modified = 1
+                self.tryToSave()
             except (KeyboardInterrupt, EOFError):
                 print "Cancelled"
         else:
             print "No password selected"
-        self.modified = 1
-        self.tryToSave()
 
     def do_new(self, arg):
         '''Add new password to current category. You will be prompted to enter
@@ -394,8 +396,8 @@ Syntax:
         else:
             tree = self.getPwd()
             tree.addNode(new_pass)
-            self.modified = 1
-        self.tryToSave()
+            #self.modified = 1
+            self.tryToSave()
 
     def do_save(self, arg):
         '''Save current password tree'''
@@ -517,6 +519,34 @@ enter help set <option> for more info on particular option."""
             print "%s: %s" % (arg, option.doc)
         except KeyError:
             print "set: no such option: %s" % arg
+
+    def do_rm(self, arg):
+        """Remove password
+        
+Syntax:
+    rm <regexp>
+    
+Remove password from database. If several passwords matches <regexp>, you will
+be prompted to choose one from the list."""
+
+        if not arg:
+            print "rm: you must specify a password to remove"
+            return
+
+        selected_password = self.pickPassword(arg)
+        if not selected_password:
+            print "No password selected."
+            return
+
+        print selected_password.asText()
+        answer = raw_input("Do you really want to delete this password (y/N)? ")
+        if answer.lower().startswith('y'):
+            # Do delete selected password
+            self.pdb.getTree().removeNode(selected_password)
+            print "Password deleted"
+            self.tryToSave()
+        else:
+            print "Password was not deleted."
 
     def mainLoop(self):
         self.updatePrompt()

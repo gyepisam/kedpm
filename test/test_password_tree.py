@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: test_password_tree.py,v 1.6 2003/09/22 20:20:32 kedder Exp $
+# $Id: test_password_tree.py,v 1.7 2003/10/15 21:29:07 kedder Exp $
 
 import unittest
 from kedpm.password_tree import PasswordTree
@@ -83,6 +83,12 @@ class PasswordTreeTestCase(unittest.TestCase):
         self.assertEqual(root, self.ptree)
         root = self.ptree.getTreeFromPath(['subdir'])
         self.assertEqual(root, self.subdir)
+
+    def test_removeNode(self):
+        found = self.ptree.locate('st1')[0]
+        self.ptree.removeNode(found)
+        found = self.ptree.locate('st1')
+        self.assertEqual(found, [])
 
 class PasswordTreeIteratorTestCase(unittest.TestCase):
     def setUp(self):
