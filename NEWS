@@ -7,8 +7,7 @@ Version 0.1.0 (??)
     If KedPM detects that it had opened database saved by FPM, it makes
     a backup to ~/.fpm/fpm.kedpm.bak;
     
-    * Improved command line interface: added simple completion to 'cd'
-    and 'ls' commands; 
+    * Improved command line interface: overall usability improvements; 
     
     * New cli commands: 'mkdir', 'new', 'edit' and 'save';
 
