@@ -7,3 +7,4 @@ Release plan for Ked Password Manager
 5. Add release to sourceforge.net;
 6. Add release to freshmeat.net;
 7. Add release to PyPI;
+8. Make cvs branch and tag (release-x-y-z)
