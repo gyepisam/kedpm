@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: wnd_main.py,v 1.8 2003/09/01 21:27:39 kedder Exp $
+# $Id: wnd_main.py,v 1.9 2003/09/02 21:40:48 kedder Exp $
 
 '''Main KedPM window'''
 
@@ -48,10 +48,8 @@ class MainWindow(Window):
         self.pdb = globals.app.pdb
         self.cwtree = self.password_tree = globals.app.pdb.getTree()
         self.setupCategories()
-        #self.updateCategories()
-        # load category popup menu
-        #self.cat_menu = self.getGladeWidget('menu_category')
         self.setupPasswords()
+        self['category_tree'].grab_focus()
         self.window.selection_add_target("PRIMARY", "STRING", 1)
         self.window.selection_add_target("CLIPBOARD", "STRING", 1)
 
@@ -184,7 +182,7 @@ class MainWindow(Window):
             # RMB clicked
             pathinfo = self['password_list'].get_path_at_pos(int(event.x), int(event.y))
             if pathinfo:
-                path, column, cell_x, cell_y = pathinfo                    
+                #path, column, cell_x, cell_y = pathinfo
                 #if not self.password_menu:
                 self.password_menu = self.generatePasswordPopup()
                 self.password_menu.popup(None, None, None, event.button, event.time)
@@ -252,4 +250,11 @@ class MainWindow(Window):
                 print "Error! directory exists!"
             else:
                 self.updateCategories()
+                
+    def on_category_tree_popup_menu(self, wodget):
+        self.menus['menu_category'].popup(None, None, None, 0, gtk.get_current_event_time())
 
+    def on_password_list_popup_menu(self, widget):
+        self.password_menu = self.generatePasswordPopup()
+        self.password_menu.popup(None, None, None, 0, gtk.get_current_event_time())
+        

@@ -1,161 +1,167 @@
-2003-08-31 23:06  Andrey Lebedev <andrey@micro.lt>
+2003-09-01 21:27  Andrey Lebedev <andrey@micro.lt>
+
+	* ChangeLog, NEWS, glade/kedpm.glade, kedpm/frontends/gtk/base.py,
+	kedpm/frontends/gtk/dialogs.py, kedpm/frontends/gtk/wnd_main.py:
+	Category adding implemented
+
+2003-08-31 20:06  Andrey Lebedev <andrey@micro.lt>
 
 	* glade/kedpm.glade, kedpm/frontends/gtk/dialogs.py,
 	kedpm/frontends/gtk/wnd_main.py: edit and add dialogs finished
 
-2003-08-31 00:47  Andrey Lebedev <andrey@micro.lt>
+2003-08-30 21:47  Andrey Lebedev <andrey@micro.lt>
 
 	* glade/kedpm.glade, kedpm/frontends/gtk/app.py,
 	kedpm/frontends/gtk/dialogs.py, kedpm/frontends/gtk/wnd_main.py:
 	working on password edit dialog
 
-2003-08-27 23:09  Andrey Lebedev <andrey@micro.lt>
+2003-08-27 20:09  Andrey Lebedev <andrey@micro.lt>
 
 	* glade/kedpm.glade, kedpm/frontends/gtk/wnd_main.py: password
 	filtering gui implemented
 
-2003-08-27 00:33  Andrey Lebedev <andrey@micro.lt>
+2003-08-26 21:33  Andrey Lebedev <andrey@micro.lt>
 
 	* ChangeLog, MANIFEST.in, setup.py, glade/kedpm.glade,
 	kedpm/__init__.py, kedpm/frontends/gtk/wnd_main.py: infrastructure
 	updates, X selection copying implemented
 
-2003-08-26 00:32  Andrey Lebedev <andrey@micro.lt>
+2003-08-25 21:32  Andrey Lebedev <andrey@micro.lt>
 
 	* glade/kedpm.glade, kedpm/frontends/gtk/base.py,
 	kedpm/frontends/gtk/wnd_main.py: little popup support code
 
-2003-08-25 00:51  Andrey Lebedev <andrey@micro.lt>
+2003-08-24 21:51  Andrey Lebedev <andrey@micro.lt>
 
 	* glade/kedpm.glade, kedpm/password_tree.py,
 	kedpm/frontends/gtk/wnd_main.py: password navigation almost done
 
-2003-08-24 17:01  Andrey Lebedev <andrey@micro.lt>
+2003-08-24 14:01  Andrey Lebedev <andrey@micro.lt>
 
 	* glade/kedpm.glade, kedpm/frontends/gtk/app.py,
 	kedpm/frontends/gtk/base.py, kedpm/frontends/gtk/dialogs.py: login
 	procedure implemented
 
-2003-08-24 12:35  Andrey Lebedev <andrey@micro.lt>
+2003-08-24 09:35  Andrey Lebedev <andrey@micro.lt>
 
 	* ChangeLog, glade/kedpm.glade, kedpm/frontends/gtk/app.py,
 	kedpm/frontends/gtk/base.py, kedpm/frontends/gtk/dialogs.py,
 	kedpm/frontends/gtk/globals.py, kedpm/frontends/gtk/wnd_main.py:
 	GTK infastructure
 
-2003-08-23 00:53  Andrey Lebedev <andrey@micro.lt>
+2003-08-22 21:53  Andrey Lebedev <andrey@micro.lt>
 
 	* kedpm-gtk, glade/kedpm.glade, glade/kedpm.gladep,
 	kedpm/frontends/gtk/__init__.py, kedpm/frontends/gtk/app.py:
 	starting gui support
 
-2003-08-20 22:36  Andrey Lebedev <andrey@micro.lt>
+2003-08-20 19:36  Andrey Lebedev <andrey@micro.lt>
 
 	* NEWS: Date of release updated
 
-2003-08-20 22:32  Andrey Lebedev <andrey@micro.lt>
+2003-08-20 19:32  Andrey Lebedev <andrey@micro.lt>
 
 	* setup.py: trove added
 
-2003-08-20 22:13  Andrey Lebedev <andrey@micro.lt>
+2003-08-20 19:13  Andrey Lebedev <andrey@micro.lt>
 
 	* NEWS: paraphrase
 
-2003-08-20 21:59  Andrey Lebedev <andrey@micro.lt>
+2003-08-20 18:59  Andrey Lebedev <andrey@micro.lt>
 
 	* INSTALL, README: typo fixes
 
-2003-08-20 21:55  Andrey Lebedev <andrey@micro.lt>
+2003-08-20 18:55  Andrey Lebedev <andrey@micro.lt>
 
 	* ChangeLog, INSTALL: info about running tests
 
-2003-08-20 00:19  Andrey Lebedev <andrey@micro.lt>
+2003-08-19 21:19  Andrey Lebedev <andrey@micro.lt>
 
 	* kedpm/__init__.py: incrementing version
 
-2003-08-19 21:56  Andrey Lebedev <andrey@micro.lt>
+2003-08-19 18:56  Andrey Lebedev <andrey@micro.lt>
 
 	* INSTALL, README: doc updates
 
-2003-08-19 21:56  Andrey Lebedev <andrey@micro.lt>
+2003-08-19 18:56  Andrey Lebedev <andrey@micro.lt>
 
 	* kedpm/plugins/pdb_figaro.py: directory for new database created
 	automatically
 
-2003-08-19 11:22  Andrey Lebedev <andrey@micro.lt>
+2003-08-19 08:22  Andrey Lebedev <andrey@micro.lt>
 
 	* README: small rst hacks
 
-2003-08-19 00:43  Andrey Lebedev <andrey@micro.lt>
+2003-08-18 21:43  Andrey Lebedev <andrey@micro.lt>
 
 	* README: more docs
 
-2003-08-18 21:53  Andrey Lebedev <andrey@micro.lt>
+2003-08-18 18:53  Andrey Lebedev <andrey@micro.lt>
 
 	* NEWS, kedpm/frontends/cli.py: cli command 'mkdir' implemented
 
-2003-08-17 22:38  Andrey Lebedev <andrey@micro.lt>
+2003-08-17 19:38  Andrey Lebedev <andrey@micro.lt>
 
 	* ChangeLog, kedpm/frontends/cli.py: Autosaving implemented. KedPM
 	will ask to save everytime db has changed
 
-2003-08-17 21:56  Andrey Lebedev <andrey@micro.lt>
+2003-08-17 18:56  Andrey Lebedev <andrey@micro.lt>
 
 	* ChangeLog, kedpm/passdb.py, kedpm/frontends/cli.py,
 	kedpm/plugins/pdb_figaro.py, test/test_figaro.py, NEWS: If KedPM
 	detects that it had opened database saved by FPM, it makes a
 	backup.
 
-2003-08-17 13:20  Andrey Lebedev <andrey@micro.lt>
+2003-08-17 10:20  Andrey Lebedev <andrey@micro.lt>
 
 	* kedpm/frontends/cli.py: password editing improved
 
-2003-08-17 00:11  Andrey Lebedev <andrey@micro.lt>
+2003-08-16 21:11  Andrey Lebedev <andrey@micro.lt>
 
 	* ChangeLog, NEWS, kedpm-cli, kedpm/password.py,
 	kedpm/password_tree.py, kedpm/frontends/cli.py,
 	kedpm/plugins/pdb_figaro.py, test/test_figaro.py,
 	test/test_password.py, test/test_password_tree.py: cli improvements
 
-2003-08-15 23:43  Andrey Lebedev <andrey@micro.lt>
+2003-08-15 20:43  Andrey Lebedev <andrey@micro.lt>
 
 	* ChangeLog, NEWS, kedpm/passdb.py, kedpm/password.py,
 	kedpm/password_tree.py, kedpm/frontends/cli.py,
 	kedpm/plugins/pdb_figaro.py, test/fpm.sample, test/test_figaro.py:
 	fpm compatible saving implemented
 
-2003-08-15 20:45  Andrey Lebedev <andrey@micro.lt>
+2003-08-15 17:45  Andrey Lebedev <andrey@micro.lt>
 
 	* AUTHORS, ChangeLog, MANIFEST.in, NEWS: Added ChangeLog and NEWS
 	files
 
-2003-08-14 01:01  Andrey Lebedev <andrey@micro.lt>
+2003-08-13 22:01  Andrey Lebedev <andrey@micro.lt>
 
 	* kedpm/password_tree.py, kedpm/plugins/pdb_figaro.py,
 	test/test_figaro.py, test/test_password_tree.py: basic fpm xml
 	restoring from tree implemented
 
-2003-08-13 01:08  Andrey Lebedev <andrey@micro.lt>
+2003-08-12 22:08  Andrey Lebedev <andrey@micro.lt>
 
 	* kedpm/plugins/pdb_figaro.py, test/test_figaro.py: preparing for
 	figaro saving implementation
 
-2003-08-12 23:02  Andrey Lebedev <andrey@micro.lt>
+2003-08-12 20:02  Andrey Lebedev <andrey@micro.lt>
 
 	* kedpm/frontends/cli.py: ls on nonexistant direcrory doesn't fail
 
-2003-08-12 00:29  Andrey Lebedev <andrey@micro.lt>
+2003-08-11 21:29  Andrey Lebedev <andrey@micro.lt>
 
 	* kedpm/password.py, kedpm/frontends/cli.py, test/test_password.py:
 	Basic password editing support in cli. No saving implemented yet
 	though.
 
-2003-08-11 23:14  Andrey Lebedev <andrey@micro.lt>
+2003-08-11 20:14  Andrey Lebedev <andrey@micro.lt>
 
 	* INSTALL, kedpm/plugins/pdb_figaro.py, test/test_figaro.py:
 	support for python-2.1 added
 
-2003-08-08 01:26  Andrey Lebedev <andrey@micro.lt>
+2003-08-07 22:26  Andrey Lebedev <andrey@micro.lt>
 
 	* .cvsignore, kedpm/password.py, kedpm/password_tree.py,
 	kedpm/frontends/cli.py, kedpm/plugins/pdb_figaro.py,
@@ -163,35 +169,35 @@
 	password infrastructure. Password field are now defined in
 	structure
 
-2003-08-07 22:07  Andrey Lebedev <andrey@micro.lt>
+2003-08-07 19:07  Andrey Lebedev <andrey@micro.lt>
 
 	* kedpm/frontends/cli.py: show password immediately if only one to
 	show
 
-2003-08-07 21:56  Andrey Lebedev <andrey@micro.lt>
+2003-08-07 18:56  Andrey Lebedev <andrey@micro.lt>
 
 	* kedpm-cli, kedpm/plugins/pdb_figaro.py: xml parsing bug in fpm
 	plugin fixed
 
-2003-08-06 23:37  Andrey Lebedev <andrey@micro.lt>
+2003-08-06 20:37  Andrey Lebedev <andrey@micro.lt>
 
 	* MANIFEST.in, test/test_figaro.py: one more figaro test for
 	decription quality
 
-2003-08-06 23:25  Andrey Lebedev <andrey@micro.lt>
+2003-08-06 20:25  Andrey Lebedev <andrey@micro.lt>
 
 	* kedpm/frontends/cli.py, test/fpm.sample, test/test_figaro.py:
 	added simple figaro unittest
 
-2003-08-06 22:55  Andrey Lebedev <andrey@micro.lt>
+2003-08-06 19:55  Andrey Lebedev <andrey@micro.lt>
 
 	* kedpm/__init__.py: increment version
 
-2003-08-05 22:03  Andrey Lebedev <andrey@micro.lt>
+2003-08-05 19:03  Andrey Lebedev <andrey@micro.lt>
 
 	* .cvsignore: ignoring distribution files
 
-2003-08-05 21:32  Andrey Lebedev <andrey@micro.lt>
+2003-08-05 18:32  Andrey Lebedev <andrey@micro.lt>
 
 	* AUTHORS, MANIFEST.in, Makefile, README, kedpm-cli, run_tests,
 	INSTALL, setup.py, COPYING, kedpm/__init__.py, kedpm/crypt.py,
@@ -201,7 +207,7 @@
 	kedpm/plugins/pdb_figaro.py, test/__init__.py,
 	test/test_password_tree.py: initial checkin
 
-2003-08-05 21:32  Andrey Lebedev <andrey@micro.lt>
+2003-08-05 18:32  Andrey Lebedev <andrey@micro.lt>
 
 	* AUTHORS, MANIFEST.in, Makefile, README, kedpm-cli, run_tests,
 	INSTALL, setup.py, COPYING, kedpm/__init__.py, kedpm/crypt.py,
