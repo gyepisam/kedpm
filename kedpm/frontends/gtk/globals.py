@@ -14,9 +14,10 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: globals.py,v 1.1 2003/08/24 09:35:10 kedder Exp $
+# $Id: globals.py,v 1.2 2003/09/12 17:47:47 kedder Exp $
 
+import sys, os
 
-glade_file = "glade/kedpm.glade"
+glade_file = os.path.join(sys.prefix, "share", "kedpm", "glade", "kedpm.glade")
 
 app = None
