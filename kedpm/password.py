@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: password.py,v 1.2 2003/08/07 22:26:11 kedder Exp $
+# $Id: password.py,v 1.3 2003/08/11 21:29:57 kedder Exp $
 
 """ Password item """
 
@@ -65,20 +65,30 @@ class Password:
     
     def __str__(self):
         return "Password for <%s>" % self.name
-
-    def getFieldTitle(self, name):
-        '''Returns title of field "name"'''
+    
+    def getField(self, name):
+        '''Returns field descriptor'''
         for key, fieldinfo in self.fields_type_info:
             if key==name:
-                return fieldinfo['title']
-        else:
-            return ""
+                return fieldinfo      
+        else: 
+            raise KeyError, 'No such field defined'
+    
+    def getFieldTitle(self, name):
+        '''Returns title of field "name"'''
+        title = ""
+        try:
+            title = self.getField(name)['title']
+        except KeyError:
+            pass
+        return title
 
-    def getFieldsOfType(self, types):
-        '''Returns all fields of type listed in types list'''
+    def getFieldsOfType(self, types = []):
+        '''Returns all fields of type listed in types list. If types is empty
+        list, return all fields.'''
         res = []
         for key, fieldinfo in self.fields_type_info:
-            if fieldinfo['type'] in types:
+            if fieldinfo['type'] in types or types == []:
                 res.append(key)
         return res
 

@@ -14,8 +14,8 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: cli.py,v 1.4 2003/08/07 22:26:11 kedder Exp $
-
+# $Id: cli.py,v 1.5 2003/08/11 21:29:58 kedder Exp $
+    
 from kedpm import __version__
 from kedpm.plugins.pdb_figaro import PDBFigaro
 from kedpm.exceptions import WrongPassword
@@ -97,6 +97,69 @@ try 'help' for brief description of available commands
         for ptup in ptuples:
             print fstr % ptup
 
+    def pickPassword(self, regexp):        
+        '''Prompt user to pick one password from located list. If list contains
+        only one password, return it without prompting. If no passwords were
+        located, or user desides to cancel operation, return None'''
+
+        pwd = self.getPwd()
+        passwords = pwd.locate(regexp)
+        if not passwords:
+            print "No passwords matching \"%s\" were found" % regexp
+            return None
+        if len(passwords) > 1:
+            self.listPasswords(passwords, 1)
+            print "Enter number. 0 returns to command prompt"
+            showstr = raw_input('show: ')
+            try:
+                shownr = int(showstr)
+                if not shownr:
+                    return None
+                selected_password = passwords[shownr-1]
+            except (ValueError, IndexError):
+                return None
+        else:
+            selected_password = passwords[0]
+        return selected_password
+
+    def inputString(self):
+        '''Input string from user'''
+        input = raw_input('> ')
+        return input
+
+    def inputText(self):
+        '''Input long text from user'''
+        return self.inputString()
+
+    def inputPassword(self):
+        '''Input long text from user'''
+        return self.inputString()
+
+    def editPassword(self, pwd):
+        '''Prompt user for each field of the password. Respect fields' type.'''
+    
+        for field, fieldinfo in pwd.fields_type_info:
+            field_type = fieldinfo['type']
+            
+            new_value = ""
+            if field_type == password.TYPE_STRING:
+                print "Enter %s (\"%s\"):" % (pwd.getFieldTitle(field), pwd[field])
+                new_value = self.inputString()
+            elif field_type == password.TYPE_TEXT:
+                print "Enter %s (\"%s\"):" % (pwd.getFieldTitle(field), pwd[field])
+                new_value = self.inputText()
+            elif field_type == password.TYPE_PASSWORD:
+                print "Enter %s (\"%s\"):" % (pwd.getFieldTitle(field), pwd[field])
+                new_value = self.inputPassword()
+            else:
+                print """Error. Type %s is unsupported yet. This field will retain an old value.""" % field_type
+
+            if new_value!="":
+                pwd[field] = new_value
+        return pwd
+    
+    ##########################################
+    # Overriding of Cmd class methods below. #
     def emptyline(self):
         pass
     
@@ -149,29 +212,43 @@ try 'help' for brief description of available commands
         print '/'+'/'.join(self.pwd)
     
     def do_show(self, arg):
-        '''display password information'''
-        pwd = self.getPwd()
-        passwords = pwd.locate(arg)
-        if not passwords:
-            print "No passwords matching \"%s\" found" % arg
-            return
-        if len(passwords) > 1:
-            self.listPasswords(passwords, 1)
-            print "Enter number to show. 0 returns to command prompt"
-            showstr = raw_input('show: ')
-            try:
-                shownr = int(showstr)
-                if not shownr:
-                    return
-                selected_password = passwords[shownr-1]
-            except (ValueError, IndexError):
-                return
+        '''display password information.
+        
+Syntax:
+    show <regexp>
+            
+This will display contents of a password item in current category. If
+several items matched by <regexp>, list of them will be printed and you will be
+prompted to enter a number, pointing to password you want to look at.
+After receiving that number, KedPM will show you the password.
+'''
+        
+        selected_password = self.pickPassword(arg)
+        if selected_password:
+            print "---------------------------------------"
+            print selected_password.asText()
+            print "---------------------------------------"
         else:
-            selected_password = passwords[0]
-        print "---------------------------------------"
-        print selected_password.asText()
-        print "---------------------------------------"
-    
+            print "No password selected"
+
+    def do_edit(self, arg):
+        '''edit password information.
+        
+Syntax:
+    edit <regexp>
+            
+This will prompt you for editing of a password item in current category. If
+several items matched by <regexp>, list of them will be printed and you will be
+prompted to enter a number, pointing to password you want to edit.  After
+receiving that number, you will be able to edit picked password.  
+'''
+
+        selected_password = self.pickPassword(arg)
+        if selected_password:
+            self.editPassword(selected_password)
+        else:
+            print "No password selected"
+
     def run(self):
         self.openDatabase()
         self.updatePrompt()

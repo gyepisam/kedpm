@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: test_password.py,v 1.1 2003/08/07 22:26:11 kedder Exp $
+# $Id: test_password.py,v 1.2 2003/08/11 21:29:58 kedder Exp $
 
 import unittest
 from kedpm import password
@@ -77,6 +77,8 @@ Password: Password
 ''')
     
     def test_getFieldsOfType(self):
+        fields = self.full.getFieldsOfType()
+        self.assertEqual(fields, ['host', 'name', 'password'])
         fields = self.full.getFieldsOfType([password.TYPE_STRING])
         self.assertEqual(fields, ['host', 'name'])
         fields = self.full.getFieldsOfType([password.TYPE_PASSWORD])
