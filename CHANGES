@@ -8,7 +8,7 @@ the top.
 Version 0.5.0 (Upcoming)
 ========================
 
-    * Translation infrastructure and russian translation added. Now it
+    * Translation infrastructure and Russian translation added. Now it
       is possible to translate KedPM to any language using usual gettext
       tools.
 
@@ -20,10 +20,10 @@ Version 0.4.0 (2004.02.29)
     * First password in root category creation bug fixed. GTK warnings
       should be gone too. (SF BUG #862551)
 
-    * Location of FPM password database file is configurable in options
-      ('fpm-database' setting).
+    * Location of the FPM password database file is configurable in
+      options ('fpm-database' setting).
 
-    * KedPM has got icons! Artworks made by Eugene Morozov. Thanks
+    * KedPM has got icons! Artwork done by Eugene Morozov. Thanks
       Eugene!
 
     * Parser patterns editor added.
@@ -59,10 +59,10 @@ Version 0.3.0 (2003-10-26)
     * Deleting of passwords implemented.
 
     * ``rmdir`` and ``mv`` commands were added to CLI (Patch #825957).
-      Thanks indygena!
+      Thanks Indygena!
 
     * Parser feature added. It will help you incorporate passwords from
-      your mails to database more efficiently.
+      your e-mails to database more efficiently.
 
     * Support for fpm-0.58 databases with longer passwords (up to
       256 characters). Not tested yet.
@@ -80,11 +80,11 @@ Version 0.2.5 (2003-09-21)
 ==========================
 
     * Fixed fpm long password bug. Figaro password manager can't handle
-      passwords longer that 24 characters. Ked Password manager will
-      allow you to save such long passwords, but it will break fpm
-      compatibility - fpm will not handle such passwords correctly.
+      passwords longer that 24 characters. Ked Password manager will allow
+      you to save such long passwords, but it will break fpm compatibility
+      - fpm will not handle such passwords correctly.
 
-    * GUI now can initialize Figaro database.
+    * GUI now can initialize a Figaro database.
 
 Version 0.2.0 (2003-09-14)
 ==========================
@@ -99,9 +99,9 @@ Version 0.2.0 (2003-09-14)
 Version 0.1.0 (2003-08-20)
 ==========================
 
-    * Added ability to save password database in fpm-compatible format.
-      If KedPM detects that it had opened database saved by FPM, it
-      makes a backup to ~/.fpm/fpm.kedpm.bak;
+    * Added ability to save the password database in fpm-compatible
+      format.  If KedPM detects that it had opened a database saved by
+      FPM, it makes a backup to ~/.fpm/fpm.kedpm.bak;
     
     * Improved command line interface: overall usability improvements; 
     
@@ -115,4 +115,4 @@ Version 0.0.2 (2003-08-05)
       interface;
 
 
-.. vim: tw=72 et fo=ta nocindent
+.. vim: tw=72 et fo=t nocindent

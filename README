@@ -8,23 +8,23 @@ Copyright (c) 2003 Andrey Lebedev <andrey at micro.lt>
 About
 =====
 
-Ked Password Manager helps to manage large amounts of passwords and
-related information and simplifies tasks of searching and entering
+Ked Password Manager helps to manage a large number of passwords and
+related information and simplifies the tasks of searching and entering
 password data.
 
-KedPM written in python and can be run virtually on any platform python
-interpreter can run.
+KedPM is written in python and can be run on virtually any platform the
+python interpreter can.
 
-KedPM written as extensible framework, which allows to plug in custom
-password database back-ends and custom user interface front-ends.
-Currently only Figaro PM back-end supported. To manage his passwords,
-user can choose between GUI (GTK2 based graphical user interface) and
-CLI (Command Line Interface).
+KedPM is written as an extensible framework, which allows you to plug in
+custom password database back-ends and custom user interface front-ends.
+Currently, only the Figaro PM back-end is supported.  To manage his
+passwords, the user can choose between the GUI (GTK2 based graphical
+user interface) and the CLI (Command Line Interface).
 
 Installation
 ============
 
-Read INSTALL file provided in this distributions for installation
+Read the INSTALL file provided in this distribution for installation
 instructions.
 
 Starting Ked Password Manager
@@ -34,34 +34,35 @@ To run Ked Password Manager, issue this command::
 
     $ kedpm
 
-This will run graphical user interface based on GTK2. Alternatively you
-can use kedpm with command line user interface::
+This will run the graphical user interface based on GTK2.
+Alternatively, to use the KedPM with the command line user interface:: 
 
     $ kedpm -c
 
-Note: ``kedpm`` program should be located in your PATH.
+Note: the ``kedpm`` program should be located in your PATH.
 
-If you have Figaro Password Manager database KedPM will try to open
-it. To do it properly, KedPM will ask you for valid password. 
+If you have a Figaro Password Manager database, KedPM will try to open
+it.  You will need to provide a valid password.
 
-After the first run KedPM will make a backup of existing fpm database
-(located in file ``~/.fpm/fpm``) to file ``~/.fpm.kedpm.bak``. So if fpm
-will break for some reason, you will be able to restore your old
-database.  Note, however, that database, saved by KedPM itself will not
-be backed up.
+After the first run, KedPM will make a backup of the existing FPM
+database (located in the file ``~/.fpm/fpm``) to file
+``~/.fpm.kedpm.bak``.  So if FPM breaks for some reason, you will be
+able to restore your old database.  Note however, that the database,
+saved by KedPM itself will not be backed up.
 
 If you have no Figaro Password Manager database at the moment, KedPM
-will try to create one for you. It will ask you for a password to
-encrypt password data with. Then KedPM will create empty FPM database.
+will try to create one for you.  It will ask you for a password to
+encrypt your password data with, then KedPM will create an empty FPM
+database.
 
 Graphical User Interface
 ========================
 
-GUI is implemented using GTK2 widget library. It means GUI will fit
-nicely in Gnome2 environment, but does not require it for normal
-operation.
+The GUI is implemented using GTK2 widget library.  This means the GUI
+will fit nicely in the Gnome2 environment, but does not require it for
+normal operation.
 
-To speed up your work with KedPM, GUI provides couple of keyboard
+To speed up your work with KedPM, the GUI provides couple of keyboard
 shortcuts:
 
     ===========  ==============================================
@@ -70,50 +71,50 @@ shortcuts:
                  category.
     ===========  ==============================================
 
-You can quickly copy to clipboard any of password information by
-right-clicking on a password in the list and choosing respective item in
-popped up menu.
-
+You can quickly copy any of the password information to the clipboard by
+right clicking on a password in the list and choosing the respective
+item in the context menu.
 
 Command Line Interface
 ======================
 
-CLI should be quite intuitive for those, who has experience with Linux
-shell. Password are placed in categories, like files are placed in
-directories. You can move between categories with ``cd`` command, show
-contents of category with ``ls`` command, and so on. 
+The CLI should be quite intuitive for those, who have experience with
+the Linux shell.  Passwords are placed in categories, like files are
+placed in directories. You can move between categories with the ``cd``
+command, show contents of a category with the ``ls`` command, and so on. 
 
-There is one difference however: passwords in database don't have unique
-identifiers, like files in file-system. Passwords in KedPM identified by
-their contents. For example, lets say you have a saved a password for
-FTP login to your site ``www.homepage.org``. To display that password
-all you need to type is ``show homepage``. This command will find the
-password, that contain word ``homepage`` in one of its fields, and
-display it to you. If KedPM has found several different password records
-with that word, you will be able to choose one from the presented list.
+There is one difference however: passwords in the database don't have
+unique identifiers, like files in the file-system.  Passwords in KedPM
+are identified by their contents.  For example, lets say you have a
+saved password for FTP login to your site ``www.homepage.org``. To
+display that password all you need to type is ``show homepage``. This
+command will find the password, that contains the word ``homepage`` in
+one of its fields, and display it.  If KedPM has found several different
+password records with that word, you will be able to choose one from the
+presented list.
 
-Full list of commands can be retrieved with ``help`` command. You can get
-help on particular command using ``help <command>``.
+The full list of commands can be retrieved with the ``help`` command.
+You can get help on a particular command by using the ``help
+<command>``.
 
 
 The "Parser" feature
 ====================
 
-One of the essential functions of the password manager is helping you
-to retrieve your passwords. On the other hand, password manager should
-let you input new passwords to the database in convenient way. 
+One of the essential functions of the password manager is helping you to
+retrieve your passwords, a, password manager should also let you input
+new passwords to the database in a convenient way. 
 
-The simplest way to enter the password that comes in mind is simple
-dialog with password data fields. Today the substantial amount of
-passwords come by email and entering such passwords is not very
-convenient: you need to copy and paste several times, switching between
-two programs after every operation.
+The simplest way to enter the password is a dialog with the password
+data fields.  Today, most passwords come by e-mail and entering such
+passwords is not very convenient: you need to copy and paste several
+times, switching between two programs after every operation.
 
-The Parser feature of Ked Password manager try to solve that problem (at
-least make it smaller). Parser asks you for a mail and tries to figure
-out what information can be useful for storing in database. Parser
-recognizes several common patterns, which can occur in password mails.
-For example::
+The Parser feature of Ked Password Manager tries to solve that problem
+(or at least make it smaller).  Parser asks you for an e-mail then tries
+to figure out what information can be useful for storing in the
+database. Parser recognizes several common password patterns, which can
+occur in e-mails.  For example::
 
     username/password: kedder/secret
 
@@ -123,30 +124,31 @@ or::
     password: secret
     hostname: kedpm.sourceforge.net
 
-Parser feature is available in GUI from "Edit->Parse password" menu
-item. In command line mode you can use ``new -p`` command - it will
-fire up your favorite text editor for you to provide mail text.
+The Parser feature is available in the GUI from "Edit->Parse password"
+menu item. In command line mode you can use ``new -p`` command - it will
+fire up your favorite text editor to provide mail text.
 
 Parser patterns
 ---------------
 
-Starting from KedPM-0.4.0 you can edit patterns, used by parser to parse
-text. This allows you to better adopt parser to your particular needs.
+Starting from KedPM-0.4.0, you can edit patterns used by Parser to parse
+text, this allows you to better adapt Parser to your particular needs.
 The format of patterns is:
 
-    =============  =========================================
-    ``{field}``    matches password field;
-    ``{ }``        matches arbitrary number of spaces or nothing;
-    ``{~regexp}``  matches arbitrary regular expression;
-    =============  =========================================
+    =============  =================================================
+    ``{field}``    matches the password field;
+    ``{ }``        matches an arbitrary number of spaces or nothing;
+    ``{~regexp}``  matches an arbitrary regular expression;
+    =============  =================================================
 
 For example, pattern::
 
     User{~(name)?}{ }:{ }{user}
 
-Will find string, starting with ``user`` or ``username``, followed by
-colon and put string after colon to ``user`` field of password. This
-pattern will recognize the following patterns in your mails::
+Will find a string, starting with ``user`` or ``username``, followed by
+a colon and put the string after the colon in the ``user`` field of the
+password.  This pattern will recognize the following patterns in your
+e-mails::
 
     username: andrey
 
@@ -154,8 +156,8 @@ or::
 
     user    : andrey
 
-and automatically fill ``user`` field of password with string
-``andrey``.
+and will automatically fill ``user`` field of the password with string
+``"andrey"``.
 
 Check out parser! Tell me what you think.
 

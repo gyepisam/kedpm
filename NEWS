@@ -52,7 +52,7 @@ Manager bug - inability to store long passwords in the database.  FPM
 can't handle passwords longer than 24 characters - KedPM now can, but
 FPM-0.53 still can not load them correctly.
 
-The GUI can now create new a FPM database, if it doesn't already exist -
+The GUI can now create a new FPM database, if it doesn't already exist -
 sorry, to those users who downloaded version 0.2.0, but could not start
 the GUI.
 

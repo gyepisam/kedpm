@@ -10,13 +10,14 @@ Prerequisites
 
 To run this software you need:
 
-    * Python interpreter (tested with 2.1.3+, 2.2.3+ and 2.3+; you will
-      need python 2.2.x or newer if you want to run GUI)
-    * Python Crypto module (http://www.amk.ca/python/code/crypto.html)
+    * The python interpreter (tested with 2.1.3+, 2.2.3+ and 2.3+; you
+      will need Python 2.2.x or newer if you want to run the GUI)
+    * The Python Crypto module
+      (http://www.amk.ca/python/code/crypto.html)
 
-Additionally, to run GUI you will need:
+Additionally, to run the GUI you will need:
 
-    * PyGTK 2 - Python Bindings for the GTK Widget Set
+    * PyGTK 2 - The python bindings for the GTK Widget Set
       (http://www.daa.com.au/~james/software/pygtk/) 
     * libglade2-0
 
@@ -24,10 +25,10 @@ Additionally, to run GUI you will need:
 Running tests
 =============
 
-The KedPM distribution contains unit tests. If you want, you can check
+The KedPM distribution contains unit tests.  If you want, you can check
 the integrity of almost all KedPM components by running ``run_tests``
-script in project's root directory. After successful passing of all
-tests you will see something like this::
+script in its root directory.  After successfully passing all
+tests, you will see something like this::
 
 	.................................
 	----------------------------------------------------------------------
@@ -35,31 +36,31 @@ tests you will see something like this::
 	 
 	OK
 
-If some of the test failed - tell me about it. Send me output of this
-script and I'll try to fix problem as soon as possible.
+If some of the tests fail, tell me about it.  Send me the output of this
+script and I'll try to fix the problem, as soon as possible.
 
 	
 Installation
 ============
 
-To install the KedPM support code into your Python tree and
-KedPM scripts into /usr/local/bin (substitute that path for whatever is
-appropriate on your system). You need to have write permissions
-for these locations, e.g. being root on Unix::
+To install the KedPM support code into your python tree and the KedPM
+scripts into ``/usr/local/bin`` (substitute that path with whatever is
+appropriate for your system).  You will need to have write permission
+for the selected location, e.g: being root on Unix::
 
     python setup.py install
 
 If you would like to place the KedPM scripts in a directory other than
 ``/usr/local/bin``, then specify the preferred location with
-``--install-script``. For example, to install them in
+``--install-script``.  For example, to install them in
 ``/opt/kedpm/bin``::
 
     python setup.py install --install-scripts=/opt/kedpm/bin
 
-You can also use the ``--prefix`` option to use a completely different
-base directory, if you do not want to use administrator rights. If you
-choose to do this, take note of the message at the end of installation
-and modify the python path accordingly.
+You can also use the ``--prefix /path/to/install`` option to use a
+completely different base directory, if you do not want to use
+administrator rights. If you choose to do this, take note of the message
+at the end of installation and modify the python path accordingly.
 
 
 .. vim: tw=72 nocindent et
