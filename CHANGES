@@ -8,6 +8,8 @@ Version 0.3.0 (??)
     * Configuration infrastructure implemented. For now only one
     configuration option exists: save-mode.
 
+    * Deleting of passwords implemented.
+
 Version 0.2.5 (2003-09-21)
 
     * Fixed fpm long password bug. Figaro password manager can't handle

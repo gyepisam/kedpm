@@ -213,6 +213,16 @@
 	      <signal name="clicked" handler="on_tb_edit_clicked" last_modification_time="Sat, 30 Aug 2003 16:20:12 GMT"/>
 	    </widget>
 	  </child>
+
+	  <child>
+	    <widget class="button" id="tb_delete">
+	      <property name="visible">True</property>
+	      <property name="label" translatable="yes">Delete</property>
+	      <property name="use_underline">True</property>
+	      <property name="stock_pixmap">gtk-delete</property>
+	      <signal name="clicked" handler="on_tb_delete_clicked" last_modification_time="Sat, 18 Oct 2003 19:58:00 GMT"/>
+	    </widget>
+	  </child>
 	</widget>
 	<packing>
 	  <property name="padding">0</property>
@@ -400,7 +410,7 @@
   <property name="visible">True</property>
   <property name="title" translatable="yes">Login - Ked Password Manager</property>
   <property name="type">GTK_WINDOW_TOPLEVEL</property>
-  <property name="window_position">GTK_WIN_POS_NONE</property>
+  <property name="window_position">GTK_WIN_POS_CENTER</property>
   <property name="modal">True</property>
   <property name="resizable">False</property>
   <property name="destroy_with_parent">False</property>
@@ -873,7 +883,7 @@
       <signal name="activate" handler="on_pmi_edit_activate" last_modification_time="Mon, 25 Aug 2003 20:33:57 GMT"/>
 
       <child internal-child="image">
-	<widget class="GtkImage" id="image48">
+	<widget class="GtkImage" id="image58">
 	  <property name="visible">True</property>
 	  <property name="stock">gtk-index</property>
 	  <property name="icon_size">1</property>
@@ -883,6 +893,15 @@
 	  <property name="ypad">0</property>
 	</widget>
       </child>
+    </widget>
+  </child>
+
+  <child>
+    <widget class="GtkImageMenuItem" id="pmi_delete">
+      <property name="visible">True</property>
+      <property name="label">gtk-delete</property>
+      <property name="use_stock">True</property>
+      <signal name="activate" handler="on_pmi_delete_activate" last_modification_time="Sat, 18 Oct 2003 20:15:20 GMT"/>
     </widget>
   </child>
 </widget>

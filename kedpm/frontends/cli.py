@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: cli.py,v 1.23 2003/10/15 21:29:07 kedder Exp $
+# $Id: cli.py,v 1.24 2003/10/18 20:26:36 kedder Exp $
 
 "Command line interface for Ked Password Manager"
 
@@ -542,7 +542,7 @@ be prompted to choose one from the list."""
         answer = raw_input("Do you really want to delete this password (y/N)? ")
         if answer.lower().startswith('y'):
             # Do delete selected password
-            self.pdb.getTree().removeNode(selected_password)
+            self.getPwd().removeNode(selected_password)
             print "Password deleted"
             self.tryToSave()
         else:

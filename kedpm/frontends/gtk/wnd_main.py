@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: wnd_main.py,v 1.17 2003/10/15 20:25:34 kedder Exp $
+# $Id: wnd_main.py,v 1.18 2003/10/18 20:26:36 kedder Exp $
 
 '''Main KedPM window'''
 
@@ -93,6 +93,10 @@ class MainWindow(Window):
                 self.buildCategoryTree(store, sub_iter, tree_branch[cat_name], path+cat_name+'/')
 
     def setupPasswords(self):
+        """Rebuild and redraw password list.
+        
+        This function should be called every time password database changed."""
+
         password_list = self['password_list']
 
         # first, clear all columns in TreeView
@@ -257,6 +261,10 @@ class MainWindow(Window):
         '''password list popup 'Edit' item clicked'''
         self.on_tb_edit_clicked(widget)
 
+    def on_pmi_delete_activate(self, widget):
+        '''password list popup 'Delete' item clicked'''
+        self.on_tb_delete_clicked(widget)
+
     def on_tb_add_clicked(self, widget):
         '''Toolbar 'Add' button clicked'''
         pswd = FigaroPassword()
@@ -319,3 +327,23 @@ class MainWindow(Window):
         cid = self.statusbar.get_context_id('search')
         self.statusbar.pop(cid)
 
+    def on_tb_delete_clicked(self, widget):
+        sel_pswd = self.getSelectedPassword()
+        if not sel_pswd:
+            return
+        # Ask user is he sure
+        dialog = gtk.MessageDialog(self.window,
+                                  gtk.DIALOG_DESTROY_WITH_PARENT,
+                                  gtk.MESSAGE_QUESTION,
+                                  gtk.BUTTONS_YES_NO,
+                                  "Are you really want to delete this password?");
+        response = dialog.run();
+        dialog.destroy();
+        if response == gtk.RESPONSE_YES:
+            # Delete password
+            self.cwtree.removeNode(sel_pswd)
+            self.setupPasswords()
+            cid = self.statusbar.get_context_id('toolbar') 
+            self.statusbar.pop(cid)
+            self.statusbar.push(cid, "Password deleted.")
+            self.tryToSave()
