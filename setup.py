@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: setup.py,v 1.6 2003/09/14 12:15:57 kedder Exp $
+# $Id: setup.py,v 1.7 2003/09/21 20:05:35 kedder Exp $
 
 from distutils.core import setup
 from kedpm import __version__
@@ -56,6 +56,7 @@ front-ends."""
         classifiers = [
             'Development Status :: 3 - Alpha',
             'Environment :: Console',
+            'Environment :: X11 Applications :: GTK',
             'Intended Audience :: Developers',
             'Intended Audience :: System Administrators',
             'License :: OSI Approved :: GNU General Public License (GPL)',
