@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: pdb_figaro.py,v 1.16 2004/02/24 22:58:46 kedder Exp $
+# $Id: pdb_figaro.py,v 1.17 2004/02/28 16:34:57 kedder Exp $
 
 """ Figaro password manager database plugin """
 
@@ -304,7 +304,7 @@ class PDBFigaro (PasswordDatabase):
             strout = strout + chr(data)
         return strout
 
-    def _addNoise(self, field, reslen = 0):         
+    def _addNoise(self, field, reslen = 0):
         """If we have a short string, I add noise after the first null prior to
         encrypting. This prevents empty blocks from looking identical to
         eachother in the encrypted file."""

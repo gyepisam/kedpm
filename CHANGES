@@ -22,6 +22,9 @@ Version 0.4.0 (??)
     databases. This feature is not supported by FPM itself, although
     databases with subcategories should still be readable by FPM.
 
+    * Saving history of searches in GUI. The feature is similar to
+    browser url bar history.
+
 Version 0.3.1 (2003-10-27)
 
     * Fixed password database initialization problem. New databases

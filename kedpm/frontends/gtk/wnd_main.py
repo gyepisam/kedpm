@@ -14,10 +14,10 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: wnd_main.py,v 1.26 2004/01/18 16:29:20 kedder Exp $
+# $Id: wnd_main.py,v 1.27 2004/02/28 16:34:57 kedder Exp $
 
 '''Main KedPM window'''
-
+import os
 import gtk
 from gtk import gdk
 import gobject
@@ -48,6 +48,9 @@ class MainWindow(Window):
     cwtree = None           # Current working tree
     search_text = ''        # Current password filter
     flat_view = False       # Is password list flat?
+    search_history = []     # List of searched strings
+    search_history_file = os.getenv("HOME") + '/.kedpm/gui_search_history'
+
 
 
     def __init__(self):
@@ -65,8 +68,13 @@ class MainWindow(Window):
         self.menu_category = self.getGladeWidget('menu_category')
         #self.menu_password = self.getGladeWidget('menu_password')
 
+        # Other widgets setup
         self.statusbar = self['statusbar']
         self.setModified(False)
+
+        #import pdb; pdb.set_trace()
+        self['search_combo'].disable_activate()
+        self.loadHistory()
 
     def setupCategories(self):
         category_tree = self['category_tree']
@@ -168,15 +176,12 @@ class MainWindow(Window):
     def generatePasswordPopup(self):
         #menu_password = self.menu_password
         menu_password = self.getGladeWidget('menu_password')
-        #return menu_password
         fields = self.prot.getFieldsOfType()
         fields.reverse()
         for field in fields:
             copy_mi = gtk.MenuItem('Copy %s' % self.prot.getFieldTitle(field))
-            #copy_mi.show()
             copy_mi.connect('activate', self.on_password_popup_activate, field)
             menu_password.prepend(copy_mi)
-            #menu_password.add(copy_mi)
         menu_password.show_all()
         return menu_password
 
@@ -253,11 +258,51 @@ class MainWindow(Window):
             self['search_entry'].grab_focus()
         self.setupPasswords()
 
+    def updateHistory(self):
+        """Update history with string in search_entry"""
+        search_entry = self['search_entry']
+        search_text = search_entry.get_text()
+        if search_text and search_text not in self.search_history:
+            self.search_history.insert(0, search_text)
+            self['search_combo'].set_popdown_strings(self.search_history)
+
+    def loadHistory(self):
+        if os.access(self.search_history_file, os.R_OK):
+            f = open(self.search_history_file, 'r')
+            hist = f.read()
+            f.close()
+            self.search_history = hist.split('\n')
+            self['search_combo'].set_popdown_strings(self.search_history)
+            self['search_entry'].set_text('')
+
+    def saveHistory(self):
+        f = open(self.search_history_file, 'w')
+        f.write('\n'.join(self.search_history))
+        f.close()
+
+    def performSearch(self, update_history=True):
+        """Search passwords based on filter entered to search entry.
+
+        Update search history if needed."""
+        
+        search_entry = self['search_entry']
+        search_text = search_entry.get_text()
+        
+        # Do search
+        if search_text != self.search_text:
+            self.search_text = search_text
+            self.setupPasswords()
+
+        # Update history list
+        if update_history:
+            self.updateHistory()
+
     #################################################################
     # Signal handlers
     def on_wnd_main_destroy(self, widget):
         if self.modified:
             self.tryToSave()
+        self.saveHistory()
         print "Exiting."
         gtk.main_quit() #make the program quit
 
@@ -308,14 +353,11 @@ class MainWindow(Window):
         selection_data.set_text(self.selected_text, len(self.selected_text))
 
     def on_find_button_activate(self, widget):
-        search_text = self['search_entry'].get_text()
-        if search_text != self.search_text:
-            self.search_text = search_text
-            self.setupPasswords()
+        self.performSearch()
 
     def on_clear_button_activate(self, widget):
         self['search_entry'].set_text('')
-        self.on_find_button_activate(widget)
+        self.performSearch()
 
     def on_tb_edit_clicked(self, widget):
         sel_pswd = self.getSelectedPassword()
@@ -389,6 +431,7 @@ class MainWindow(Window):
     def on_search_entry_focus_out_event(self, widget, focus):
         cid = self.statusbar.get_context_id('search')
         self.statusbar.pop(cid)
+        self.updateHistory()
 
     def on_tb_delete_clicked(self, widget):
         sel_pswd = self.getSelectedPassword()
@@ -444,3 +487,6 @@ class MainWindow(Window):
         dlg = dialogs.EditParserPatterns()
         dlg.run()
         globals.app.conf.save()
+        
+    def on_search_entry_changed(self, widget):
+        self.performSearch(update_history=False)
