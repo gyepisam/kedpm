@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: cli.py,v 1.8 2003/08/16 21:11:20 kedder Exp $
+# $Id: cli.py,v 1.9 2003/08/17 10:20:07 kedder Exp $
     
 from kedpm import __version__
 from kedpm.plugins.pdb_figaro import PDBFigaro, FigaroPassword
@@ -53,7 +53,7 @@ try 'help' for brief description of available commands
                     print
                     print "Good bye."
                     sys.exit(1)
-    
+
     def updatePrompt(self):
         self.prompt = self.PS1 % ('/'+'/'.join(self.pwd))
 
@@ -125,18 +125,29 @@ try 'help' for brief description of available commands
             selected_password = passwords[0]
         return selected_password
 
-    def inputString(self):
+    def inputString(self, prompt):
         '''Input string from user'''
-        input = raw_input('> ')
+        input = raw_input(prompt)
         return input
 
-    def inputText(self):
+    def inputText(self, prompt):
         '''Input long text from user'''
-        return self.inputString()
+        return self.inputString(prompt)
 
-    def inputPassword(self):
+    def inputPassword(self, prompt):
         '''Input long text from user'''
-        return self.inputString()
+        pwd = None
+        while pwd is None:
+            pass1 = getpass(prompt)
+            if pass1=='':
+                return ''
+            pass2 = getpass('Repeat: ')
+            if pass1==pass2:
+                pwd = pass1
+            else:                
+                print "Passwords don't match. Try again."
+        return pwd
+        
 
     def editPassword(self, pwd):
         '''Prompt user for each field of the password. Respect fields' type.'''
@@ -148,14 +159,11 @@ try 'help' for brief description of available commands
             
             new_value = ""
             if field_type == password.TYPE_STRING:
-                print "Enter %s (\"%s\"):" % (pwd.getFieldTitle(field), pwd[field])
-                new_value = self.inputString()
+                new_value = self.inputString("Enter %s (\"%s\"): " % (pwd.getFieldTitle(field), pwd[field]))
             elif field_type == password.TYPE_TEXT:
-                print "Enter %s (\"%s\"):" % (pwd.getFieldTitle(field), pwd[field])
-                new_value = self.inputText()
+                new_value = self.inputText("Enter %s (\"%s\"): " % (pwd.getFieldTitle(field), pwd[field]))
             elif field_type == password.TYPE_PASSWORD:
-                print "Enter %s (\"%s\"):" % (pwd.getFieldTitle(field), pwd[field])
-                new_value = self.inputPassword()
+                new_value = self.inputPassword("Enter %s: " % pwd.getFieldTitle(field))
             else:
                 print """Error. Type %s is unsupported yet. This field will retain an old value.""" % field_type
 
