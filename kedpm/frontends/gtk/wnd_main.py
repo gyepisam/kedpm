@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: wnd_main.py,v 1.5 2003/08/27 20:09:55 kedder Exp $
+# $Id: wnd_main.py,v 1.6 2003/08/30 21:47:45 kedder Exp $
 
 '''Main KedPM window'''
 
@@ -26,7 +26,7 @@ import globals
 from kedpm.password import TYPE_STRING
 
 from base import Window
-from dialogs import AboutDialog
+from dialogs import AboutDialog, PasswordEditDialog
 
 
 class MainWindow(Window):
@@ -182,4 +182,10 @@ class MainWindow(Window):
     def on_clear_button_activate(self, widget):
         self['search_entry'].set_text('')
         self.on_find_button_activate(widget)
- 
+
+    def on_tb_edit_clicked(self, widget):
+        print "Editing"
+        dlg = PasswordEditDialog()
+        dlg.run()
+        print "Done"
+

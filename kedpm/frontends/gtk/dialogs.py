@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: dialogs.py,v 1.2 2003/08/24 14:01:45 kedder Exp $
+# $Id: dialogs.py,v 1.3 2003/08/30 21:47:45 kedder Exp $
 
 '''Dialog classes'''
 
@@ -22,6 +22,7 @@ import gtk
 
 from base import Dialog, processEvents
 from kedpm.exceptions import WrongPassword
+from kedpm import password 
 
 class LoginDialog(Dialog):
     name = "dlg_login"
@@ -67,4 +68,78 @@ class AboutDialog(Dialog):
             self.destroyDialog()
         elif response_id == 1:
             CreditsDialog(transient_for=self.window).run()
+
+
+from kedpm.plugins.pdb_figaro import FigaroPassword # FIXME: this should be parametrized
+class PasswordEditDialog(Dialog):
+    name = "dlg_edit"
+
+    entries = {}
+
+    def __init__(self):
+        '''Construct password editing dialog from password spec'''
+        super(Dialog, self).__init__()
+        #self.window.hide()
+        tbl = self['edit_table']
+
+        self.password = FigaroPassword(title="Title", notes="Notes", password="Pass")
+        fti = self.password.fields_type_info
+        tbl.set_property('n-rows', len(fti))
+        row = 0
+        self.entries = {}
+        for field, type_info in fti:
+            label = gtk.Label(type_info['title']+":")
+            label.set_alignment(0, 0)
+            widget, entry = self.getEntryWidget(type_info['type'], self.password[field])
+            self.entries[field] = entry
+            tbl.attach(label, 0, 1, row, row+1, gtk.FILL, gtk.FILL, 0, 0)
+            tbl.attach(widget, 1, 2, row, row+1, gtk.EXPAND | gtk.FILL, gtk.EXPAND, 0, 0)
+            row += 1
+        #tbl.show_all()
+        self.window.show_all()
+
+    def getEntryWidget(self, type, value):
+        '''Return compound widget, text entry'''
+        if type == password.TYPE_PASSWORD:
+            entry = gtk.Entry()
+            entry.set_text(value)
+            hbox = gtk.HBox()
+            hbox.set_spacing(6)
+            entry.set_visibility(gtk.FALSE)
+            hbox.pack_start(entry, gtk.FALSE, gtk.TRUE)
+            btn = gtk.ToggleButton('_Show')
+            btn.set_property('can-focus', gtk.FALSE)
+            btn.connect('toggled', self.on_show_button_toggled, entry)
+            hbox.pack_start(btn, gtk.FALSE, gtk.TRUE)
+            return hbox, entry
+        elif type == password.TYPE_TEXT:
+            frame = gtk.Frame()
+            frame.set_shadow_type(gtk.SHADOW_IN)
+            scroll = gtk.ScrolledWindow()
+            scroll.set_policy(gtk.POLICY_AUTOMATIC, gtk.POLICY_AUTOMATIC)
+            entry = gtk.TextView()
+            entry.set_wrap_mode(gtk.WRAP_WORD)
+            entry.get_buffer().set_text(value)
+            scroll.add(entry)
+            frame.add(scroll)
+            return frame, entry
+        else:
+            entry = gtk.Entry()
+            entry.set_text(value)
+            return entry, entry
+
+    def on_show_button_toggled(self, widget, entry):
+        entry.set_visibility(widget.get_active())
+
+    def on_dlg_edit_response(self, widget, response_id):
+        if response_id == gtk.RESPONSE_OK:
+            print "Accepting data"
+            for field, entry in self.entries.items():
+                if self.password.getField(field)['type'] == password.TYPE_TEXT:
+                    buffer = entry.get_buffer()
+                    b_start, b_end = buffer.get_bounds()
+                    value = buffer.get_text(b_start, b_end, gtk.FALSE)
+                else:
+                    value = entry.get_text()
+                self.password[field] = value
 
