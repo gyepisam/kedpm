@@ -1,5 +1,5 @@
 include AUTHORS COPYING INSTALL NEWS CHANGES ChangeLog MANIFEST.in
 include scripts/kedpm kedpm-cli kedpm-gtk
 include run_tests
-include test/fpm.sample test/sample_config.xml
+include test/fpm.sample test/sample_config.xml test/__init__.py
 include glade/kedpm.glade glade/kedpm.gladep
