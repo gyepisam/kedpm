@@ -14,22 +14,22 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: parser.py,v 1.4 2003/10/23 21:11:45 kedder Exp $
+# $Id: parser.py,v 1.5 2003/10/25 16:12:34 kedder Exp $
 
 """Password pattern functions"""
 
 import re
 
 patterns = [
-"Username/Password: {user}/{password}",
-
-"""Username: {user}
-Password: {password}"""
+    "User{~(name)?}/Pass{~(word)?}:{ }{user}/{password}",
+    "User{~(name)?}:{ }{user}",
+    "Pass{~(word)?}:{ }{password}",
+    "Host{~(name)?}:{ }{url}"
 ]
 
 def parse(pattern, text):
     """Parse password text using regular expression
-    
+
     Return dictionary of password properties.
     """
     match = re.match(pattern, text, re.MULTILINE | re.DOTALL | re.IGNORECASE)
@@ -49,19 +49,23 @@ def regularize(pattern):
     """Return valid regular expression from password pattern
 
     Syntax:
-    
+
     Property field::
         {name} => (?P<name>.*?)
-        
+
     Arbitrary text::
         {} => .*
-    
+
+    Spaces::
+        { } => \s*
+
     Custom regular expression::
-        {~expr} => expr        
+        {~expr} => expr
     """
 
     expr = re.sub(r"\{~(.*?)\}", r"\1", pattern)
     expr = re.sub(r"\{\}", r".*", expr)
+    expr = re.sub(r"\{ \}", r"\s*", expr)
     expr = re.sub(r"\{(\S*?)\}", r"(?P<\1>.*?)", expr)
     #return expr
     return "(^|.*\s)"+expr+"($|\s)"
@@ -74,7 +78,6 @@ def parseMessage(text, patterns):
     for pattern in patterns:
         regexp = regularize(pattern)
         passdict = parse(regexp, text)
-        if len(passdict) > len(choosendict):
-            choosendict = passdict
+        choosendict.update(passdict)
 
     return choosendict
