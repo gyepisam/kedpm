@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: cli.py,v 1.29 2004/01/18 16:29:20 kedder Exp $
+# $Id: cli.py,v 1.30 2004/02/19 21:51:40 kedder Exp $
 
 "Command line interface for Ked Password Manager"
 
@@ -30,6 +30,7 @@ from getpass import getpass
 from cmd import Cmd
 import os, sys, tempfile
 from os.path import expanduser
+import readline
 
 class Application (Cmd, Frontend):
     PS1 = "kedpm:%s> " # prompt template
@@ -39,6 +40,7 @@ try 'help' for brief description of available commands
 """
 
     modified = 0
+    histfile = os.getenv("HOME") + '/.kedpm/history'
 
     def __init__(self):
         Cmd.__init__(self)
@@ -281,6 +283,7 @@ long password correctly."""
 
     def do_exit(self, arg):
         '''Quit KED Password Manager'''
+        readline.write_history_file(self.histfile)
         if self.modified:
             self.tryToSave()
         print "Exiting."
@@ -658,6 +661,8 @@ edit.'''
         self.conf.save()
 
     def mainLoop(self):
+        if os.access(self.histfile, os.R_OK):
+            readline.read_history_file(self.histfile)
         self.updatePrompt()
         try:
             self.cmdloop()

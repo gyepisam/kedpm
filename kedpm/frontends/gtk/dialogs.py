@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: dialogs.py,v 1.18 2004/01/18 16:29:20 kedder Exp $
+# $Id: dialogs.py,v 1.19 2004/02/19 21:51:40 kedder Exp $
 
 '''Dialog classes'''
 
@@ -279,6 +279,15 @@ class EditParserPatterns(Dialog):
             count += 1
         plist.set_model(store)
 
+    def process(self):
+        store = self['patterns'].get_model()
+        list_iter = store.get_iter_first()
+        patterns = []
+        while list_iter:
+            val = store.get_value(list_iter, 0)
+            patterns.append(val)
+            list_iter = store.iter_next(list_iter)
+        globals.app.conf.patterns = patterns
 
     def clearEntry(self):
         self['delete_pattern'].set_sensitive(False)

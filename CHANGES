@@ -15,6 +15,8 @@ Version 0.4.0 (??)
 
     * Parser patterns editor added.
 
+    * CLI frontend remembers command history between runs.
+
 Version 0.3.1 (2003-10-27)
 
     * Fixed password database initialization problem. New databases
