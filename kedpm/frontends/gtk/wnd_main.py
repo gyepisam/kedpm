@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: wnd_main.py,v 1.6 2003/08/30 21:47:45 kedder Exp $
+# $Id: wnd_main.py,v 1.7 2003/08/31 20:06:56 kedder Exp $
 
 '''Main KedPM window'''
 
@@ -27,7 +27,7 @@ from kedpm.password import TYPE_STRING
 
 from base import Window
 from dialogs import AboutDialog, PasswordEditDialog
-
+from kedpm.plugins.pdb_figaro import FigaroPassword # FIXME: this should be parametrized
 
 class MainWindow(Window):
     '''Main window of Ked Password Manager'''
@@ -45,9 +45,9 @@ class MainWindow(Window):
     def __init__(self):
         super(MainWindow, self).__init__()
         self.pdb = globals.app.pdb
-        self.password_tree = globals.app.pdb.getTree()
+        self.cwtree = self.password_tree = globals.app.pdb.getTree()
         self.setupCategories()
-        #self.setupPasswords()
+        self.setupPasswords()
         self.window.selection_add_target("PRIMARY", "STRING", 1)
         self.window.selection_add_target("CLIPBOARD", "STRING", 1)
 
@@ -123,6 +123,14 @@ class MainWindow(Window):
         have_selection = self.window.selection_owner_set('CLIPBOARD')
         self.selected_text = text
 
+    def getSelectedPassword(self):
+        store, iter = self['password_list'].get_selection().get_selected()
+        if iter:
+            password = self.passwords[store.get_value(iter, 0)]
+            return password
+        else:
+            return None
+
 
     # Signal handlers
     def on_wnd_main_destroy(self, widget):
@@ -152,17 +160,17 @@ class MainWindow(Window):
     def on_password_list_button_press_event(self, widget, event):
         if event.button == 3:
             # RMB clicked
-            path, column, cell_x, cell_y = self['password_list'].get_path_at_pos(int(event.x), int(event.y))
-            #if not self.password_menu:
-            self.password_menu = self.generatePasswordPopup()
-            self.password_menu.popup(None, None, None, event.button, event.time)
-            print path
+            pathinfo = self['password_list'].get_path_at_pos(int(event.x), int(event.y))
+            if pathinfo:
+                path, column, cell_x, cell_y = pathinfo                    
+                #if not self.password_menu:
+                self.password_menu = self.generatePasswordPopup()
+                self.password_menu.popup(None, None, None, event.button, event.time)
         return gtk.FALSE
 
     def on_password_popup_activate(self, widget, data):
         print "Data is %s" % data
-        store, iter = self['password_list'].get_selection().get_selected()
-        password = self.passwords[store.get_value(iter, 0)]
+        password = self.getSelectedPassword()
         copytext = password[data]
         self.setXSelection(copytext)
 
@@ -184,8 +192,25 @@ class MainWindow(Window):
         self.on_find_button_activate(widget)
 
     def on_tb_edit_clicked(self, widget):
-        print "Editing"
-        dlg = PasswordEditDialog()
-        dlg.run()
-        print "Done"
+        sel_pswd = self.getSelectedPassword()
+        if sel_pswd:
+            dlg = PasswordEditDialog(sel_pswd)
+            response = dlg.run()
+            if response == gtk.RESPONSE_OK:
+                self.setupPasswords()
+
+    def on_tb_add_clicked(self, widget):
+        pswd = FigaroPassword()
+        dlg = PasswordEditDialog(pswd)
+        response = dlg.run()
+        if response == gtk.RESPONSE_OK:
+            self.cwtree.addNode(pswd)
+            self.setupPasswords()
+
+    def on_mi_save_activate(self, widget):
+        self.pdb.save()
+        sb = self['statusbar']
+        cid = sb.get_context_id('status') 
+        sb.pop(cid)
+        sb.push(cid, "Saved.")
 

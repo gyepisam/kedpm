@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: dialogs.py,v 1.3 2003/08/30 21:47:45 kedder Exp $
+# $Id: dialogs.py,v 1.4 2003/08/31 20:06:56 kedder Exp $
 
 '''Dialog classes'''
 
@@ -76,13 +76,14 @@ class PasswordEditDialog(Dialog):
 
     entries = {}
 
-    def __init__(self):
+    def __init__(self, password):
         '''Construct password editing dialog from password spec'''
-        super(Dialog, self).__init__()
+        super(PasswordEditDialog, self).__init__()
         #self.window.hide()
         tbl = self['edit_table']
 
-        self.password = FigaroPassword(title="Title", notes="Notes", password="Pass")
+        #self.password = FigaroPassword(title="Title", notes="Notes", password="Pass")
+        self.password = password
         fti = self.password.fields_type_info
         tbl.set_property('n-rows', len(fti))
         row = 0
