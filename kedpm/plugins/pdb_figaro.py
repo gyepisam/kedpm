@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: pdb_figaro.py,v 1.9 2003/08/17 18:56:18 kedder Exp $
+# $Id: pdb_figaro.py,v 1.10 2003/08/19 18:56:12 kedder Exp $
 
 """ Figaro password manager database plugin """
 
@@ -114,6 +114,7 @@ class PDBFigaro (PasswordDatabase):
         f = open(filename, 'w')
         f.write(doc.toxml())
         f.close()
+        os.chmod(filename, 0600)
 
     def generateSalt(self):
         '''Generate salt, that consists of 8 small latin characters'''
@@ -182,9 +183,15 @@ class PDBFigaro (PasswordDatabase):
         return document
     
     def create(self, password, fname=""):
+        filename = fname or self.default_db_filename
+        dirname, fname = os.path.split(filename)
+        print dirname
+        if not os.access(dirname, os.F_OK):
+            print "Creating directory %s" % dirname
+            os.mkdir(dirname, 0700)
         newdb = PDBFigaro()
         newdb._password = password
-        newdb.save(fname)
+        newdb.save(filename)
     
     def _getPasswordFromNode(self, node):
         ''' Create password instance from given fpm node '''
