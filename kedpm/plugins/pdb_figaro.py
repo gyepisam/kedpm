@@ -1,4 +1,4 @@
-# Copyright (C) 2003  Andrey Lebedev <andrey@micro.lt>
+# Copyright (C) 2003-2005  Andrey Lebedev <andrey@micro.lt>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: pdb_figaro.py,v 1.18 2004/02/29 11:45:48 kedder Exp $
+# $Id: pdb_figaro.py,v 1.19 2005/03/05 21:44:33 kedder Exp $
 
 """ Figaro password manager database plugin """
 
@@ -95,6 +95,14 @@ class PDBFigaro (PasswordDatabase):
         if generator.startswith('kedpm'):
             self.native=1
         self.convDomToTree(fpm)
+
+    def changePassword(self, password):
+        """Change password for database.
+        
+        Database will be saved and reopened with new password."""        
+        self._password = password
+        self.save()
+        self.open(password, fname = self.filename)
 
     def convDomToTree(self, fpm):
         'Read figaro xml database and create password tree from it'

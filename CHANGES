@@ -12,6 +12,8 @@ Version 0.5.0 (Upcoming)
       is possible to translate KedPM to any language using usual gettext
       tools.
 
+    * Changing of database master password implemented.
+
 Version 0.4.0 (2004.02.29) 
 ==========================
 

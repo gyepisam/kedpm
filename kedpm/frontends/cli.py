@@ -1,4 +1,4 @@
-# Copyright (C) 2003  Andrey Lebedev <andrey@micro.lt>
+# Copyright (C) 2003-2005  Andrey Lebedev <andrey@micro.lt>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: cli.py,v 1.33 2004/02/29 22:38:52 kedder Exp $
+# $Id: cli.py,v 1.34 2005/03/05 21:44:32 kedder Exp $
 
 "Command line interface for Ked Password Manager"
 
@@ -75,7 +75,8 @@ try 'help' for brief description of available commands.
             pass1 = getpass(_("Provide password: "))
             pass2 = getpass(_("Repeat password: "))
             if pass1 == '':
-                print _("Empty passwords are really insecure. You shoud create one.")
+                print _("Empty passwords are really insecure. You should " \
+                        "create one.")
             if pass1!=pass2:
                 print _("Passwords don't match! Please repeat.")
 
@@ -484,6 +485,35 @@ Syntax:
 
     def complete_rename(self, text, line, begidx, endidx):
         return self.complete_dirs(text, line, begidx, endidx)
+
+    def do_passwd(self, arg):
+        """Change master password for opened database
+        
+Syntax:
+    password [new password]
+
+If new password is not provided with command, you will be promted to enter new
+one.
+"""
+
+        if not arg:
+            # Password is not provided with command. Ask user for it
+            pass1 = getpass(_("New password: "))
+            pass2 = getpass(_("Repeat password: "))
+            if pass1 == '':
+                print _("Empty passwords are really insecure. You should " \
+                        "create one.")
+                return
+            if pass1!=pass2:
+                print _("Passwords don't match! Please repeat.")
+                return
+            new_pass = pass1
+        else:
+            new_pass = arg
+
+        self.pdb.changePassword(new_pass)
+        print _("Password changed.")
+        
 
     def do_help(self, arg):
         """Print help topic"""

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ked Password Manager 0.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2004-03-02 00:43+0200\n"
+"POT-Creation-Date: 2005-03-05 22:50+0200\n"
 "PO-Revision-Date: 2004-03-02 00:33+0200\n"
 "Last-Translator: Andrey Lebedev <andrey@micro.lt>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -51,57 +51,59 @@ msgstr "Создаю новую базу данных паролей."
 msgid "Provide password: "
 msgstr "Введите пароль:"
 
-#: kedpm/frontends/cli.py:76
+#: kedpm/frontends/cli.py:76 kedpm/frontends/cli.py:502
 msgid "Repeat password: "
 msgstr "Повторите пароль:"
 
-#: kedpm/frontends/cli.py:78
-msgid "Empty passwords are really insecure. You shoud create one."
+#: kedpm/frontends/cli.py:78 kedpm/frontends/cli.py:504
+#: kedpm/frontends/gtk/dialogs.py:393
+#, fuzzy
+msgid "Empty passwords are really insecure. You should create one."
 msgstr "Пустые пароли крайне небезопасны. Вы должны создать пароль."
 
-#: kedpm/frontends/cli.py:80
+#: kedpm/frontends/cli.py:81 kedpm/frontends/cli.py:508
 msgid "Passwords don't match! Please repeat."
 msgstr "Пароли не совпадают! Пожалуйста повторите."
 
-#: kedpm/frontends/cli.py:144
+#: kedpm/frontends/cli.py:145
 msgid "No passwords matching \"%s\" were found"
 msgstr "Не одного пароля, соответствующего \"%s\" не найдено"
 
-#: kedpm/frontends/cli.py:148
+#: kedpm/frontends/cli.py:149
 msgid "Enter number. Enter 0 to cancel."
 msgstr "Введите номер. Введите 0 для отмены."
 
-#: kedpm/frontends/cli.py:150
+#: kedpm/frontends/cli.py:151
 msgid "show: "
 msgstr "показать: "
 
-#: kedpm/frontends/cli.py:185
+#: kedpm/frontends/cli.py:186 kedpm/frontends/gtk/dialogs.py:389
 msgid "Passwords don't match. Try again."
 msgstr "Пароли не совпадают. Попробуйте снова."
 
-#: kedpm/frontends/cli.py:198 kedpm/frontends/cli.py:200
+#: kedpm/frontends/cli.py:199 kedpm/frontends/cli.py:201
 msgid "Enter %s (\"%s\"): "
 msgstr "Введите %s (\"%s\"): "
 
-#: kedpm/frontends/cli.py:202
+#: kedpm/frontends/cli.py:203
 msgid "Enter %s: "
 msgstr "Введите %s: "
 
-#: kedpm/frontends/cli.py:204
+#: kedpm/frontends/cli.py:205
 msgid "Error. Type %s is unsupported yet. This field will retain an old value."
 msgstr ""
 "Ошибка. Тип %s пока не поддерживается. Это поле сохранит старое значение."
 
-#: kedpm/frontends/cli.py:213
+#: kedpm/frontends/cli.py:214
 msgid "WARNING! Your password is too long for Figaro Password Manager."
 msgstr "ВНИМАНИЕ! Ваш пароль слижком длинный для Figaro Password Manager."
 
-#: kedpm/frontends/cli.py:214
+#: kedpm/frontends/cli.py:215
 msgid ""
 "Figaro Password Manager can handle only passwords shorter than 24 characters."
 msgstr "Figaro Password Manager может хранить лишь пароли короче 24 символов."
 
-#: kedpm/frontends/cli.py:215
+#: kedpm/frontends/cli.py:216
 msgid ""
 "However, KedPM can store this password for you, but it\n"
 "will break fpm compatibility. fpm will not be able to handle such\n"
@@ -111,108 +113,118 @@ msgstr ""
 "уничтожит совместимость с fpm. fpm не сможет корректно\n"
 "обработать настолько длинный пароль."
 
-#: kedpm/frontends/cli.py:218
+#: kedpm/frontends/cli.py:219
 msgid "Do you still want to save your password? [Y/n]: "
 msgstr "Вы всё ещё хотите сохранить ваш пароль? [Y/n]: "
 
-#: kedpm/frontends/cli.py:234
+#: kedpm/frontends/cli.py:235
 msgid "Database was modified. Do you want to save it now? [Y/n]: "
 msgstr "База данных изменена. Вы хотите сохранить её сейчас? [Y/n]: "
 
-#: kedpm/frontends/cli.py:258
+#: kedpm/frontends/cli.py:259
 msgid "running %s"
 msgstr "выполняю %s"
 
-#: kedpm/frontends/cli.py:302
+#: kedpm/frontends/cli.py:303
 msgid "Exiting."
 msgstr "Выхожу."
 
-#: kedpm/frontends/cli.py:322
+#: kedpm/frontends/cli.py:323
 msgid "ls: %s:  No such catalog"
 msgstr "ls: %s: Нет·такой·категории"
 
-#: kedpm/frontends/cli.py:325
+#: kedpm/frontends/cli.py:326
 msgid "=== Directories ==="
 msgstr "=== Директории ==="
 
-#: kedpm/frontends/cli.py:328
+#: kedpm/frontends/cli.py:329
 msgid "==== Passwords ===="
 msgstr "===== Пароли ====="
 
-#: kedpm/frontends/cli.py:345
+#: kedpm/frontends/cli.py:346
 msgid "cd: %s: No such catalog"
 msgstr "cd: %s: Нет·такой·категории"
 
-#: kedpm/frontends/cli.py:406
+#: kedpm/frontends/cli.py:407
 msgid "Cancelled"
 msgstr "Отменено"
 
-#: kedpm/frontends/cli.py:408 kedpm/frontends/cli.py:616
+#: kedpm/frontends/cli.py:409 kedpm/frontends/cli.py:646
 msgid "No password selected"
 msgstr "Пароль не выбран"
 
-#: kedpm/frontends/cli.py:439
+#: kedpm/frontends/cli.py:440
 msgid "Saving..."
 msgstr "Сохраняю..."
 
-#: kedpm/frontends/cli.py:454
+#: kedpm/frontends/cli.py:455
 msgid "mkdir: too few arguments"
 msgstr "mkdir: слишком мало аргументов"
 
-#: kedpm/frontends/cli.py:455
+#: kedpm/frontends/cli.py:456
 msgid "try 'help mkdir' for more information"
 msgstr "папробуйте 'help mkdir' для более подробной информации"
 
-#: kedpm/frontends/cli.py:478
+#: kedpm/frontends/cli.py:479
 msgid "rename: category %s already exists"
 msgstr "rename: категория %s уже существует"
 
-#: kedpm/frontends/cli.py:481
+#: kedpm/frontends/cli.py:482
 msgid "rename: %s: no such category"
 msgstr "rename:·%s:·нет такой категории"
 
-#: kedpm/frontends/cli.py:525 kedpm/frontends/cli.py:554
+#: kedpm/frontends/cli.py:501
+#, fuzzy
+msgid "New password: "
+msgstr "Повторите пароль:"
+
+#: kedpm/frontends/cli.py:515
+#, fuzzy
+msgid "Password changed."
+msgstr "Пароль принят."
+
+#: kedpm/frontends/cli.py:555 kedpm/frontends/cli.py:584
 msgid "set: no such option: %s"
 msgstr "set:·нет такой опции:·%s"
 
-#: kedpm/frontends/cli.py:571
+#: kedpm/frontends/cli.py:601
 msgid "No password selected."
 msgstr "Не выбрано не одного пароля"
 
-#: kedpm/frontends/cli.py:579
+#: kedpm/frontends/cli.py:609
 msgid "Password deleted"
 msgstr "Пароль удалён"
 
-#: kedpm/frontends/cli.py:582
+#: kedpm/frontends/cli.py:612
 msgid "Password was not deleted."
 msgstr "Пароль не был удалён."
 
-#: kedpm/frontends/cli.py:606
+#: kedpm/frontends/cli.py:636
 msgid "mv: %s: No such catalog"
 msgstr "mv:·%s:·Нет такой категории"
 
-#: kedpm/frontends/cli.py:627
+#: kedpm/frontends/cli.py:657
 msgid "rmdir: too few arguments"
 msgstr "rmdir:·слишком мало аргументов"
 
-#: kedpm/frontends/cli.py:628
+#: kedpm/frontends/cli.py:658
 msgid "try 'help rmdir' for more information"
 msgstr "попробуйте·'help·rmdir' для более подробной информации"
 
-#: kedpm/frontends/cli.py:633
+#: kedpm/frontends/cli.py:663
 msgid "rmdir: Can't remove root directory"
 msgstr "rmdir: Не могу удалить корневую директорию"
 
-#: kedpm/frontends/cli.py:640
+#: kedpm/frontends/cli.py:670
 msgid ""
 "Are you sure you want to delete category %s' and ALL it's entries? [y/N]: "
 msgstr "Вы действительно хотите удалить категорию %s и ВСЕ её записи? [y/N]: "
 
-#: kedpm/frontends/cli.py:644
+#: kedpm/frontends/cli.py:674
 msgid "rmdir: cateogry \"%s\" and all it's entries were deleted."
 msgstr "rmdir:·категория·\"%s\" и все её записи были удалены."
 
-#: kedpm/frontends/cli.py:651
+#: kedpm/frontends/cli.py:681
 msgid "rmdir: Warning! Current working directory was removed. Changing to /"
 msgstr "rmdir:·Внимание! Текущая рабочая директория была удалена. Изменяю на /"
 
@@ -224,69 +236,70 @@ msgstr "Ked Password Manager"
 msgid "_File"
 msgstr "_Файл"
 
-#: glade/glade-msg.c:9 glade/glade-msg.c:56
+#: glade/glade-msg.c:9
+#, fuzzy
+msgid "Change master _password..."
+msgstr "Пароль чистым текстом:"
+
+#: glade/glade-msg.c:10 glade/glade-msg.c:54
 msgid "_Edit"
 msgstr "_Правка"
 
-#: glade/glade-msg.c:10
+#: glade/glade-msg.c:11
 msgid "Add new password to current category"
 msgstr "Добавить новый пароль в текущую категорию"
 
-#: glade/glade-msg.c:11 glade/glade-msg.c:60
+#: glade/glade-msg.c:12 glade/glade-msg.c:58
 msgid "_Add password"
 msgstr "_Добавить пароль"
 
-#: glade/glade-msg.c:12
+#: glade/glade-msg.c:13
 msgid "Add new password by parsing mailed password information"
 msgstr "Добавить новый пароль с помощью разбора текста"
 
-#: glade/glade-msg.c:13
+#: glade/glade-msg.c:14
 msgid "Pa_rse password"
 msgstr "Ра_зобрать пароль"
 
-#: glade/glade-msg.c:14 glade/glade-msg.c:29
+#: glade/glade-msg.c:15 glade/glade-msg.c:29
 msgid "Edit selected password"
 msgstr "Редактировать выделенный пароль"
 
-#: glade/glade-msg.c:15
+#: glade/glade-msg.c:16
 msgid "_Edit password"
 msgstr "Редактировать пароль"
 
-#: glade/glade-msg.c:16
+#: glade/glade-msg.c:17
 msgid "Delete selected password"
 msgstr "Удалить выделенный пароль"
 
-#: glade/glade-msg.c:17
+#: glade/glade-msg.c:18
 msgid "_Delete password"
 msgstr "_Удалить пароль"
 
-#: glade/glade-msg.c:18
+#: glade/glade-msg.c:19
 msgid "Edit parser patterns"
 msgstr "Редактировать шаблоны разбора"
 
-#: glade/glade-msg.c:19
+#: glade/glade-msg.c:20
 msgid "_View"
 msgstr "_Вид"
 
-#: glade/glade-msg.c:20
+#: glade/glade-msg.c:21
 msgid "Flat tree"
 msgstr "Плоское дерево"
 
-#: glade/glade-msg.c:21
+#: glade/glade-msg.c:22
 msgid "Show password information as plain text."
 msgstr "Показать пароль как открытый текст."
 
-#: glade/glade-msg.c:22
+#: glade/glade-msg.c:23
 msgid "As plain _text"
 msgstr "_Открытым текстом"
 
-#: glade/glade-msg.c:23
+#: glade/glade-msg.c:24
 msgid "_Help"
 msgstr "_Справка"
-
-#: glade/glade-msg.c:24
-msgid "_About"
-msgstr "_О программе"
 
 #: glade/glade-msg.c:25
 msgid "Save password database"
@@ -320,125 +333,121 @@ msgstr "Плоско"
 msgid "Password filter (Ctrl+K)"
 msgstr "Фильтр паролей (Ctrl+K)"
 
-#: glade/glade-msg.c:34 glade/glade-msg.c:44 glade/glade-msg.c:64
-#: glade/glade-msg.c:72 glade/glade-msg.c:73 glade/glade-msg.c:93
-msgid "*"
-msgstr ""
-
-#: glade/glade-msg.c:35
+#: glade/glade-msg.c:34
 msgid "Filter password list"
 msgstr "Фильтровать список паролей"
 
-#: glade/glade-msg.c:36
+#: glade/glade-msg.c:35
 msgid "Find now"
 msgstr "Найти"
 
-#: glade/glade-msg.c:37
+#: glade/glade-msg.c:36
 msgid "Show all passwords (Ctrl+Escape)"
 msgstr "Показать все пароли (Ctrl+Escape)"
 
-#: glade/glade-msg.c:38
+#: glade/glade-msg.c:37
 msgid "Clear"
 msgstr "Очистить"
 
-#: glade/glade-msg.c:39
+#: glade/glade-msg.c:38
 msgid "Login - Ked Password Manager"
 msgstr "Вход - Ked Password Manager"
 
-#: glade/glade-msg.c:40
+#: glade/glade-msg.c:39
 msgid "Welcome to <b>Ked Password Manager</b>!"
 msgstr "Добро пожаловать в <b>Ked Password Manager</b>!"
 
-#: glade/glade-msg.c:41
+#: glade/glade-msg.c:40
 msgid "Provide password to access database."
 msgstr "Введите пароль для доступа к базе данных паролей."
 
-#: glade/glade-msg.c:42
+#: glade/glade-msg.c:41
 msgid "<span color=\"red\"><b>Password incorrect. Please try again</b></span>"
 msgstr "<span color=\"red\"><b>Пароль неверный. Попробуйте снова</b></span>"
 
-#: glade/glade-msg.c:43
+#: glade/glade-msg.c:42
 msgid "_Password:"
 msgstr "_Пароль: "
 
-#: glade/glade-msg.c:45
+#: glade/glade-msg.c:43
 msgid "About Ked Password Manager"
 msgstr "О программе Ked Password Manager"
 
-#: glade/glade-msg.c:46
+#: glade/glade-msg.c:44
 msgid "_Credits"
 msgstr "_Авторы"
 
-#: glade/glade-msg.c:47
+#: glade/glade-msg.c:45
 #, c-format
 msgid ""
 "<span size=\"xx-large\" weight=\"heavy\" stretch=\"ultraexpanded\">Ked "
 "Password Manager %s</span>"
 msgstr ""
 
-#: glade/glade-msg.c:48
+#: glade/glade-msg.c:46
 msgid "A tool for organizing passwords."
 msgstr "Инструмент для организации паролей."
 
-#: glade/glade-msg.c:49
+#: glade/glade-msg.c:47
+#, fuzzy
 msgid ""
-"<small>Copyright (c) 2003 Andrey Lebedev &lt;andrey@micro.lt&gt;</small>"
+"<small>Copyright (c) 2003-2005 Andrey Lebedev &lt;andrey@micro.lt&gt;</small>"
 msgstr ""
 "<small>Copyright (c) 2003 Андрей Лебедев &lt;andrey@micro.lt&gt;</small>"
 
-#: glade/glade-msg.c:50
+#: glade/glade-msg.c:48
 msgid "Credits"
 msgstr "Авторы"
 
-#: glade/glade-msg.c:51
+#: glade/glade-msg.c:49
 msgid "Andrey Lebedev <andrey@micro.lt>"
 msgstr "Андрей Лебедев <andrey@micro.lt>"
 
-#: glade/glade-msg.c:52
+#: glade/glade-msg.c:50
 msgid "Written by"
 msgstr "Программирование"
 
-#: glade/glade-msg.c:53
+#: glade/glade-msg.c:51
 msgid "Eugene Morozov"
 msgstr "Евгений Морозов"
 
-#: glade/glade-msg.c:54
+#: glade/glade-msg.c:52
 msgid "Graphics"
 msgstr "Графика"
 
-#: glade/glade-msg.c:55
+#: glade/glade-msg.c:53
 msgid "View as plain _text"
 msgstr "Просмотр открытым текстом"
 
-#: glade/glade-msg.c:57
+#: glade/glade-msg.c:55
 msgid "Edit password"
 msgstr "Изменить пароль:"
 
-#: glade/glade-msg.c:58
+#: glade/glade-msg.c:56
 msgid "Add _subcategory"
 msgstr "Добавить _подкатегорию"
 
-#: glade/glade-msg.c:59
+#: glade/glade-msg.c:57
 msgid "Add password to selected category"
 msgstr "Добавить пароль в выбранную категорию"
 
-#: glade/glade-msg.c:61
+#: glade/glade-msg.c:59
 msgid "Add category"
 msgstr "Добавить категорию"
 
-#: glade/glade-msg.c:62
+#: glade/glade-msg.c:60
 msgid "Provide name of a category to add"
 msgstr "Укажите имя добавляемой категории"
 
-#: glade/glade-msg.c:63
+#: glade/glade-msg.c:61
 msgid "_Category name:"
 msgstr "Имя категории:"
 
-#: glade/glade-msg.c:65
+#: glade/glade-msg.c:62
 msgid "Choose Password"
 msgstr "Выберите пароль"
 
-#: glade/glade-msg.c:66
+#: glade/glade-msg.c:63
 msgid ""
 "<b>Welcome to Ked Password Manager!</b>\n"
 "\n"
@@ -452,57 +461,57 @@ msgstr ""
 "Ваших паролей. Крайне важно, чтобы вы запомнили этот пароль; без него вы не "
 "сможете получить доступ до списка ваших паролей."
 
-#: glade/glade-msg.c:69
+#: glade/glade-msg.c:66
 msgid ""
 "<span color=\"red\"><b>Passwords don't match. Please try again.</b></span>"
 msgstr ""
 "<span color=\"red\"><b>Пароли не совпадают. Попробуйте снова.</b></span>"
 
-#: glade/glade-msg.c:70
+#: glade/glade-msg.c:67
 msgid "Provide password:"
 msgstr "Введите пароль:"
 
-#: glade/glade-msg.c:71
+#: glade/glade-msg.c:68 glade/glade-msg.c:90
 msgid "Repeat password:"
 msgstr "Повторите пароль:"
 
-#: glade/glade-msg.c:74
+#: glade/glade-msg.c:69
 msgid "Preferences"
 msgstr "Настройки"
 
-#: glade/glade-msg.c:75
+#: glade/glade-msg.c:70
 msgid "<b>Saving</b>"
 msgstr "<b>Сохранение</b>"
 
-#: glade/glade-msg.c:76
+#: glade/glade-msg.c:71
 msgid "    "
 msgstr ""
 
-#: glade/glade-msg.c:77
+#: glade/glade-msg.c:72
 msgid "save-mode:"
 msgstr ""
 
-#: glade/glade-msg.c:78
+#: glade/glade-msg.c:73
 msgid "ask"
 msgstr ""
 
-#: glade/glade-msg.c:79
+#: glade/glade-msg.c:74
 msgid "auto"
 msgstr ""
 
-#: glade/glade-msg.c:80
+#: glade/glade-msg.c:75
 msgid "fpm-database:"
 msgstr ""
 
-#: glade/glade-msg.c:81
+#: glade/glade-msg.c:76
 msgid "Parse password"
 msgstr "Разобрать пароль"
 
-#: glade/glade-msg.c:82
+#: glade/glade-msg.c:77
 msgid "_Parse"
 msgstr "_Разобрать"
 
-#: glade/glade-msg.c:83
+#: glade/glade-msg.c:78
 msgid ""
 "<b>Paste your mail with password information here.</b>\n"
 "\n"
@@ -514,15 +523,15 @@ msgstr ""
 "Ked Password Manager попробует разобрать его и автоматически заполнить "
 "некоторые поля пароля."
 
-#: glade/glade-msg.c:86
+#: glade/glade-msg.c:81
 msgid "Plain text password"
 msgstr "Пароль чистым текстом:"
 
-#: glade/glade-msg.c:87
+#: glade/glade-msg.c:82
 msgid "Parser patterns"
 msgstr "Шаблоны разбора"
 
-#: glade/glade-msg.c:88
+#: glade/glade-msg.c:83
 msgid ""
 "Here you can teach Ked Password Manager how to extract useful password "
 "information from your emails. For more information on format of these "
@@ -532,7 +541,7 @@ msgstr ""
 "из ваших email сообщений. За более подробной информацией о формате этих "
 "шаблонов обращайтесь к документации KedPM."
 
-#: glade/glade-msg.c:89
+#: glade/glade-msg.c:84
 msgid ""
 "<b>Basic rules are:</b>\n"
 "  {field} - matches password field;\n"
@@ -543,3 +552,16 @@ msgstr ""
 "  {field} - соответствует полю пароля;\n"
 "  { } - соответствует произвольному количеству пробелов, либо ничему;\n"
 "  {~regexp} - соответствует произвольному регулярному выражению;"
+
+#: glade/glade-msg.c:88
+#, fuzzy
+msgid "Change master password"
+msgstr "Пароль чистым текстом:"
+
+#: glade/glade-msg.c:89
+#, fuzzy
+msgid "New password:"
+msgstr "Повторите пароль:"
+
+#~ msgid "_About"
+#~ msgstr "_О программе"

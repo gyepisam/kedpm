@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: passdb.py,v 1.4 2004/01/04 17:07:16 kedder Exp $
+# $Id: passdb.py,v 1.5 2005/03/05 21:44:32 kedder Exp $
 
 """ Password Database """
 
@@ -41,6 +41,10 @@ class PasswordDatabase:
 
     def create(self, password, fname=""):
         """Create new password database"""
+        pass
+
+    def changePassword(self, newpassword):
+        """Change password for database"""
         pass
 
     def getTree(self):

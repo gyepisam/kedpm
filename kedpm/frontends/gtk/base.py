@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: base.py,v 1.5 2003/09/05 19:40:23 kedder Exp $
+# $Id: base.py,v 1.6 2005/03/05 21:44:33 kedder Exp $
 
 import gtk
 import gtk.glade
@@ -54,7 +54,7 @@ class Window(object):
         #    self.menus[menu] = menu_wt.get_widget(menu)
 
     def __getitem__(self, name):
-        return self.widgetTree.get_widget(name) 
+        return self.widgetTree.get_widget(name)
 
     def getGladeWidget(self, name):
         widgetTree = gtk.glade.XML(globals.glade_file, name)
@@ -62,6 +62,7 @@ class Window(object):
         return widgetTree.get_widget(name)
 
 class Dialog(Window):
+    """Base class for modal dialogs"""
     def __init__(self, transient_for="main"):
         super(Dialog, self).__init__()
         #Window.__init__(self)
@@ -70,15 +71,34 @@ class Dialog(Window):
                 transient_for = globals.app.wnd_main.window
             self.window.set_transient_for(transient_for)
 
+    #def run(self):
+    #    """Create dialog and wait for user input. Return user response."""
+    #    response = self.window.run()
+    #    if response == gtk.RESPONSE_OK:
+    #        self.process()
+    #    self.destroyDialog()
+    #    return response
+
     def run(self):
-        response = self.window.run()
-        if response == gtk.RESPONSE_OK:
-            self.process()
-        self.destroyDialog()
-        return response
+        """Present dialog window to the user."""
+        while 1:
+            resp = self.window.run()
+            if resp in (gtk.RESPONSE_CANCEL, gtk.RESPONSE_DELETE_EVENT):
+                self.destroyDialog()
+                return resp
+            
+            done = self.process(resp)
+            if done:
+                self.destroyDialog()
+                return resp
 
     def destroyDialog(self):
         self.window.destroy()
 
-    def process(self):
-        pass
+    def process(self, resp_id):
+        """Perform any processing of entered data.
+        
+        Return True if data is processed successfuly, or False if data needs
+        corrections. If True is returned, dialog will be destroyed.
+        """
+        return True

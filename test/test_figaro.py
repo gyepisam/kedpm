@@ -1,4 +1,4 @@
-# Copyright (C) 2003  Andrey Lebedev <andrey@micro.lt>
+# Copyright (C) 2003-2005  Andrey Lebedev <andrey@micro.lt>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,11 +14,14 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: test_figaro.py,v 1.11 2004/02/24 22:58:46 kedder Exp $
+# $Id: test_figaro.py,v 1.12 2005/03/05 21:44:54 kedder Exp $
 
 import os
+import shutil
 import unittest
 from kedpm.plugins.pdb_figaro import FigaroPassword, PDBFigaro, FPM_PASSWORD_LEN, FigaroPasswordTooLongError
+from kedpm.exceptions import WrongPassword
+
 from Crypto.Cipher import Blowfish
 
 class PDBFigaroTestCase(unittest.TestCase):
@@ -97,6 +100,23 @@ class PDBFigaroTestCase(unittest.TestCase):
         self.assertEqual(self.pdb.FULL_VERSION, '00.53.00')
         self.assertEqual(self.pdb.MIN_VERSION, '00.50.00')
         self.assertEqual(self.pdb.DISPLAY_VERSION, '0.53')
+
+    def test_changePassword(self):
+        new_pwd = 'new_password'
+        # Copy test database to new location
+        shutil.copyfile('test/fpm.sample', 'test/fpm.passwdtest')
+        try:
+            self.pdb.open(self.password, fname='test/fpm.passwdtest')
+            
+            self.pdb.changePassword(new_pwd)
+
+            # Try to open database with old password
+            self.assertRaises(WrongPassword, self.pdb.open, self.password,
+                              fname='test/fpm.passwdtest')
+
+            self.pdb.open(new_pwd, fname='test/fpm.passwdtest')
+        finally:
+            os.unlink('test/fpm.passwdtest')
 
 
 class SavedFigaroTestCase(PDBFigaroTestCase):

@@ -1,4 +1,4 @@
-# Copyright (C) 2003  Andrey Lebedev <andrey@micro.lt>
+# Copyright (C) 2003-2005  Andrey Lebedev <andrey@micro.lt>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: dialogs.py,v 1.19 2004/02/19 21:51:40 kedder Exp $
+# $Id: dialogs.py,v 1.20 2005/03/05 21:44:33 kedder Exp $
 
 '''Dialog classes'''
 
@@ -22,7 +22,7 @@ import gtk
 import gobject
 from gtk import keysyms
 
-from base import Dialog, processEvents
+from base import Dialog, processEvents, Window
 from kedpm.exceptions import WrongPassword
 from kedpm.parser import parseMessage
 from kedpm import password, __version__
@@ -56,30 +56,15 @@ class LoginDialog(Dialog):
         super(LoginDialog, self).__init__(transient_for=None)
         self.pdb = pdb
 
-    def run(self):
-        password = self['password']
-        self.message = self['message']
-        while 1:
-            try:
-                self.pdb.open(password.get_text())
-                break
-            except WrongPassword:
-                self.message.set_markup('<span color="red"><b>Password incorrect. Please try again</b></span>')
-                password.select_region(0, len(password.get_text()))
-            res = self.window.run()
-            if res != gtk.RESPONSE_OK:
-                return res
-            self.message.show()
-        self.destroyDialog()
-        return res
-
-    def on_dlg_login_response(self, widget, response_id):
-        if response_id == gtk.RESPONSE_OK:
-            self.message.show()
-            self.message.set_markup('<b>Opening...</b>')
-            processEvents()
-
-
+    def process(self, resp_id):
+        try:
+            self.pdb.open(self['password'].get_text())
+        except WrongPassword:
+            errorMessageDialog(_("Password incorrect. Please try again"),
+                               self.window)
+            return False
+        return True
+        
 class CreditsDialog(Dialog):
     name = "dlg_credits"
 
@@ -90,14 +75,10 @@ class AboutDialog(Dialog):
         super(AboutDialog, self).__init__()
         self['kedpm-version'].set_markup(self['kedpm-version'].get_label() % __version__)
 
-    def run(self):
-        self.window.show()
-        
-    def on_dlg_about_response(self, widget, response_id):
-        if response_id == gtk.RESPONSE_CANCEL:
-            self.destroyDialog()
-        elif response_id == 1:
+    def process(self, resp_id):
+        if resp_id == 1:
             CreditsDialog(transient_for=self.window).run()
+            return False
 
  # FIXME: this should be parametrized
 from kedpm.plugins.pdb_figaro import FigaroPassword, FigaroPasswordTooLongError
@@ -159,24 +140,11 @@ class PasswordEditDialog(Dialog):
             entry.set_text(value)
             return entry, entry
 
-    def run(self):
-        password = self['password']
-        self.message = self['message']
-        while 1:
-            res = self.window.run()
-            if res != gtk.RESPONSE_OK:
-                break
-            if self.process():
-                break
-        self.destroyDialog()
-        return res
-
-
     def on_show_button_toggled(self, widget, entry):
         entry.set_visibility(widget.get_active())
 
     #def on_dlg_edit_response(self, widget, response_id):
-    def process(self):
+    def process(self, resp_id):
         """Fill password object with entered data"""
         if True:
         #if response_id == gtk.RESPONSE_OK:
@@ -228,19 +196,21 @@ class AddCategoryDialog(Dialog):
     name="dlg_add_category"
     category_name = ""
     
-    def process(self):
+    def process(self, resp_id):
         self.category_name = self['category_name'].get_text()
+        return True
 
 class ParsePasswordDialog(Dialog):
     name="dlg_parse"
     parseddict = {}
     
-    def process(self):
+    def process(self, resp_id):
         patterns = globals.app.conf.patterns
         buf = self['text'].get_buffer()
         b_start, b_end = buf.get_bounds()
         text = buf.get_text(b_start, b_end, gtk.FALSE)
         self.parseddict = parseMessage(text, patterns)
+        return True
 
 class AsPlainTextDialog(Dialog):
     name="dlg_as_plain_text"
@@ -279,7 +249,7 @@ class EditParserPatterns(Dialog):
             count += 1
         plist.set_model(store)
 
-    def process(self):
+    def process(self, resp_id):
         store = self['patterns'].get_model()
         list_iter = store.get_iter_first()
         patterns = []
@@ -288,6 +258,7 @@ class EditParserPatterns(Dialog):
             patterns.append(val)
             list_iter = store.iter_next(list_iter)
         globals.app.conf.patterns = patterns
+        return True
 
     def clearEntry(self):
         self['delete_pattern'].set_sensitive(False)
@@ -341,8 +312,35 @@ class EditParserPatterns(Dialog):
             store.remove(self.editing)
 
 
-def errorMessageDialog(message):
-    dialog = gtk.MessageDialog(globals.app.wnd_main.window,
+class ChangeMasterPasswordDialog(Dialog):
+    name = "dlg_master_password"
+    def process(self, resp):
+        pwd = self['password'].get_text()
+        pwd_repeat = self['repeat'].get_text()
+        if pwd != pwd_repeat:
+            errorMessageDialog(_("Passwords don't match. Try again."))
+            self['password'].grab_focus()
+            return False
+        if not pwd:
+            errorMessageDialog(_("Empty passwords are really insecure. "
+                                 "You should create one."))
+            self['password'].grab_focus()
+            return False
+        # Change the password now
+        globals.app.pdb.changePassword(pwd)
+        return True
+
+
+def errorMessageDialog(message, parent_win = None):
+    """Present error message to the user. 
+    
+    Dialog is attached to the main kedpm window unless parent window is
+    explicitly provided via parent_win parameter.
+    """
+    if not parent_win:
+        parent_win = globals.app.wnd_main.window
+    
+    dialog = gtk.MessageDialog(parent_win,
                                   gtk.DIALOG_DESTROY_WITH_PARENT,
                                   gtk.MESSAGE_ERROR,
                                   gtk.BUTTONS_CLOSE,

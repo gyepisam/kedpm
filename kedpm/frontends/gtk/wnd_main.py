@@ -1,4 +1,4 @@
-# Copyright (C) 2003  Andrey Lebedev <andrey@micro.lt>
+# Copyright (C) 2003-2005  Andrey Lebedev <andrey@micro.lt>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: wnd_main.py,v 1.28 2004/02/28 18:45:20 kedder Exp $
+# $Id: wnd_main.py,v 1.29 2005/03/05 21:44:33 kedder Exp $
 
 '''Main KedPM window'''
 import os
@@ -492,3 +492,7 @@ class MainWindow(Window):
         
     def on_search_entry_changed(self, widget):
         self.performSearch(update_history=False)
+
+    def on_mi_passwd_activate(self, widget):
+        dlg = dialogs.ChangeMasterPasswordDialog()
+        dlg.run()
