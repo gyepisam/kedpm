@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: wnd_main.py,v 1.11 2003/09/05 19:40:23 kedder Exp $
+# $Id: wnd_main.py,v 1.12 2003/09/05 21:24:46 kedder Exp $
 
 '''Main KedPM window'''
 
@@ -28,6 +28,7 @@ from kedpm.exceptions import RenameError
 
 from base import Window
 from dialogs import AboutDialog, PasswordEditDialog, AddCategoryDialog
+from dialogs import errorMessageDialog
 from kedpm.plugins.pdb_figaro import FigaroPassword # FIXME: this should be parametrized
 
 class MainWindow(Window):
@@ -38,6 +39,7 @@ class MainWindow(Window):
     menu_category = None
     menu_password = None
 
+    modified = False        # Is database modified?
     passwords = []          # List of passwords currently displaying in the password pane
     prot = None             # Prototype password instance
     password_menu = None    # Popup menu for RMB in password pane
@@ -139,7 +141,6 @@ class MainWindow(Window):
         return menu_password
 
     def setXSelection(self, text):
-        print "Copying %s" % text
         have_selection = self.window.selection_owner_set('PRIMARY')
         have_selection = self.window.selection_owner_set('CLIPBOARD')
         self.selected_text = text
@@ -152,15 +153,30 @@ class MainWindow(Window):
         else:
             return None
 
+    def tryToSave(self):
+        self.modified = True
+        dialog = gtk.MessageDialog(self.window,
+                                  gtk.DIALOG_DESTROY_WITH_PARENT,
+                                  gtk.MESSAGE_QUESTION,
+                                  gtk.BUTTONS_YES_NO,
+                                  "Password database has changed.\nDo you want to save it now?");
+        #import pdb; pdb.set_trace()
+        response = dialog.run();
+        if response == gtk.RESPONSE_YES:
+            self.pdb.save()
+            self.modified = False
+        dialog.destroy();
+
 
     # Signal handlers
     def on_wnd_main_destroy(self, widget):
+        if self.modified:
+            self.tryToSave()
         print "Exiting."
         gtk.main_quit() #make the program quit
 
     def on_mi_quit_activate(self, widget):
-        '''Menu: File->Quit'''
-        
+        '''Menu: File->Quit'''        
         self.on_wnd_main_destroy(widget)
 
     def on_mi_about_activate(self, widget):
@@ -195,7 +211,6 @@ class MainWindow(Window):
         return gtk.FALSE
 
     def on_password_popup_activate(self, widget, data):
-        print "Data is %s" % data
         password = self.getSelectedPassword()
         copytext = password[data]
         self.setXSelection(copytext)
@@ -204,7 +219,6 @@ class MainWindow(Window):
         print "clearing %s selection" % event.selection
 
     def on_wnd_main_selection_get(self, widget, selection_data, info, time_stamp):
-        print "providing selection %s" % selection_data.selection
         selection_data.set_text(self.selected_text, len(self.selected_text))
 
     def on_find_button_activate(self, widget):
@@ -224,6 +238,8 @@ class MainWindow(Window):
             response = dlg.run()
             if response == gtk.RESPONSE_OK:
                 self.setupPasswords()
+                self.tryToSave()
+
                 
     def on_pmi_edit_activate(self, widget):
         '''password list popup 'Edit' item clicked'''
@@ -237,6 +253,7 @@ class MainWindow(Window):
         if response == gtk.RESPONSE_OK:
             self.cwtree.addNode(pswd)
             self.setupPasswords()
+            self.tryToSave()
 
     def on_mi_save_activate(self, widget):
         '''Main menu 'Save' item activated'''
@@ -254,7 +271,7 @@ class MainWindow(Window):
             try:
                 self.cwtree.addBranch(dlg.category_name)
             except AttributeError:
-                print "Error! directory exists!"
+                errorMessageDialog('Directory "%s" already exists!' % dlg.category_name);
             else:
                 self.updateCategories()
                 
@@ -277,7 +294,8 @@ class MainWindow(Window):
             try:
                 self.password_tree.renameBranch(cat_path.split('/'), newname)
             except RenameError, message:
-                print message
-                return 
+                errorMessageDialog(message[0])
+                return
             self.updateCategories()
+            self.tryToSave()
 

@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: password_tree.py,v 1.7 2003/09/04 20:28:59 kedder Exp $
+# $Id: password_tree.py,v 1.8 2003/09/05 21:24:46 kedder Exp $
 
 """ Password items organized in recursive tree """
 
@@ -138,7 +138,7 @@ class PasswordTree:
         except KeyError:
             pass
         else:
-            raise RenameError, 'category %s already exists' % newname
+            raise RenameError, "Category \"%s\" already exists." % newname
         branches = parent_tree.getBranches()
         cat = branches[oldname]
         del branches[oldname]

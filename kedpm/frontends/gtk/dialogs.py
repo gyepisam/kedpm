@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: dialogs.py,v 1.5 2003/09/01 21:27:39 kedder Exp $
+# $Id: dialogs.py,v 1.6 2003/09/05 21:24:46 kedder Exp $
 
 '''Dialog classes'''
 
@@ -22,7 +22,8 @@ import gtk
 
 from base import Dialog, processEvents
 from kedpm.exceptions import WrongPassword
-from kedpm import password 
+from kedpm import password
+import globals
 
 class LoginDialog(Dialog):
     name = "dlg_login"
@@ -150,3 +151,12 @@ class AddCategoryDialog(Dialog):
     
     def process(self):
         self.category_name = self['category_name'].get_text()
+
+def errorMessageDialog(message):
+    dialog = gtk.MessageDialog(globals.app.wnd_main.window,
+                                  gtk.DIALOG_DESTROY_WITH_PARENT,
+                                  gtk.MESSAGE_ERROR,
+                                  gtk.BUTTONS_CLOSE,
+                                  message);
+    dialog.run();
+    dialog.destroy();
