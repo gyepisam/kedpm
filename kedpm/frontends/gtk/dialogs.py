@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: dialogs.py,v 1.4 2003/08/31 20:06:56 kedder Exp $
+# $Id: dialogs.py,v 1.5 2003/09/01 21:27:39 kedder Exp $
 
 '''Dialog classes'''
 
@@ -144,3 +144,9 @@ class PasswordEditDialog(Dialog):
                     value = entry.get_text()
                 self.password[field] = value
 
+class AddCategoryDialog(Dialog):
+    name="dlg_add_category"
+    category_name = ""
+    
+    def process(self):
+        self.category_name = self['category_name'].get_text()

@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: base.py,v 1.3 2003/08/25 21:32:51 kedder Exp $
+# $Id: base.py,v 1.4 2003/09/01 21:27:39 kedder Exp $
 
 import gtk
 import gtk.glade
@@ -32,16 +32,24 @@ class Window(object):
     
     name = ""
     window = None
+    menu_names=[]
+    menus = {}
+    
 
     def __init__(self):
         self.widgetTree = gtk.glade.XML(globals.glade_file, self.name)
-        # create signal table and connect
+        # create signal table and connect it
         signals = {}
         for item in dir(self):
             if item.startswith('on_'):
                 signals[item] = getattr(self, item)
         self.widgetTree.signal_autoconnect(signals)
         self.window = self.widgetTree.get_widget(self.name)
+        for menu in self.menu_names:
+            print "Loading", menu
+            menu_wt = gtk.glade.XML(globals.glade_file, menu)
+            menu_wt.signal_autoconnect(signals)
+            self.menus[menu] = menu_wt.get_widget(menu)
 
     def __getitem__(self, name):
         return self.widgetTree.get_widget(name) 
@@ -61,9 +69,13 @@ class Dialog(Window):
 
     def run(self):
         response = self.window.run()
+        if response == gtk.RESPONSE_OK:
+            self.process()
         self.destroyDialog()
         return response
 
     def destroyDialog(self):
         self.window.destroy()
 
+    def process(self):
+        pass

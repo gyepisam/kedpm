@@ -1,3 +1,25 @@
+2003-08-31 23:06  Andrey Lebedev <andrey@micro.lt>
+
+	* glade/kedpm.glade, kedpm/frontends/gtk/dialogs.py,
+	kedpm/frontends/gtk/wnd_main.py: edit and add dialogs finished
+
+2003-08-31 00:47  Andrey Lebedev <andrey@micro.lt>
+
+	* glade/kedpm.glade, kedpm/frontends/gtk/app.py,
+	kedpm/frontends/gtk/dialogs.py, kedpm/frontends/gtk/wnd_main.py:
+	working on password edit dialog
+
+2003-08-27 23:09  Andrey Lebedev <andrey@micro.lt>
+
+	* glade/kedpm.glade, kedpm/frontends/gtk/wnd_main.py: password
+	filtering gui implemented
+
+2003-08-27 00:33  Andrey Lebedev <andrey@micro.lt>
+
+	* ChangeLog, MANIFEST.in, setup.py, glade/kedpm.glade,
+	kedpm/__init__.py, kedpm/frontends/gtk/wnd_main.py: infrastructure
+	updates, X selection copying implemented
+
 2003-08-26 00:32  Andrey Lebedev <andrey@micro.lt>
 
 	* glade/kedpm.glade, kedpm/frontends/gtk/base.py,

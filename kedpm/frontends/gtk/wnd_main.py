@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: wnd_main.py,v 1.7 2003/08/31 20:06:56 kedder Exp $
+# $Id: wnd_main.py,v 1.8 2003/09/01 21:27:39 kedder Exp $
 
 '''Main KedPM window'''
 
@@ -26,13 +26,14 @@ import globals
 from kedpm.password import TYPE_STRING
 
 from base import Window
-from dialogs import AboutDialog, PasswordEditDialog
+from dialogs import AboutDialog, PasswordEditDialog, AddCategoryDialog
 from kedpm.plugins.pdb_figaro import FigaroPassword # FIXME: this should be parametrized
 
 class MainWindow(Window):
     '''Main window of Ked Password Manager'''
     
     name = "wnd_main"
+    menu_names = ['menu_category']
 
     passwords = []          # List of passwords currently displaying in the password pane
     prot = None             # Prototype password instance
@@ -47,6 +48,9 @@ class MainWindow(Window):
         self.pdb = globals.app.pdb
         self.cwtree = self.password_tree = globals.app.pdb.getTree()
         self.setupCategories()
+        #self.updateCategories()
+        # load category popup menu
+        #self.cat_menu = self.getGladeWidget('menu_category')
         self.setupPasswords()
         self.window.selection_add_target("PRIMARY", "STRING", 1)
         self.window.selection_add_target("CLIPBOARD", "STRING", 1)
@@ -58,14 +62,32 @@ class MainWindow(Window):
         col.add_attribute(renderer_cat, 'text', 0)
         category_tree.append_column(col)
         
+        #store = gtk.TreeStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
+        #root_cat = store.append(None)
+        #store.set(root_cat, 0, 'Root', 1, '/')
+        #for cat_name in self.password_tree.getBranches():
+        #    store.set(store.append(root_cat), 0, cat_name, 1, '/'+cat_name)
+            
+        #category_tree.set_model(store)
+        self.updateCategories()
+
+    def updateCategories(self):
+        category_tree = self['category_tree']
         store = gtk.TreeStore(gobject.TYPE_STRING, gobject.TYPE_STRING)
         root_cat = store.append(None)
         store.set(root_cat, 0, 'Root', 1, '/')
-        for cat_name in self.password_tree.getBranches():
-            store.set(store.append(root_cat), 0, cat_name, 1, '/'+cat_name)
-            
+        self.buildCategoryTree(store, root_cat, self.password_tree, '/')
+        #for cat_name in self.password_tree.getBranches():
+        #    store.set(store.append(root_cat), 0, cat_name, 1, '/'+cat_name)
         category_tree.set_model(store)
         category_tree.expand_all()
+
+    def buildCategoryTree(self, store, root_iter, tree_branch, path):
+        for cat_name in tree_branch.getBranches():
+            sub_iter = store.append(root_iter) 
+            store.set(sub_iter, 0, cat_name, 1, path+cat_name+'/')
+            if tree_branch[cat_name].getBranches():
+                self.buildCategoryTree(store, sub_iter, tree_branch[cat_name], path+cat_name+'/')
 
     def setupPasswords(self):
         password_list = self['password_list']
@@ -168,6 +190,11 @@ class MainWindow(Window):
                 self.password_menu.popup(None, None, None, event.button, event.time)
         return gtk.FALSE
 
+    def on_category_tree_button_press_event(self, widget, event):
+        if event.button == 3:
+            self.menus['menu_category'].popup(None, None, None, event.button, event.time)
+        return gtk.FALSE
+
     def on_password_popup_activate(self, widget, data):
         print "Data is %s" % data
         password = self.getSelectedPassword()
@@ -213,4 +240,16 @@ class MainWindow(Window):
         cid = sb.get_context_id('status') 
         sb.pop(cid)
         sb.push(cid, "Saved.")
+
+    def on_mi_add_category_activate(self, widget):
+        print "Adding subcategory"
+        dlg = AddCategoryDialog()
+        response = dlg.run()
+        if response == gtk.RESPONSE_OK and dlg.category_name!='':
+            try:
+                self.cwtree.addBranch(dlg.category_name)
+            except AttributeError:
+                print "Error! directory exists!"
+            else:
+                self.updateCategories()
 
