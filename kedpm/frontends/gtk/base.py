@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: base.py,v 1.2 2003/08/24 14:01:45 kedder Exp $
+# $Id: base.py,v 1.3 2003/08/25 21:32:51 kedder Exp $
 
 import gtk
 import gtk.glade
@@ -45,6 +45,10 @@ class Window(object):
 
     def __getitem__(self, name):
         return self.widgetTree.get_widget(name) 
+
+    def getGladeWidget(self, name):
+        widgetTree = gtk.glade.XML(globals.glade_file, name)
+        return widgetTree.get_widget(name)
 
 class Dialog(Window):
     def __init__(self, transient_for="main"):

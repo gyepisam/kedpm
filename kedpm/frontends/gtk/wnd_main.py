@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: wnd_main.py,v 1.2 2003/08/24 21:51:59 kedder Exp $
+# $Id: wnd_main.py,v 1.3 2003/08/25 21:32:51 kedder Exp $
 
 '''Main KedPM window'''
 
@@ -87,8 +87,6 @@ class MainWindow(Window):
         
         password_list.set_model(store)
 
-        
-        
 
     # Signal handlers
     def on_wnd_main_destroy(self, widget):
@@ -115,3 +113,11 @@ class MainWindow(Window):
         tree = self.password_tree.getTreeFromPath(pass_path.split('/'))
         self.setupPasswords(tree)
 
+    def on_password_list_button_press_event(self, widget, event):
+        if event.button == 3:
+            # RMB clicked
+            path, column, cell_x, cell_y = self['password_list'].get_path_at_pos(int(event.x), int(event.y))
+            menu_password = self.getGladeWidget('menu_password')
+            menu_password.popup(None, None, None, event.button, event.time)
+            print path
+        return gtk.FALSE
