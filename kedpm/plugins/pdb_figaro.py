@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: pdb_figaro.py,v 1.4 2003/08/11 20:14:30 kedder Exp $
+# $Id: pdb_figaro.py,v 1.5 2003/08/12 22:08:47 kedder Exp $
 
 """ Figaro password manager database plugin """
 
@@ -24,6 +24,8 @@ from xml.dom import minidom
 from string import strip
 from Crypto.Cipher import Blowfish
 from Crypto.Hash import MD5
+
+from random import randint
 
 from kedpm.exceptions import WrongPassword
 from kedpm.passdb import PasswordDatabase
@@ -80,19 +82,34 @@ class PDBFigaro (PasswordDatabase):
             assert len(encrypted) % 8 == 0
             return self.decrypt(encrypted)
         else: return ""    
-    
-    def decrypt(self, string):
-        ''' Decrypt FPM encoded string '''        
+
+    def encrypt(self, field):
+        ''' Encrypt FPM encoded field '''
+        pass
+
+    def decrypt(self, field):
+        ''' Decrypt FPM encoded field '''
         hash=MD5.new()
         hash.update(self._salt + self._password)
         key = hash.digest()
         bf = Blowfish.new(key)
-        hexstr = self._hex_to_bin(string)
+        hexstr = self._hex_to_bin(field)
         rotated = bf.decrypt(hexstr)
         plaintext = self._unrotate(rotated)
         return plaintext
 
+    def _bin_to_hex(self, strin):
+        '''Used in encrypt'''
+        strout = ""
+        for i in range(len(strin)):
+            data = strin[i]
+            high = ord(data) / 16
+            low = ord(data) % 16
+            strout += chr(ord('a')+high) + chr(ord('a')+low)
+        return strout
+
     def _hex_to_bin(self, strin):
+        '''Used in decrypt'''
         strout = ""
         for i in range(len(strin) / 2):
             high = ord(strin[i * 2]) - ord('a')
@@ -102,19 +119,50 @@ class PDBFigaro (PasswordDatabase):
             strout = strout + chr(data)
         return strout
 
+    def _addNoise(self, field):         
+        '''If we have a short string, I add noise after the first null prior to
+        encrypting. This prevents empty blocks from looking identical to
+        eachother in the encrypted file.'''
+   
+        block_size = Blowfish.block_size
+        field += '\x00'
+        while len(field) % block_size > 0:
+            rchar = chr(randint(0, 255))
+            field += rchar
+        return field
+
+    def _rotate(self, field):
+        '''After we use _addNoise (above) we ensure blocks don't look identical
+        unless all 8 chars in the block are part of the password.  This routine
+        makes us use all three blocks equally rather than fill the first, then
+        the second, etc.   This makes it so none of the blocks in the password
+        will remain constant from save to save, even if the password is from
+        7-20 characters long.  Note that passwords from 21-24 characters start
+        to fill blocks, and so will be constant.  '''
+
+        plaintext = ""
+        tmp = {}
+        block_size = Blowfish.block_size
+        num_blocks = len(field)/block_size
+        for b in range(num_blocks):
+            for i in range(block_size):
+                tmp[b*block_size+i] = field[i*num_blocks+b]
+
+        for c in range(len(tmp)):
+            plaintext = plaintext + tmp[c]
+        return str(plaintext)
+
     def _unrotate(self, field):
         plaintext = ""
         tmp = {}
-        blocksize = Blowfish.block_size
-        num_blocks = len(field)/blocksize
+        block_size = Blowfish.block_size
+        num_blocks = len(field)/block_size
         for b in range(num_blocks):
-            for i in range(blocksize):
-                tmp[i*num_blocks+b] = field[b*blocksize+i]
+            for i in range(block_size):
+                tmp[i*num_blocks+b] = field[b*block_size+i]
 
         for c in range(len(tmp)):
             if tmp[c] == chr(0):
                 break
             plaintext = plaintext + tmp[c]
         return str(plaintext)
-
-

@@ -14,10 +14,11 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: test_figaro.py,v 1.3 2003/08/11 20:14:30 kedder Exp $
+# $Id: test_figaro.py,v 1.4 2003/08/12 22:08:47 kedder Exp $
 
 import unittest
 from kedpm.plugins.pdb_figaro import PDBFigaro
+from Crypto.Cipher import Blowfish
 
 class PDBFigaroTestCase(unittest.TestCase):
     password = 'password'
@@ -47,6 +48,20 @@ class PDBFigaroTestCase(unittest.TestCase):
         self.assertEqual(len(pwds), 2)
         pwd_test2 = tree_test.locate('test2')
         self.assertEqual(pwd_test2[0].password, 'test2 password')
+
+    def test_encriptionUtils(self):
+        str = "FIGARO ENCRYPTION TEST"
+        noised = self.pdb._addNoise(str)
+        self.assertEqual(len(noised) % Blowfish.block_size, 0)
+        rotated = self.pdb._rotate(noised)
+        self.assertEqual(len(rotated) % Blowfish.block_size, 0)
+
+        hex = self.pdb._bin_to_hex(rotated)
+        bin = self.pdb._hex_to_bin(hex)
+        self.assertEqual(bin, rotated)
+        
+        unrotated = self.pdb._unrotate(bin)
+        self.assertEqual(str, unrotated)
 
 class FigaroCryptoTestCase(unittest.TestCase):
     def test_unrotate(self):
