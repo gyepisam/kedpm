@@ -1,7 +1,7 @@
 Noteworthy changes in Ked Password Manager. Most recent changes are at
 the top.
 
-Version 0.1.0 (??)
+Version 0.1.0 (2003-08-20)
 
     * Added ability to save password database in fpm-compatible format.
     If KedPM detects that it had opened database saved by FPM, it makes
