@@ -1,4 +1,3 @@
-# KED Password Manager
 # Copyright (C) 2003  Andrey Lebedev <andrey@micro.lt>
 #
 # This program is free software; you can redistribute it and/or modify
@@ -15,11 +14,20 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: __init__.py,v 1.8 2003/09/27 19:48:09 kedder Exp $
+# $Id: parser.py,v 1.1 2003/09/27 19:48:10 kedder Exp $
 
-''' KED Password Manager 
+import re
 
-Simple to use, extensible and secure password manager
-'''
+def parse(pattern, text):
+    match = re.match(pattern, text, re.MULTILINE | re.DOTALL)
+    if match is None:
+        return None
+    groupdict = match.groupdict()
+    for group, value in groupdict.items():
+        if value.strip()=="":
+            pass
+            del groupdict[group]
+        else:
+            groupdict[group] = groupdict[group].strip()
 
-__version__ = '0.2.6'
+    return groupdict
