@@ -14,14 +14,27 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: parser.py,v 1.1 2003/09/27 19:48:10 kedder Exp $
+# $Id: parser.py,v 1.2 2003/09/30 21:02:43 kedder Exp $
+
+"""Password pattern functions"""
 
 import re
 
+patterns = [
+"Username/Password: {user}/{password}",
+
+"""Username: {user}
+Password: {password}"""
+]
+
 def parse(pattern, text):
+    """Parse password text using regular expression
+    
+    Return dictionary of password properties.
+    """
     match = re.match(pattern, text, re.MULTILINE | re.DOTALL)
     if match is None:
-        return None
+        return {}
     groupdict = match.groupdict()
     for group, value in groupdict.items():
         if value.strip()=="":
@@ -31,3 +44,24 @@ def parse(pattern, text):
             groupdict[group] = groupdict[group].strip()
 
     return groupdict
+
+def regularize(pattern):
+    """Return valid regular expression from password pattern
+
+    Syntax:
+    
+    Property field::
+        {name} => (?P<name>.*?)
+        
+    Arbitrary text::
+        {} => .*
+    
+    Custom regular expression::
+        {~expr} => expr        
+    """
+
+    expr = re.sub(r"\{~(.*?)\}", r"\1", pattern)
+    expr = re.sub(r"\{\}", r".*", expr)
+    expr = re.sub(r"\{(\S*?)\}", r"(?P<\1>.*?)", expr)
+    #return expr
+    return "(^|.*\s)"+expr+"($|\s)"

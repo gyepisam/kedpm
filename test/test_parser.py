@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: test_parser.py,v 1.1 2003/09/27 19:48:10 kedder Exp $
+# $Id: test_parser.py,v 1.2 2003/09/30 21:02:45 kedder Exp $
 
 import unittest
 
@@ -22,10 +22,15 @@ from kedpm import parser
 
 class ParserTestCase(unittest.TestCase):
     
-    pattern = '^Username/Password: (?P<user>.*)/(?P<password>.*)$'
+    pattern = '(^|.*\s)Username/Password: (?P<user>.*?)/(?P<password>.*?)($|\s)'
     cases = [
         {"text": 'Username/Password: actualusername/actualpassword',
         "match": {'password': 'actualpassword', 'user': 'actualusername'}},
+        
+        {"text": '''This is a first line
+        Username/Password: longusername/longpassword  asd
+        Some other line''',
+        "match": {'password': 'longpassword', 'user': 'longusername'}},
 
         {"text": 'Username/Password: the username/!@#%^^&*(',
         "match": {'password': '!@#%^^&*(', 'user': 'the username'}},
@@ -61,6 +66,35 @@ $'''
             for case in cases:
                 match = parser.parse(pattern, case["text"])
                 self.assertEqual(match, case["match"])
+
+    def test_regularize(self):
+        cases = [
+            ("{~.*}", "(^|.*\s).*($|\s)"),
+            ("{~test.+}", '(^|.*\s)test.+($|\s)'),
+
+            ("{the}{test}", '(^|.*\s)(?P<the>.*?)(?P<test>.*?)($|\s)'),
+            ("""{hello}
+            {~(test)+}
+            {}
+            {welcome}
+            """,
+            """(^|.*\s)(?P<hello>.*?)
+            (test)+
+            .*
+            (?P<welcome>.*?)
+            ($|\s)"""),
+        ]
+        for pattern, regexp in cases:
+            res = parser.regularize(pattern)
+            self.assertEqual(res, regexp)
+       
+    def test_parser(self):
+        pattern = "Username/Password: {user}/{password}"
+        expr = parser.regularize(pattern)
+        for case in self.cases:
+            match = parser.parse(expr, case["text"])
+            self.assertEqual(match, case["match"])
+            
 
 def suite():
     return unittest.makeSuite(ParserTestCase, 'test')

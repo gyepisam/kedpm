@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: cli.py,v 1.17 2003/09/21 19:39:16 kedder Exp $
+# $Id: cli.py,v 1.18 2003/09/30 21:02:45 kedder Exp $
 
 "Command line interface for Ked Password Manager"
 
@@ -24,9 +24,10 @@ from kedpm.passdb import DatabaseNotExist
 from kedpm.exceptions import WrongPassword, RenameError
 from kedpm.frontends.frontend import Frontend
 from kedpm import password
+from kedpm import parser
 from getpass import getpass
 from cmd import Cmd
-import sys
+import os, sys, tempfile
 
 class Application (Cmd, Frontend):
     PS1 = "kedpm:%s> " # prompt template
@@ -219,6 +220,37 @@ long password correctly."""
                 compl.append(dir)
         return compl
     
+    def getEditorInput(self):
+        """Fire up default editor and read user input from temporary file"""
+        default_editor = "vi"
+        if os.environ.has_key('VISUAL'):
+            editor = os.environ['VISUAL']
+        elif os.environ.has_key('EDITOR'):
+            editor = os.environ['EDITOR']
+        else: 
+            editor = default_editor
+        print "running %s" % editor
+        # create temporary file
+        handle, tmpfname = tempfile.mkstemp(prefix="kedpm_")
+        os.system(editor + " " + tmpfname)
+        tmpfile = open(tmpfname, 'r')
+        text = tmpfile.read()
+        tmpfile.close()
+        os.remove(tmpfname)
+        return text
+
+    def parseMessage(self, text, pwd):
+        """Extract valuable password information from text and return filled password"""
+        choosendict = {}
+        for pattern in parser.patterns:
+            regexp = parser.regularize(pattern)
+            passdict = parser.parse(regexp, text)
+            if len(passdict) > len(choosendict):
+                choosendict = passdict
+
+        print "Choosen dict: %s" % str(choosendict)    
+        pwd.update(choosendict)
+    
     ##########################################
     # Command implementations below.         #
         
@@ -334,8 +366,21 @@ receiving that number, you will be able to edit picked password.
 
     def do_new(self, arg):
         '''Add new password to current category. You will be prompted to enter
-fields.'''
+fields.
+    
+Syntax:
+    new [-p]
+
+    -p - Get properties by parsing provided text. Will open default text editor
+         for you to paste text in.
+'''
         new_pass = FigaroPassword() # FIXME: Password type shouldn't be hardcoded.
+        argv = arg.split()
+
+        if "-p" in argv:
+            text = self.getEditorInput()
+            self.parseMessage(text, new_pass)
+        
         try:
             self.editPassword(new_pass)
         except (KeyboardInterrupt, EOFError):
