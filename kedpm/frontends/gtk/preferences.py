@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: preferences.py,v 1.1 2003/10/13 21:09:40 kedder Exp $
+# $Id: preferences.py,v 1.2 2003/10/25 19:43:27 kedder Exp $
 
 """Preferences for GTK2 GUI"""
 import gtk
@@ -99,4 +99,4 @@ class PreferencesDialog(Dialog):
             raise TypeError, "Unrecognized option"
 
     def saveConfig(self):
-        pass
+        globals.app.conf.save()

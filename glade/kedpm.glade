@@ -1571,7 +1571,7 @@ Please choose the password which will be used to encrypt your passwords. It is v
 	      <property name="label">gtk-close</property>
 	      <property name="use_stock">True</property>
 	      <property name="relief">GTK_RELIEF_NORMAL</property>
-	      <property name="response_id">-7</property>
+	      <property name="response_id">-6</property>
 	    </widget>
 	  </child>
 	</widget>
