@@ -14,12 +14,12 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: cli.py,v 1.15 2003/09/12 18:37:26 kedder Exp $
+# $Id: cli.py,v 1.16 2003/09/21 18:18:08 kedder Exp $
 
 "Command line interface for Ked Password Manager"
 
 from kedpm import __version__
-from kedpm.plugins.pdb_figaro import PDBFigaro, FigaroPassword
+from kedpm.plugins.pdb_figaro import PDBFigaro, FigaroPassword, FigaroPasswordTooLongError
 from kedpm.passdb import DatabaseNotExist
 from kedpm.exceptions import WrongPassword, RenameError
 from kedpm.frontends.frontend import Frontend
@@ -189,7 +189,20 @@ try 'help' for brief description of available commands
             if new_value!="":
                 input[field] = new_value
 
-        pwd.update(input)
+        try:
+            pwd.update(input)
+        except FigaroPasswordTooLongError:
+            print "WARNING! Your password is too long for Figaro Password Manager."
+            print "Figaro Password Manager can handle only passwords shorter than 24 characters."
+            print """However, KedPM can store this password for you, but it
+will break fpm compatibility. fpm will not be able to handle such
+long password correctly."""
+            answer = raw_input("Do you still want to save your password? [Y/n]: ")
+            if answer.lower().startswith('n'):
+                raise KeyboardInterrupt
+            pwd.store_long_password = 1
+            pwd.update(input)
+
         #return pwd
 
     def tryToSave(self):        

@@ -14,11 +14,11 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: test_figaro.py,v 1.8 2003/08/17 18:56:18 kedder Exp $
+# $Id: test_figaro.py,v 1.9 2003/09/21 18:18:08 kedder Exp $
 
 import os
 import unittest
-from kedpm.plugins.pdb_figaro import FigaroPassword, PDBFigaro, FPM_PASSWORD_LEN
+from kedpm.plugins.pdb_figaro import FigaroPassword, PDBFigaro, FPM_PASSWORD_LEN, FigaroPasswordTooLongError
 from Crypto.Cipher import Blowfish
 
 class PDBFigaroTestCase(unittest.TestCase):
@@ -94,6 +94,7 @@ class PDBFigaroTestCase(unittest.TestCase):
         self.assertEqual(self.pdb.native, 0)
 
 
+
 class SavedFigaroTestCase(PDBFigaroTestCase):
     def setUp(self):
         pdb = PDBFigaro()
@@ -123,6 +124,22 @@ class SavedFigaroTestCase(PDBFigaroTestCase):
     def test_native(self):
         self.assertEqual(self.pdb.native, 1)
 
+    def test_tooLongPassword(self):
+        pwd = FigaroPassword()
+        longpswd = "1234567890"*3;
+        self.assertRaises(FigaroPasswordTooLongError, pwd.__setitem__, 
+            'password', longpswd)
+        self.assertRaises(FigaroPasswordTooLongError, pwd.update, 
+            {'password': longpswd})
+        pwd.store_long_password = 1
+        pwd['title'] = "Long password"
+        pwd['password'] = longpswd
+        self.pdb.getTree()['Test'].addNode(pwd)
+        self.pdb.save(fname="fpm.saved")
+        self.pdb = PDBFigaro()
+        self.pdb.open(self.password, fname='fpm.saved')
+        saved_pwd = self.pdb.getTree()['Test'].locate('Long password')[0]
+        self.assertEqual(saved_pwd['password'], longpswd)
         
 
 class FigaroCryptoTestCase(unittest.TestCase):

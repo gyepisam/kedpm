@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: dialogs.py,v 1.7 2003/09/14 12:15:57 kedder Exp $
+# $Id: dialogs.py,v 1.8 2003/09/21 18:18:08 kedder Exp $
 
 '''Dialog classes'''
 
@@ -74,15 +74,15 @@ class AboutDialog(Dialog):
         elif response_id == 1:
             CreditsDialog(transient_for=self.window).run()
 
-
-from kedpm.plugins.pdb_figaro import FigaroPassword # FIXME: this should be parametrized
+ # FIXME: this should be parametrized
+from kedpm.plugins.pdb_figaro import FigaroPassword, FigaroPasswordTooLongError
 class PasswordEditDialog(Dialog):
     name = "dlg_edit"
 
     entries = {}
 
     def __init__(self, password):
-        '''Construct password editing dialog from password spec'''
+        '''Construct password editing dialog from password spec. Accept password object'''
         super(PasswordEditDialog, self).__init__()
         #self.window.hide()
         tbl = self['edit_table']
@@ -134,11 +134,28 @@ class PasswordEditDialog(Dialog):
             entry.set_text(value)
             return entry, entry
 
+    def run(self):
+        password = self['password']
+        self.message = self['message']
+        while 1:
+            res = self.window.run()
+            if res != gtk.RESPONSE_OK:
+                break
+            if self.process():
+                break
+        self.destroyDialog()
+        return res
+
+
     def on_show_button_toggled(self, widget, entry):
         entry.set_visibility(widget.get_active())
 
-    def on_dlg_edit_response(self, widget, response_id):
-        if response_id == gtk.RESPONSE_OK:
+    #def on_dlg_edit_response(self, widget, response_id):
+    def process(self):
+        """Fill password object with entered data"""
+        if True:
+        #if response_id == gtk.RESPONSE_OK:
+            props = {}
             print "Accepting data"
             for field, entry in self.entries.items():
                 if self.password.getField(field)['type'] == password.TYPE_TEXT:
@@ -147,7 +164,41 @@ class PasswordEditDialog(Dialog):
                     value = buffer.get_text(b_start, b_end, gtk.FALSE)
                 else:
                     value = entry.get_text()
-                self.password[field] = value
+                props[field] = value
+            try:
+                self.password.update(props)
+            except FigaroPasswordTooLongError:
+                allow_save = self.askToSaveLongPass()
+                if allow_save:
+                    self.password.store_long_password = 1
+                    self.password.update(props)
+                else:
+                    return False
+        return True
+
+    def askToSaveLongPass(self):
+        """Return boolean user answer"""
+
+        message = "<b>Your password is too long for Figaro Password Manager.</b>\n\n"
+        message += "Figaro Password Manager can handle only passwords shorter than 24 characters.\n\n"
+        message += "However, KedPM can store this password for you, but this "
+        message += "will break fpm compatibility. fpm will not be able to handle such "
+        message += "long password correctly.\n\n"
+        message += "Do you still want to save your password?"
+        
+        dialog = gtk.MessageDialog(self.window,
+                          gtk.DIALOG_DESTROY_WITH_PARENT,
+                          gtk.MESSAGE_QUESTION,
+                          gtk.BUTTONS_YES_NO,
+                          ""
+        );
+        dialog.label.set_markup(message)
+        response = dialog.run()
+        dialog.destroy()
+        if response == gtk.RESPONSE_YES:
+            return True
+        return False
+
 
 class AddCategoryDialog(Dialog):
     name="dlg_add_category"

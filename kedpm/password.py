@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: password.py,v 1.5 2003/08/16 21:11:20 kedder Exp $
+# $Id: password.py,v 1.6 2003/09/21 18:18:08 kedder Exp $
 
 """ Password item """
 
@@ -53,7 +53,7 @@ class Password:
     def update(self, info):
         for k in self._fields.keys():
             if info.has_key(k):
-                self._fields[k]['value'] = info[k]
+                self[k] = info[k]
 
     def __getattr__(self, name):
         try:

@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: pdb_figaro.py,v 1.10 2003/08/19 18:56:12 kedder Exp $
+# $Id: pdb_figaro.py,v 1.11 2003/09/21 18:18:08 kedder Exp $
 
 """ Figaro password manager database plugin """
 
@@ -34,6 +34,9 @@ from kedpm.password import Password, TYPE_STRING, TYPE_TEXT, TYPE_PASSWORD
 
 FPM_PASSWORD_LEN = 24
 
+class FigaroPasswordTooLongError(ValueError):
+    pass
+
 class FigaroPassword (Password):
     fields_type_info = [
         ('title',     {'title': 'Title', 'type': TYPE_STRING}),
@@ -44,12 +47,18 @@ class FigaroPassword (Password):
     ]
 
     default = 0
+    store_long_password = 0
     launcher = ""
 
     def __init__(self, **kw):
         Password.__init__(self, **kw)
         self.default = kw.get('default', 0)
         self.launcher = kw.get('launcher', '')
+
+    def __setitem__(self, key, value):
+        if key=='password' and len(value) > FPM_PASSWORD_LEN and not self.store_long_password:
+            raise FigaroPasswordTooLongError, "Password is too long"
+        Password.__setitem__(self, key, value)
 
 class PDBFigaro (PasswordDatabase):
 
@@ -60,7 +69,7 @@ class PDBFigaro (PasswordDatabase):
     #default_db_filename = 'test/fpm.sample'
 
     def open(self, password, fname=""):
-        ''' Open figaro password database and construct password tree '''
+        """ Open figaro password database and construct password tree """
         
         self._password = password
         self.filename = fname or self.default_db_filename
@@ -105,7 +114,7 @@ class PDBFigaro (PasswordDatabase):
             branch.addNode(self._getPasswordFromNode(node))
 
     def save(self, fname=""):
-        '''Save figaro password database'''
+        """Save figaro password database"""
     
         # Create new salt for each save
         self._salt = self.generateSalt()
@@ -117,14 +126,14 @@ class PDBFigaro (PasswordDatabase):
         os.chmod(filename, 0600)
 
     def generateSalt(self):
-        '''Generate salt, that consists of 8 small latin characters'''
+        """Generate salt, that consists of 8 small latin characters"""
         salt = ""
         for i in range(8):
             salt += chr(randint(ord('a'), ord('z')))
         return salt
         
     def convTreeToDom(self):
-        '''Build and return DOM document from current password tree'''
+        """Build and return DOM document from current password tree"""
         
         domimpl = minidom.getDOMImplementation()
         document= domimpl.createDocument("http://kedpm.sourceforge.net/xml/fpm", "FPM", None)
@@ -194,7 +203,7 @@ class PDBFigaro (PasswordDatabase):
         newdb.save(filename)
     
     def _getPasswordFromNode(self, node):
-        ''' Create password instance from given fpm node '''
+        """ Create password instance from given fpm node """
         fields = ["title", "user", "url", "notes", "password"]
         params = {}
         for field in fields:
@@ -219,20 +228,24 @@ class PDBFigaro (PasswordDatabase):
             return self.decrypt(encrypted)
         else: return ""    
 
-    def encrypt(self, field, password=0):
-        ''' Encrypt FPM encoded field '''
+    def encrypt(self, field, field_is_password=0):
+        """ Encrypt FPM encoded field """
         hash=MD5.new()
         hash.update(self._salt + self._password)
         key = hash.digest()
         bf = Blowfish.new(key)
-        noised = self._addNoise(field, password and FPM_PASSWORD_LEN)
+        # Allow passwords that are longer than 24 characters. Unfortunately
+        # this will break fpm compatibility somewhat - fpm will not be able to
+        # handle such long password correctly.
+        noised = self._addNoise(field, field_is_password and 
+                (len(field) / FPM_PASSWORD_LEN + 1) * FPM_PASSWORD_LEN)
         rotated = self._rotate(noised)
         encrypted = bf.encrypt(rotated)
         hexstr = self._bin_to_hex(encrypted)
         return hexstr
 
     def decrypt(self, field):
-        ''' Decrypt FPM encoded field '''
+        """ Decrypt FPM encoded field """
         hash=MD5.new()
         hash.update(self._salt + self._password)
         key = hash.digest()
@@ -243,7 +256,7 @@ class PDBFigaro (PasswordDatabase):
         return plaintext
 
     def _bin_to_hex(self, strin):
-        '''Used in encrypt'''
+        """Used in encrypt"""
         strout = ""
         for i in range(len(strin)):
             data = strin[i]
@@ -254,7 +267,7 @@ class PDBFigaro (PasswordDatabase):
         return strout
 
     def _hex_to_bin(self, strin):
-        '''Used in decrypt'''
+        """Used in decrypt"""
         strout = ""
         for i in range(len(strin) / 2):
             high = ord(strin[i * 2]) - ord('a')
@@ -265,9 +278,9 @@ class PDBFigaro (PasswordDatabase):
         return strout
 
     def _addNoise(self, field, reslen = 0):         
-        '''If we have a short string, I add noise after the first null prior to
+        """If we have a short string, I add noise after the first null prior to
         encrypting. This prevents empty blocks from looking identical to
-        eachother in the encrypted file.'''
+        eachother in the encrypted file."""
    
         block_size = Blowfish.block_size
         field += '\x00'
@@ -278,13 +291,13 @@ class PDBFigaro (PasswordDatabase):
         return field
 
     def _rotate(self, field):
-        '''After we use _addNoise (above) we ensure blocks don't look identical
+        """After we use _addNoise (above) we ensure blocks don't look identical
         unless all 8 chars in the block are part of the password.  This routine
         makes us use all three blocks equally rather than fill the first, then
         the second, etc.   This makes it so none of the blocks in the password
         will remain constant from save to save, even if the password is from
         7-20 characters long.  Note that passwords from 21-24 characters start
-        to fill blocks, and so will be constant.  '''
+        to fill blocks, and so will be constant.  """
 
         plaintext = ""
         tmp = {}

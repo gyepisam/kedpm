@@ -14,9 +14,9 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: password_tree.py,v 1.8 2003/09/05 21:24:46 kedder Exp $
+# $Id: password_tree.py,v 1.9 2003/09/21 18:18:08 kedder Exp $
 
-""" Password items organized in recursive tree """
+"""Password items organized in recursive tree."""
 
 import re
 
@@ -41,8 +41,8 @@ class PasswordTreeIterator:
             return ""
         
     def next(self):
-        '''This will iterate through whole password tree. next() method will
-        consequently return every item in password tree.'''
+        """This will iterate through whole password tree. next() method will
+        consequently return every item in password tree."""
         
         if len(self.branches) > self.branch_index or self.branch_index==-1:
             if self.br_iterator:
@@ -72,16 +72,16 @@ class PasswordTree:
     _branches = {}
     
     def __init__(self):
-        " Create named tree instance """
+        """Create named tree instance."""
         self._nodes = []
         self._branches = {}
 
     def addNode(self, node):
-        """ add node to the tree """
+        """Add node to the tree."""
         self._nodes.append(node)
 
     def addBranch(self, name):
-        """ add new branch to the tree """
+        """Add new branch to the tree."""
         if self._branches.has_key(name):
             raise AttributeError, "Branch already exists"
         branch = PasswordTree()
@@ -89,11 +89,11 @@ class PasswordTree:
         return branch
 
     def getNodes(self):
-        """ return all non-tree nodes of the tree """
+        """Return all non-tree nodes of the tree."""
         return self._nodes
 
     def getBranches(self):
-        """ return all branch nodes of the tree """
+        """Return all branch nodes of the tree."""
         return self._branches
    
     def get(self, branch, default=None):
@@ -103,7 +103,7 @@ class PasswordTree:
         return self._branches[key]
 
     def locate(self, pattern):
-        '''returns list of passwords, matching pattern'''
+        """Return list of passwords, matching pattern."""
         re_search = re.compile(".*"+pattern+".*")
         results = []
         for password in self._nodes:
@@ -115,8 +115,8 @@ class PasswordTree:
         return results
 
     def getTreeFromPath(self, path):
-        '''Return password tree from given path
-        path is list of path items'''
+        """Return password tree from given path
+        path is list of path items."""
         path = self.normalizePath(path)
         tree = self
         if path == []:
@@ -126,8 +126,8 @@ class PasswordTree:
         return tree
 
     def renameBranch(self, path, newname):
-        '''Set new name for the given branch. Do not rename tree root - just
-        leave it as is. Tree rood don't have any name anyway'''
+        """Set new name for the given branch. Do not rename tree root - just
+        leave it as is. Tree rood don't have any name anyway."""
         path = self.normalizePath(path)
         if not path:
             return
@@ -145,8 +145,8 @@ class PasswordTree:
         branches[newname] = cat
 
     def normalizePath(self, path):
-        '''reduce .. and . items from path
-        path is list of path items'''
+        """Reduce .. and . items from path
+        path is list of path items."""
         normal = []
         for pathitem in path:
             if pathitem == "." or pathitem == "":
