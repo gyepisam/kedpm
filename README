@@ -1,6 +1,6 @@
-
-Ked Password Manager
-====================
+============================
+Ked Password Manager: README
+============================
 
 Copyright (c) 2003 Andrey Lebedev <andrey@micro.lt>
 
@@ -8,24 +8,26 @@ Copyright (c) 2003 Andrey Lebedev <andrey@micro.lt>
 About
 =====
 
-Ked Password Manager helps to manage large amounts of passwords and related
-information and simplifies tasks of searching and entering password data.
+Ked Password Manager helps to manage large amounts of passwords and
+related information and simplifies tasks of searching and entering
+password data.
 
 Ked-PM written in python and can be run virtually on any platform python
 interpreter can run.
 
-Ked-PM written as extensible framework, which allows to plug in custom password
-database back-ends and custom user interface front-ends. Currently only Figaro
-PM back-end and CLI (Command Line Interface) front-end supported.
+Ked-PM written as extensible framework, which allows to plug in custom
+password database back-ends and custom user interface front-ends.
+Currently only Figaro PM back-end and CLI (Command Line Interface)
+front-end supported.
 
 Installation
 ============
 
-Read INSTALL file provided in this distributions for installations instructions
+Read INSTALL file provided in this distributions for installation
+instructions.
 
-
-Command Line Interface
-======================
+Starting Ked Password Manager
+=============================
 
 To run Ked Password Manager Command Line Interface, run::
 
@@ -33,10 +35,32 @@ To run Ked Password Manager Command Line Interface, run::
 
 kedpm-cli program should be located in your PATH.
 
-Commands
---------
+If you have Figaro Password Manager database kedpm will try to open
+it. To do it properly, KedPM will ask you for valid password. 
+
+After the first run KedPM will make a backup of existing fpm database
+(located in file ~/.fpm/fpm) to file ~/.fpm.kedpm.bak. So if fpm will
+break for some reason, you will be able to restore your old database.
+Note, however, that database, saved by kedpm itself will not be backed
+up.
+
+If you have no Figaro Password Manager database at the moment, kedpm
+will try to create one for you. It will ask you for a password to
+encrypt password data with. Then KedPM will create empty FPM database.
+
+Command Line Interface
+======================
+
+Currently KedPM supports only command line interface (no GUI for now,
+but its going to change soon).
+
+However, cli should be quite intuitive for those, who has expirience
+with linux shell. Password are placed in categories, like files
+are placed in directories. You can move between categories with 'cd'
+command, show contents of category with 'ls' command, and so on. 
+
+Full list of commands can be retrieved with 'help' command. You can get
+help on particular command using 'help <command>'.
 
 
-
-
-.. vim: tw=72
+.. vim: tw=72 nocindent
