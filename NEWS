@@ -16,7 +16,7 @@ With this release I've decided to change project status from
 alpha to beta. I've used the program quite a lot and it performed great,
 so I think its ready for public testing.
 
-Apart bug fixing, this release introduces parser's pattern editor
+Apart from bugfixes, this release introduces parser's pattern editor
 (without much documentation yet), subcategories of arbitrary depth and
 various usability improvements. Figaro Password Manager compatibility is
 still in place:)

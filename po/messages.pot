@@ -1,0 +1,210 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR ORGANIZATION
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: Mon Mar  1 00:37:50 2004\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: ENCODING\n"
+"Generated-By: pygettext.py 1.5\n"
+
+
+#: kedpm/frontends/cli.py:38
+msgid ""
+"Ked Password Manager is ready for operation.\n"
+"try 'help' for brief description of available commands.\n"
+msgstr ""
+
+#: kedpm/frontends/cli.py:54
+msgid "Ked Password Manager (version %s)"
+msgstr ""
+
+#: kedpm/frontends/cli.py:61
+msgid "Error! Wrong password."
+msgstr ""
+
+#: kedpm/frontends/cli.py:63
+msgid "Provide password to access the database (Ctrl-C to exit)"
+msgstr ""
+
+#: kedpm/frontends/cli.py:64
+msgid "Password: "
+msgstr ""
+
+#: kedpm/frontends/cli.py:67
+msgid "Password accepted."
+msgstr ""
+
+#: kedpm/frontends/cli.py:72
+msgid "Creating new password database."
+msgstr ""
+
+#: kedpm/frontends/cli.py:75
+msgid "Provide password: "
+msgstr ""
+
+#: kedpm/frontends/cli.py:76
+msgid "Repeat password: "
+msgstr ""
+
+#: kedpm/frontends/cli.py:78
+msgid "Empty passwords are really insecure. You shoud create one."
+msgstr ""
+
+#: kedpm/frontends/cli.py:80
+msgid "Passwords don't match! Please repeat."
+msgstr ""
+
+#: kedpm/frontends/cli.py:144
+msgid "No passwords matching \"%s\" were found"
+msgstr ""
+
+#: kedpm/frontends/cli.py:148
+msgid "Enter number. Enter 0 to cancel."
+msgstr ""
+
+#: kedpm/frontends/cli.py:150
+msgid "show: "
+msgstr ""
+
+#: kedpm/frontends/cli.py:185
+msgid "Passwords don't match. Try again."
+msgstr ""
+
+#: kedpm/frontends/cli.py:198 kedpm/frontends/cli.py:200
+msgid "Enter %s (\"%s\"): "
+msgstr ""
+
+#: kedpm/frontends/cli.py:202
+msgid "Enter %s: "
+msgstr ""
+
+#: kedpm/frontends/cli.py:204
+msgid "Error. Type %s is unsupported yet. This field will retain an old value."
+msgstr ""
+
+#: kedpm/frontends/cli.py:213
+msgid "WARNING! Your password is too long for Figaro Password Manager."
+msgstr ""
+
+#: kedpm/frontends/cli.py:214
+msgid "Figaro Password Manager can handle only passwords shorter than 24 characters."
+msgstr ""
+
+#: kedpm/frontends/cli.py:215
+msgid ""
+"However, KedPM can store this password for you, but it\n"
+"will break fpm compatibility. fpm will not be able to handle such\n"
+"long password correctly."
+msgstr ""
+
+#: kedpm/frontends/cli.py:218
+msgid "Do you still want to save your password? [Y/n]: "
+msgstr ""
+
+#: kedpm/frontends/cli.py:234
+msgid "Database was modified. Do you want to save it now? [Y/n]: "
+msgstr ""
+
+#: kedpm/frontends/cli.py:258
+msgid "running %s"
+msgstr ""
+
+#: kedpm/frontends/cli.py:302
+msgid "Exiting."
+msgstr ""
+
+#: kedpm/frontends/cli.py:322
+msgid "ls: %s:  No such catalog"
+msgstr ""
+
+#: kedpm/frontends/cli.py:325
+msgid "=== Directories ==="
+msgstr ""
+
+#: kedpm/frontends/cli.py:328
+msgid "==== Passwords ===="
+msgstr ""
+
+#: kedpm/frontends/cli.py:345
+msgid "cd: %s: No such catalog"
+msgstr ""
+
+#: kedpm/frontends/cli.py:406
+msgid "Cancelled"
+msgstr ""
+
+#: kedpm/frontends/cli.py:408 kedpm/frontends/cli.py:616
+msgid "No password selected"
+msgstr ""
+
+#: kedpm/frontends/cli.py:439
+msgid "Saving..."
+msgstr ""
+
+#: kedpm/frontends/cli.py:454
+msgid "mkdir: too few arguments"
+msgstr ""
+
+#: kedpm/frontends/cli.py:455
+msgid "try 'help mkdir' for more information"
+msgstr ""
+
+#: kedpm/frontends/cli.py:478
+msgid "rename: category %s already exists"
+msgstr ""
+
+#: kedpm/frontends/cli.py:481
+msgid "rename: %s: no such category"
+msgstr ""
+
+#: kedpm/frontends/cli.py:525 kedpm/frontends/cli.py:554
+msgid "set: no such option: %s"
+msgstr ""
+
+#: kedpm/frontends/cli.py:571
+msgid "No password selected."
+msgstr ""
+
+#: kedpm/frontends/cli.py:579
+msgid "Password deleted"
+msgstr ""
+
+#: kedpm/frontends/cli.py:582
+msgid "Password was not deleted."
+msgstr ""
+
+#: kedpm/frontends/cli.py:606
+msgid "mv: %s: No such catalog"
+msgstr ""
+
+#: kedpm/frontends/cli.py:627
+msgid "rmdir: too few arguments"
+msgstr ""
+
+#: kedpm/frontends/cli.py:628
+msgid "try 'help rmdir' for more information"
+msgstr ""
+
+#: kedpm/frontends/cli.py:633
+msgid "rmdir: Can't remove root directory"
+msgstr ""
+
+#: kedpm/frontends/cli.py:640
+msgid "Are you sure you want to delete category %s' and ALL it's entries? [y/N]: "
+msgstr ""
+
+#: kedpm/frontends/cli.py:644
+msgid "rmdir: cateogry \"%s\" and all it's entries were deleted."
+msgstr ""
+
+#: kedpm/frontends/cli.py:651
+msgid "rmdir: Warning! Current working directory was removed. Changing to /"
+msgstr ""
+

@@ -15,7 +15,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: __init__.py,v 1.15 2004/02/29 11:45:48 kedder Exp $
+# $Id: __init__.py,v 1.16 2004/02/29 22:38:52 kedder Exp $
 
 ''' KED Password Manager 
 
@@ -45,3 +45,7 @@ def setupPrefix():
 
 if data_files_dir is None:
     setupPrefix()
+
+# Install gettext _() function
+import gettext
+gettext.install('kedpm', './po', unicode=0)

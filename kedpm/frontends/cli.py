@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: cli.py,v 1.32 2004/02/29 12:26:24 kedder Exp $
+# $Id: cli.py,v 1.33 2004/02/29 22:38:52 kedder Exp $
 
 "Command line interface for Ked Password Manager"
 
@@ -35,9 +35,9 @@ import readline
 class Application (Cmd, Frontend):
     PS1 = "kedpm:%s> " # prompt template
     cwd = []  # Current working directory
-    intro = """Ked Password Manager is ready for operation.
-try 'help' for brief description of available commands
-"""
+    intro = _("""Ked Password Manager is ready for operation.
+try 'help' for brief description of available commands.
+""")
 
     modified = 0
     histfile = os.getenv("HOME") + '/.kedpm/history'
@@ -51,33 +51,33 @@ try 'help' for brief description of available commands
         ''' Open database amd prompt for password if nesessary '''
         self.pdb = PDBFigaro(filename = expanduser(self.conf.options['fpm-database']))
         password = ""
-        print "Ked Password Manager (version %s)" % __version__
+        print _("Ked Password Manager (version %s)") % __version__
         while 1:
             try:
                 self.pdb.open(password)
                 break
             except WrongPassword:
                 if password:
-                    print "Error! Wrong password."
+                    print _("Error! Wrong password.")
                 else:
-                    print "Provide password to access the database (Ctrl-C to exit)"
-                password = getpass("Password: ")
+                    print _("Provide password to access the database (Ctrl-C to exit)")
+                password = getpass(_("Password: "))
             except DatabaseNotExist:
                 password = self.createNewDatabase()
-        print "Password accepted."
+        print _("Password accepted.")
         print
 
     def createNewDatabase(self):
         'Create new password database and return password for created database'
-        print "Creating new password database."
+        print _("Creating new password database.")
         pass1 = pass2 = ""
         while pass1 != pass2 or pass1 == "":
-            pass1 = getpass("Provide password: ")
-            pass2 = getpass("Repeat password: ")
+            pass1 = getpass(_("Provide password: "))
+            pass2 = getpass(_("Repeat password: "))
             if pass1 == '':
-                print "Empty passwords are really insecure. You shoud create one."
+                print _("Empty passwords are really insecure. You shoud create one.")
             if pass1!=pass2:
-                print "Passwords don't match! Please repeat."
+                print _("Passwords don't match! Please repeat.")
 
         self.pdb.create(pass1)
         return pass1
@@ -141,13 +141,13 @@ try 'help' for brief description of available commands
             tree = self.getCwd()
         passwords = tree.locate(regexp)
         if not passwords:
-            print "No passwords matching \"%s\" were found" % regexp
+            print _("No passwords matching \"%s\" were found") % regexp
             return None
         if len(passwords) > 1:
             self.listPasswords(passwords, 1)
-            print "Enter number. Enter 0 to cancel."
+            print _("Enter number. Enter 0 to cancel.")
             try:
-                showstr = raw_input('show: ')
+                showstr = raw_input(_('show: '))
             except (KeyboardInterrupt, EOFError):
                 # user has cancelled selection
                 showstr = "0"
@@ -182,7 +182,7 @@ try 'help' for brief description of available commands
             if pass1==pass2:
                 pwd = pass1
             else:
-                print "Passwords don't match. Try again."
+                print _("Passwords don't match. Try again.")
         return pwd
 
     def editPassword(self, pwd):
@@ -195,13 +195,14 @@ try 'help' for brief description of available commands
 
             new_value = ""
             if field_type == password.TYPE_STRING:
-                new_value = self.inputString("Enter %s (\"%s\"): " % (pwd.getFieldTitle(field), pwd[field]))
+                new_value = self.inputString(_("Enter %s (\"%s\"): ") % (pwd.getFieldTitle(field), pwd[field]))
             elif field_type == password.TYPE_TEXT:
-                new_value = self.inputText("Enter %s (\"%s\"): " % (pwd.getFieldTitle(field), pwd[field]))
+                new_value = self.inputText(_("Enter %s (\"%s\"): ") % (pwd.getFieldTitle(field), pwd[field]))
             elif field_type == password.TYPE_PASSWORD:
-                new_value = self.inputPassword("Enter %s: " % pwd.getFieldTitle(field))
+                new_value = self.inputPassword(_("Enter %s: ") % pwd.getFieldTitle(field))
             else:
-                print """Error. Type %s is unsupported yet. This field will retain an old value.""" % field_type
+                print _("Error. Type %s is unsupported yet. " \
+                        "This field will retain an old value.") % field_type
 
             if new_value!="":
                 input[field] = new_value
@@ -209,12 +210,12 @@ try 'help' for brief description of available commands
         try:
             pwd.update(input)
         except FigaroPasswordTooLongError:
-            print "WARNING! Your password is too long for Figaro Password Manager."
-            print "Figaro Password Manager can handle only passwords shorter than 24 characters."
-            print """However, KedPM can store this password for you, but it
+            print _("WARNING! Your password is too long for Figaro Password Manager.")
+            print _("Figaro Password Manager can handle only passwords shorter than 24 characters.")
+            print _("""However, KedPM can store this password for you, but it
 will break fpm compatibility. fpm will not be able to handle such
-long password correctly."""
-            answer = raw_input("Do you still want to save your password? [Y/n]: ")
+long password correctly.""")
+            answer = raw_input(_("Do you still want to save your password? [Y/n]: "))
             if answer.lower().startswith('n'):
                 raise KeyboardInterrupt
             pwd.store_long_password = 1
@@ -230,7 +231,7 @@ long password correctly."""
             return
         answer = 'y'
         if self.conf.options["save-mode"] == "ask":
-            answer = raw_input("Database was modified. Do you want to save it now? [Y/n]: ")
+            answer = raw_input(_("Database was modified. Do you want to save it now? [Y/n]: "))
         if answer=='' or answer.lower().startswith('y'):
             self.do_save('')
 
@@ -254,7 +255,7 @@ long password correctly."""
             editor = os.environ['EDITOR']
         else:
             editor = default_editor
-        print "running %s" % editor
+        print _("running %s") % editor
         # create temporary file
         handle, tmpfname = tempfile.mkstemp(prefix="kedpm_")
         tmpfile = open(tmpfname, 'w')
@@ -298,7 +299,7 @@ long password correctly."""
         readline.write_history_file(self.histfile)
         if self.modified:
             self.tryToSave()
-        print "Exiting."
+        print _("Exiting.")
         sys.exit(0)
 
     def do_EOF(self, arg):
@@ -318,13 +319,13 @@ Syntax:
         try:
             tree = self.getTreeFromRelativePath(arg)
         except KeyError:
-            print "ls: %s:  No such catalog" % arg
+            print _("ls: %s:  No such catalog") % arg
             return
         
-        print "=== Directories ==="
+        print _("=== Directories ===")
         for bname in tree.getBranches().keys():
             print bname+"/"
-        print "==== Passwords ===="
+        print _("==== Passwords ====")
         self.listPasswords(tree.getNodes())
 
     def complete_ls(self, text, line, begidx, endidx):
@@ -341,7 +342,7 @@ Syntax:
         try:
             newpath = root.getTreeFromPath(cdpath)
         except KeyError:
-            print "cd: %s: No such catalog" % arg
+            print _("cd: %s: No such catalog") % arg
         else:
             self.cwd = cdpath
             self.updatePrompt()
@@ -402,9 +403,9 @@ receiving that number, you will be able to edit picked password.
                 #self.modified = 1
                 self.tryToSave()
             except (KeyboardInterrupt, EOFError):
-                print "Cancelled"
+                print _("Cancelled")
         else:
-            print "No password selected"
+            print _("No password selected")
 
     def do_new(self, arg):
         '''Add new password to current category. You will be prompted to enter
@@ -435,7 +436,7 @@ Syntax:
 
     def do_save(self, arg):
         '''Save current password tree'''
-        sys.stdout.write("Saving...")
+        sys.stdout.write(_("Saving..."))
         sys.stdout.flush()
         self.pdb.save()
         print "OK"
@@ -450,8 +451,8 @@ Syntax:
 Creates new password category in current one.
 '''
         if not arg:
-            print "mkdir: too few arguments"
-            print "try 'help mkdir' for more information"
+            print _("mkdir: too few arguments")
+            print _("try 'help mkdir' for more information")
             return
 
         pwd = self.getCwd()
@@ -474,10 +475,10 @@ Syntax:
         try:
             self.pdb.getTree().renameBranch(self.cwd+[oldname], newname)
         except RenameError:
-            print "rename: category %s already exists" % newname
+            print _("rename: category %s already exists") % newname
             return
         except KeyError:
-            print "rename: %s: no such category" % oldname
+            print _("rename: %s: no such category") % oldname
             return
         self.tryToSave()
 
@@ -521,7 +522,7 @@ enter help set <option> for more info on particular option."""
         try:
             opt_value = opts[opt_name]
         except KeyError:
-            print "set: no such option: %s" % arg
+            print _("set: no such option: %s") % arg
             return
         if len(tokens) == 1:
             # show value of option
@@ -550,7 +551,7 @@ enter help set <option> for more info on particular option."""
             option = self.conf.options.getOption(arg)
             print "%s: %s" % (arg, option.doc)
         except KeyError:
-            print "set: no such option: %s" % arg
+            print _("set: no such option: %s") % arg
 
     def do_rm(self, arg):
         """Remove password
@@ -567,7 +568,7 @@ be prompted to choose one from the list."""
 
         selected_password = self.pickPassword(arg)
         if not selected_password:
-            print "No password selected."
+            print _("No password selected.")
             return
 
         print selected_password.asText()
@@ -575,10 +576,10 @@ be prompted to choose one from the list."""
         if answer.lower().startswith('y'):
             # Do delete selected password
             self.getCwd().removeNode(selected_password)
-            print "Password deleted"
+            print _("Password deleted")
             self.tryToSave()
         else:
-            print "Password was not deleted."
+            print _("Password was not deleted.")
 
     def do_mv(self, arg):
         '''move a password
@@ -602,7 +603,7 @@ Syntax:
         try:
             dst_branch = root.getTreeFromPath(cat_path)
         except KeyError:
-            print "mv: %s: No such catalog" % cat
+            print _("mv: %s: No such catalog") % cat
             return
 
         # select password from user
@@ -612,7 +613,7 @@ Syntax:
             self.getCwd().removeNode(selected_password)
             self.tryToSave()
         else:
-            print "No password selected"
+            print _("No password selected")
 
     def do_rmdir(self, arg):
         '''Delete a category (directory)
@@ -623,32 +624,32 @@ Syntax:
 Deletes a password category and ALL it\'s entries
 '''
         if not arg:
-            print "rmdir: too few arguments"
-            print "try 'help rmdir' for more information"
+            print _("rmdir: too few arguments")
+            print _("try 'help rmdir' for more information")
             return
 
         abspath = self.getAbsolutePath(arg)
         if not abspath:
-            print "rmdir: Can't remove root directory"
+            print _("rmdir: Can't remove root directory")
             return
         pwd = self.pdb.getTree().getTreeFromPath(abspath[:-1])
         toremove = abspath[-1]
         abspath_str = '/'+'/'.join(abspath)
         
         #pwd = self.getCwd()
-        answer = raw_input("Are you sure you want to delete category %s'" \
-                " and ALL it's entries? [y/N]: " % abspath_str)
+        answer = raw_input(_("Are you sure you want to delete category %s'" \
+                " and ALL it's entries? [y/N]: ") % abspath_str)
         if answer.lower().startswith('y'):
             pwd.removeBranch(toremove)
-            print "rmdir: cateogry \"%s\" and all it's entries were deleted." % abspath_str
+            print _("rmdir: cateogry \"%s\" and all it's entries were deleted.") % abspath_str
             self.tryToSave()
 
         # Check if current directory still exists. If not - cd to root.
         try:
             cwd = self.getCwd()
         except KeyError:
-            print "rmdir: Warning! Current working directory was removed. " \
-                    "Changing to /"
+            print _("rmdir: Warning! Current working directory was removed. " \
+                    "Changing to /")
             self.cwd = []
             self.updatePrompt()
 
