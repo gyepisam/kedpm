@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: pdb_figaro.py,v 1.6 2003/08/13 22:02:00 kedder Exp $
+# $Id: pdb_figaro.py,v 1.7 2003/08/15 20:43:22 kedder Exp $
 
 """ Figaro password manager database plugin """
 
@@ -30,7 +30,9 @@ from random import randint
 from kedpm.exceptions import WrongPassword
 from kedpm.passdb import PasswordDatabase
 from kedpm.password_tree import PasswordTree
-from kedpm.password import Password, TYPE_STRING, TYPE_TEXT, TYPE_PASSWORD
+from kedpm.password import Password, TYPE_STRING, TYPE_TEXT, TYPE_PASSWORD, TYPE_META
+
+FPM_PASSWORD_LEN = 24
 
 class FigaroPassword (Password):
     fields_type_info = [
@@ -41,19 +43,39 @@ class FigaroPassword (Password):
         ('password', {'title': 'Password', 'type': TYPE_PASSWORD}),
     ]
 
+    default = 0
+    launcher = ""
+
+    def __init__(self, **kw):
+        Password.__init__(self, **kw)
+        self.default = kw.get('default', 0)
+        self.launcher = kw.get('launcher', '')
+
 class PDBFigaro (PasswordDatabase):
 
     default_db_filename = os.getenv('HOME') + '/.fpm/fpm'
+    #default_db_filename = 'test/fpm.sample'
 
     def open(self, password, fname=""):
         ''' Open figaro password database and construct password tree '''
+        
         self._password = password
-        fpm = minidom.parse(fname or self.default_db_filename)
+        self.filename = fname or self.default_db_filename
+        fpm = minidom.parse(self.filename)
         keyinfo = fpm.documentElement.getElementsByTagName("KeyInfo")[0]
         self._salt = keyinfo.getAttribute('salt')
         vstring = keyinfo.getAttribute('vstring')
         if self.decrypt(vstring) != "FIGARO":
             raise WrongPassword, "Wrong password"
+
+        # Save LauncherList xml element. Although kedpm don't use launchers
+        # yet, this list will be inserted into saved database to preserve
+        # compatibility with fpm.
+
+        nodes = fpm.documentElement.getElementsByTagName("LauncherList")
+        if nodes:
+            assert len(nodes) == 1
+            self.launcherlist = nodes[0]
 
         nodes = fpm.documentElement.getElementsByTagName("PasswordItem")
         for node in nodes:
@@ -63,7 +85,18 @@ class PDBFigaro (PasswordDatabase):
                 branch = self._pass_tree.addBranch(category)
             branch.addNode(self._getPasswordFromNode(node))
 
+    def save(self, fname="fpm.kedpm-saved"):
+        '''Save figaro password database'''
+    
+        doc = self.buildPasswordTree()
+        f = open(fname, 'w')
+        f.write(doc.toxml())
+        f.close()
+        
+
     def buildPasswordTree(self):
+        '''Build and return DOM document from current password tree'''
+        
         domimpl = minidom.getDOMImplementation()
         document= domimpl.createDocument("http://kedpm.sourceforge.net/xml/fpm", "FPM", None)
         root = document.documentElement
@@ -73,11 +106,15 @@ class PDBFigaro (PasswordDatabase):
         # KeyInfo tag
         keyinfo = document.createElement('KeyInfo')
         keyinfo.setAttribute('salt', self._salt)
-        keyinfo.setAttribute('vstring', self.encrypt('FiGARO'))
+        keyinfo.setAttribute('vstring', self.encrypt('FIGARO'))
         root.appendChild(keyinfo)
+        
+        # Add LauncherList for fpm compatibility
+        root.appendChild(self.launcherlist)
+
         # PasswordList tag
         passwordlist = document.createElement('PasswordList')
-        props = ['title', 'user', 'url', 'notes', 'password']
+        props = ['title', 'user', 'url', 'notes']
         iter = self._pass_tree.getIterator()
         while 1:
             pwd = iter.next()
@@ -90,16 +127,29 @@ class PDBFigaro (PasswordDatabase):
                 pr_node.appendChild(pr_node_text)
                 pwitem.appendChild(pr_node)
 
-            category = document.createElement('Category')
-            cat_text = document.createTextNode(self.encrypt(iter.getCurrentCategory()))
-            category.appendChild(cat_text)
+            password = document.createElement('password')
+            text = document.createTextNode(self.encrypt(pwd['password'], 1))
+            password.appendChild(text)
+            pwitem.appendChild(password)
+
+            category = document.createElement('category')
+            text = document.createTextNode(self.encrypt(iter.getCurrentCategory()))
+            category.appendChild(text)
             pwitem.appendChild(category)
-            
+
+            # Following launcher and default tags for fpm compatibility
+            launcher = document.createElement('launcher')
+            text = document.createTextNode(self.encrypt(pwd.launcher))
+            launcher.appendChild(text)
+            pwitem.appendChild(launcher)
+
+            if pwd.default:
+                pwitem.appendChild(document.createElement('default'))
+
             passwordlist.appendChild(pwitem)
         root.appendChild(passwordlist)
 
-        
-        #print root.toxml()
+        return document
         
     
     def _getPasswordFromNode(self, node):
@@ -108,6 +158,12 @@ class PDBFigaro (PasswordDatabase):
         params = {}
         for field in fields:
             params[field] = self._getTagData(node, field)
+        
+        # save default and launcher fields for fpm compatibility
+        chnode = node.getElementsByTagName('default')
+        if len(chnode)==1:
+            params['default'] = 1
+        params['launcher'] = self._getTagData(node, 'launcher')
         return FigaroPassword(**params)
     
     def _getTagData(self, node, tag):
@@ -122,13 +178,13 @@ class PDBFigaro (PasswordDatabase):
             return self.decrypt(encrypted)
         else: return ""    
 
-    def encrypt(self, field):
+    def encrypt(self, field, password=0):
         ''' Encrypt FPM encoded field '''
         hash=MD5.new()
         hash.update(self._salt + self._password)
         key = hash.digest()
         bf = Blowfish.new(key)
-        noised = self._addNoise(field)
+        noised = self._addNoise(field, password and FPM_PASSWORD_LEN)
         rotated = self._rotate(noised)
         encrypted = bf.encrypt(rotated)
         hexstr = self._bin_to_hex(encrypted)
@@ -153,6 +209,7 @@ class PDBFigaro (PasswordDatabase):
             high = ord(data) / 16
             low = ord(data) % 16
             strout += chr(ord('a')+high) + chr(ord('a')+low)
+        assert (2*len(strin) == len(strout))
         return strout
 
     def _hex_to_bin(self, strin):
@@ -166,14 +223,15 @@ class PDBFigaro (PasswordDatabase):
             strout = strout + chr(data)
         return strout
 
-    def _addNoise(self, field):         
+    def _addNoise(self, field, reslen = 0):         
         '''If we have a short string, I add noise after the first null prior to
         encrypting. This prevents empty blocks from looking identical to
         eachother in the encrypted file.'''
    
         block_size = Blowfish.block_size
         field += '\x00'
-        while len(field) % block_size > 0:
+        reslen = reslen or (len(field) / block_size + 1) * block_size
+        while len(field) < reslen:
             rchar = chr(randint(0, 255))
             field += rchar
         return field

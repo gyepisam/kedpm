@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: cli.py,v 1.6 2003/08/12 20:02:09 kedder Exp $
+# $Id: cli.py,v 1.7 2003/08/15 20:43:22 kedder Exp $
     
 from kedpm import __version__
 from kedpm.plugins.pdb_figaro import PDBFigaro
@@ -30,6 +30,8 @@ class Frontend (Cmd):
     intro = """KED Password Manager (version %s) is ready for operation.
 try 'help' for brief description of available commands
 """ % __version__
+
+    modified = 0
     
     def openDatabase(self):
         ''' Open database amd prompt for password if nesessary '''
@@ -109,7 +111,7 @@ try 'help' for brief description of available commands
             return None
         if len(passwords) > 1:
             self.listPasswords(passwords, 1)
-            print "Enter number. 0 returns to command prompt"
+            print "Enter number. Enter 0 to cancel."
             showstr = raw_input('show: ')
             try:
                 shownr = int(showstr)
@@ -159,7 +161,7 @@ try 'help' for brief description of available commands
         return pwd
     
     ##########################################
-    # Overriding of Cmd class methods below. #
+    # Command implementations below.         #
     def emptyline(self):
         pass
     
@@ -250,7 +252,16 @@ receiving that number, you will be able to edit picked password.
         else:
             print "No password selected"
 
+        self.modified = 1
+
+    def do_save(self, arg):
+        '''Save current password tree to a file'''
+        self.pdb.save()
+        self.modified = 0
+
     def run(self):
         self.openDatabase()
         self.updatePrompt()
         self.cmdloop()
+
+

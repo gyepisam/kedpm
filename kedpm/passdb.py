@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: passdb.py,v 1.1 2003/08/05 18:32:18 kedder Exp $
+# $Id: passdb.py,v 1.2 2003/08/15 20:43:22 kedder Exp $
 
 """ Password Database """
 
@@ -32,7 +32,7 @@ class PasswordDatabase:
         """ Open database from external source """
         pass
 
-    def save(self):
+    def save(self, fname=""):
         """ Save database to external source """
         pass
 

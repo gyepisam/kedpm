@@ -1,7 +1,16 @@
-2003-08-05 0.0.2
+Noteworthy changes in Ked Password Manager. Most recent changes at the
+top.
 
-  * First public release. All it can do is read Figaro Password Manager
-    database files and display passwords to user via cli interface.
+Version 0.1.0 (??)
+
+    * Added ability to save password database in fpm-compatible format.
 
 
- vim: tw=72
+Version 0.0.2 (2003-08-05)
+
+    * First public release. All it can do is read Figaro Password
+    Manager database files and display passwords to user via cli
+    interface.
+
+
+ vim: tw=72 et fo=ta

@@ -14,10 +14,11 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: test_figaro.py,v 1.5 2003/08/13 22:02:00 kedder Exp $
+# $Id: test_figaro.py,v 1.6 2003/08/15 20:43:22 kedder Exp $
 
+import os
 import unittest
-from kedpm.plugins.pdb_figaro import PDBFigaro
+from kedpm.plugins.pdb_figaro import PDBFigaro, FPM_PASSWORD_LEN
 from Crypto.Cipher import Blowfish
 
 class PDBFigaroTestCase(unittest.TestCase):
@@ -30,6 +31,7 @@ class PDBFigaroTestCase(unittest.TestCase):
         assert isinstance(self.pdb, PDBFigaro)
 
     def test_tree(self):
+        'Tree should be formed correctly'
         ptree = self.pdb.getTree()
         branches = ptree.getBranches()
         bkeys = branches.keys()
@@ -42,7 +44,17 @@ class PDBFigaroTestCase(unittest.TestCase):
         assert tree_kedder
         self.assertEqual(len(tree_kedder.getNodes()), 1)
 
-    def test_decription(self):
+    def test_fpmCompatibilty(self):
+        ptree = self.pdb.getTree()
+        pwd = ptree['Test'].locate('test2')[0]
+        self.assertEqual(pwd.default, 1)
+        pwd = ptree['Test'].locate('test1')[0]
+        self.assertEqual(pwd.default, 0)
+        pwd = ptree['Kedder'].locate('kedder1')[0]
+        self.assertEqual(pwd.launcher, 'ssh')
+        
+    def test_decryption(self):
+        'Test how passwords are decrypted'
         tree_test = self.pdb.getTree()['Test']
         pwds = tree_test.locate('url')
         self.assertEqual(len(pwds), 2)
@@ -70,8 +82,26 @@ class PDBFigaroTestCase(unittest.TestCase):
             decrypted = self.pdb.decrypt(encrypted)
             self.assertEqual(str, decrypted)
 
-    def test_buildPasswordTree(self):
-        self.pdb.buildPasswordTree()
+    def test_passwordEncryption(self):
+        'Encrypted password should be 48 character long'
+        pwdstr = 'shortpass'
+        encrypted = self.pdb.encrypt(pwdstr, 1)
+        self.assertEqual(len(encrypted), FPM_PASSWORD_LEN*2)
+        decrypted = self.pdb.decrypt(encrypted)
+        self.assertEqual(pwdstr, decrypted)
+
+
+class SavedFigaroTestCase(PDBFigaroTestCase):
+    def setUp(self):
+        pdb = PDBFigaro()
+        pdb.open(self.password, fname='test/fpm.sample')
+        pdb.save(fname="fpm.saved")
+        self.pdb = PDBFigaro()
+        self.pdb.open(self.password, fname='fpm.saved')
+
+    def tearDown(self):
+        os.remove('fpm.saved')
+        
 
 class FigaroCryptoTestCase(unittest.TestCase):
     def test_unrotate(self):
@@ -82,6 +112,7 @@ class FigaroCryptoTestCase(unittest.TestCase):
 def suite():
     l = [
         unittest.makeSuite(PDBFigaroTestCase, 'test'),
+        unittest.makeSuite(SavedFigaroTestCase, 'test'),
         unittest.makeSuite(FigaroCryptoTestCase, 'test')
     ]
     return unittest.TestSuite(l)

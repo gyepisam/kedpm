@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: password_tree.py,v 1.3 2003/08/13 22:01:59 kedder Exp $
+# $Id: password_tree.py,v 1.4 2003/08/15 20:43:22 kedder Exp $
 
 """ Password items organized in recursive tree """
 
@@ -37,7 +37,6 @@ class PasswordTreeIterator:
         return self.branches[self.branch_index]
         
     def next(self):
-
         '''This will iterate through whole password tree. next() method will
         consequently return every item in password tree.'''
         

@@ -1,3 +1,8 @@
+2003-08-15 20:45  Andrey Lebedev <andrey@micro.lt>
+
+	* AUTHORS, ChangeLog, MANIFEST.in, NEWS: Added ChangeLog and NEWS
+	files
+
 2003-08-14 01:01  Andrey Lebedev <andrey@micro.lt>
 
 	* kedpm/password_tree.py, kedpm/plugins/pdb_figaro.py,

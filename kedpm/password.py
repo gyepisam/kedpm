@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: password.py,v 1.3 2003/08/11 21:29:57 kedder Exp $
+# $Id: password.py,v 1.4 2003/08/15 20:43:22 kedder Exp $
 
 """ Password item """
 
@@ -22,6 +22,7 @@
 TYPE_STRING = 'string'
 TYPE_TEXT = 'text'
 TYPE_PASSWORD = 'password'
+TYPE_META = 'meta'
 
 class Password:
     """ Basic class for password structure """
@@ -62,9 +63,6 @@ class Password:
             self[name] = value
         except KeyError, message:
             self.__dict__[name] = value
-    
-    def __str__(self):
-        return "Password for <%s>" % self.name
     
     def getField(self, name):
         '''Returns field descriptor'''
