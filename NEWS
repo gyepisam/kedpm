@@ -5,6 +5,17 @@ NEWS
 Ked Password Manager project news. For more detailed list of changes,
 see CHANGES file.
 
+KedPM-0.2.5: How long your passwords are?
+=========================================
+
+2003.09.21 This is a bug-fix release. It fixes a major Figaro Password
+Manager bug - inability to store long passwords in database. fpm can't
+handle passwords longer than 24 characters. KedPM now can, but fpm-0.53
+will not load them correctly anyway.
+
+GUI can create new fpm database, if it isn't already exist. Sorry for
+those users, who downloaded version 0.2.0, but could not start GUI.
+
 
 KedPM-0.2.0: Featuring GUI 
 ===========================
@@ -36,4 +47,4 @@ out. Make sure you've backed up your ~/.fpm/fpm though.
 
 
 
-vim: tw=72 et fo=ta nocindent
+vim: tw=72 et fo=t nocindent
