@@ -9,51 +9,52 @@ see CHANGES file.
 KedPM-0.4.0: Everybody must get stoned
 ======================================
 
-2004.02.29. After a long idling, I've finally found some time to work on
-KedPM. 
+2004.02.29 After a long time dealing with other matters, I've finally
+found some time to work on KedPM.
 
-With this release I've decided to change project status from
-alpha to beta. I've used the program quite a lot and it performed great,
-so I think its ready for public testing.
+With this release I've decided to change the project status from alpha
+to beta. I've used this program quite a lot and it has performed quite
+well, so I think its ready for public testing.
 
 Apart from bugfixes, this release introduces parser's pattern editor
 (without much documentation yet), subcategories of arbitrary depth and
 various usability improvements. Figaro Password Manager compatibility is
-still in place:)
+also still in place :-) 
 
 
 KedPM-0.3.1
 ===========
 
-2003.10.27. Kedpm-0.3.0 had a bug that prevented creating of a new
-databases. This is fixed in this release. A small fix of a big bug.
+2003.10.27 KedPm-0.3.0 had a bug that prevented creating of new
+databases, it is fixed in this release.
+
 
 KedPM-0.3.0: Meet Parser
 ========================
 
-2003.10.26 Two major features added in this release. The first is the
-Parser feature, that will help you incorporate passwords from your mails
-to database more efficiently. Second: ability to search password tree
-recursively. It will allow you to search all your passwords in one
-operation.
+2003.10.26 Two major features were added in this release. The first is
+the Parser feature, that will help you incorporate passwords from your
+e-mails to the database more efficiently. The second feature is the
+ability to search the password tree recursively, this will allow you to
+search all of your passwords in one operation.
 
-Other updates include experimental fpm-0.58 format support (with it's
+Other updates include experimental FPM-0.58 format support (with it's
 longer passwords), basic configuration options, deleting and moving
-passwords, ability to display password as plain text in GUI, various
-usability enhancements.
+passwords, the ability to display passwords as plain text in GUI and
+various usability enhancements.
 
 
-KedPM-0.2.5: How long your passwords are?
+KedPM-0.2.5: How long are your passwords?
 =========================================
 
-2003.09.21 This is a bug-fix release. It fixes a major Figaro Password
-Manager bug - inability to store long passwords in database. fpm can't
-handle passwords longer than 24 characters. KedPM now can, but fpm-0.53
-will not load them correctly anyway.
+2003.09.21 This is a bug-fix release, it fixes a major Figaro Password
+Manager bug - inability to store long passwords in the database. FPM
+can't handle passwords longer than 24 characters, KedPM now can, but
+FPM-0.53 still can not load them correctly.
 
-GUI can create new fpm database, if it isn't already exist. Sorry for
-those users, who downloaded version 0.2.0, but could not start GUI.
-
+The GUI can now create new a FPM database, if it doesn't already exist -
+sorry, to those users who downloaded version 0.2.0, but could not start
+the GUI.
 
 KedPM-0.2.0: Featuring GUI 
 ===========================
