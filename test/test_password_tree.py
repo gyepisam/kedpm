@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: test_password_tree.py,v 1.7 2003/10/15 21:29:07 kedder Exp $
+# $Id: test_password_tree.py,v 1.8 2003/10/26 16:58:50 kedder Exp $
 
 import unittest
 from kedpm.password_tree import PasswordTree
@@ -23,6 +23,13 @@ from kedpm.exceptions import RenameError
 
 class PasswordTreeTestCase(unittest.TestCase):
     def setUp(self):
+        # We will form such tree here:
+        # root
+        #  +-pass1
+        #  +-pass2
+        #  +-subdir
+        #    +-pass3
+        
         self.ptree = PasswordTree()
         self.pass1 = Password(host = "host1", name = "name1", password = "password1")
         self.pass2 = Password(host = "host2", name = "name2", password = "password2")
@@ -89,6 +96,20 @@ class PasswordTreeTestCase(unittest.TestCase):
         self.ptree.removeNode(found)
         found = self.ptree.locate('st1')
         self.assertEqual(found, [])
+        # test deletion from subtree
+        self.ptree.removeNode(self.pass3)
+        self.assertEqual(self.ptree['subdir'].getNodes(), [])
+
+    def test_flatten(self):
+        flat_tree = self.ptree.flatten()
+        nodes = flat_tree.getNodes()
+        self.assertEqual(len(nodes), 3)
+        passwords = [self.pass3, self.pass1, self.pass2]
+        self.assertEqual(nodes, passwords)
+
+    def test_getBranchContainingNode(self):
+        self.assertEqual(self.ptree.getBranchContainingNode(self.pass3), self.subdir)
+        self.assertEqual(self.ptree.getBranchContainingNode(self.pass1), self.ptree)
 
 class PasswordTreeIteratorTestCase(unittest.TestCase):
     def setUp(self):

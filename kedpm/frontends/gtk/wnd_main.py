@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: wnd_main.py,v 1.23 2003/10/25 19:51:45 kedder Exp $
+# $Id: wnd_main.py,v 1.24 2003/10/26 16:58:50 kedder Exp $
 
 '''Main KedPM window'''
 
@@ -47,6 +47,7 @@ class MainWindow(Window):
     selected_text = ''      # Current selection
     cwtree = None           # Current working tree
     search_text = ''        # Current password filter
+    flat_view = False       # Is password list flat?
 
 
     def __init__(self):
@@ -107,7 +108,7 @@ class MainWindow(Window):
         for column in password_list.get_columns():
             password_list.remove_column(column)
 
-        passwords = self.cwtree.locate(self.search_text)
+        passwords = self.getCWTree().locate(self.search_text)
 
         if passwords:
             self.prot = passwords[0]
@@ -136,6 +137,12 @@ class MainWindow(Window):
         self.passwords = passwords
         password_list.set_model(store)
         self.updateControls()
+
+    def getCWTree(self):
+        if self.flat_view:
+            return self.password_tree.flatten()
+        else:
+            return self.cwtree
 
     def updateControls(self):
         """Update controls according to current status.
@@ -226,9 +233,20 @@ class MainWindow(Window):
         dlg = dialogs.PasswordEditDialog(pswd)
         response = dlg.run()
         if response == gtk.RESPONSE_OK:
-            self.cwtree.addNode(pswd)
+            self.getCWTree().addNode(pswd)
             self.setupPasswords()
             self.tryToSave()        
+
+    def toggleFlatView(self):
+        """Toggle flat password view and update related controls"""
+        self.flat_view = not self.flat_view
+        self['scroll_tree'].set_property("visible", not self.flat_view)
+        self['tb_flat_tree'].set_active(self.flat_view)
+        self['mi_flat_tree'].set_active(self.flat_view)
+        # disable some controls
+        for control in ['tb_add', 'mi_add_password', 'mi_parse_password']:
+            self[control].set_sensitive(not self.flat_view)
+        self.setupPasswords()
 
     #################################################################
     # Signal handlers
@@ -319,7 +337,7 @@ class MainWindow(Window):
         dlg = dialogs.PasswordEditDialog(pswd)
         response = dlg.run()
         if response == gtk.RESPONSE_OK:
-            self.cwtree.addNode(pswd)
+            self.getCWTree().addNode(pswd)
             self.setupPasswords()
             self.tryToSave()
 
@@ -333,7 +351,7 @@ class MainWindow(Window):
         response = dlg.run()
         if response == gtk.RESPONSE_OK and dlg.category_name!='':
             try:
-                self.cwtree.addBranch(dlg.category_name)
+                self.getCWTree().addBranch(dlg.category_name)
             except AttributeError:
                 errorMessageDialog('Directory "%s" already exists!' % dlg.category_name);
             else:
@@ -389,7 +407,7 @@ class MainWindow(Window):
         dialog.destroy();
         if response == gtk.RESPONSE_YES:
             # Delete password
-            self.cwtree.removeNode(sel_pswd)
+            self.password_tree.removeNode(sel_pswd)
             self.setupPasswords()
             cid = self.statusbar.get_context_id('toolbar')
             self.statusbar.pop(cid)
@@ -416,3 +434,12 @@ class MainWindow(Window):
 
     def on_pmi_view_as_plain_text_activate(self, widget):
         self.on_mi_as_plain_text_activate(widget)
+
+    def on_mi_flat_tree_activate(self, widget):
+        if widget.get_active() != self.flat_view:
+            self.toggleFlatView()
+
+    def on_tb_flat_tree_toggled(self, widget):
+        if widget.get_active() != self.flat_view:
+            self.toggleFlatView()
+

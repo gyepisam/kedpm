@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: cli.py,v 1.26 2003/10/23 21:11:45 kedder Exp $
+# $Id: cli.py,v 1.27 2003/10/26 16:58:50 kedder Exp $
 
 "Command line interface for Ked Password Manager"
 
@@ -32,12 +32,17 @@ import os, sys, tempfile
 
 class Application (Cmd, Frontend):
     PS1 = "kedpm:%s> " # prompt template
-    pwd = []
+    cwd = []  # Current working directory
     intro = """Ked Password Manager is ready for operation.
 try 'help' for brief description of available commands
 """
 
     modified = 0
+
+    def __init__(self):
+        Cmd.__init__(self)
+        if sys.stdout.isatty():
+            self.PS1 = "\x1b[1m"+self.PS1+"\x1b[0m" # colored prompt template
     
     def openDatabase(self):
         ''' Open database amd prompt for password if nesessary '''
@@ -75,11 +80,11 @@ try 'help' for brief description of available commands
         return pass1
 
     def updatePrompt(self):
-        self.prompt = self.PS1 % ('/'+'/'.join(self.pwd))
+        self.prompt = self.PS1 % ('/'+'/'.join(self.cwd))
 
-    def getPwd(self):
-        'Return current password tree instance'
-        return self.pdb.getTree().getTreeFromPath(self.pwd)
+    def getCwd(self):
+        'Return current working password tree instance'
+        return self.pdb.getTree().getTreeFromPath(self.cwd)
 
     def listPasswords(self, passwords, show_numbers=0):
         '''display given passwords in nicely formed table'''
@@ -121,13 +126,17 @@ try 'help' for brief description of available commands
         for ptup in ptuples:
             print fstr % ptup
 
-    def pickPassword(self, regexp):        
-        '''Prompt user to pick one password from located list. If list contains
-        only one password, return it without prompting. If no passwords were
-        located, or user desides to cancel operation, return None'''
-
-        pwd = self.getPwd()
-        passwords = pwd.locate(regexp)
+    def pickPassword(self, regexp, tree = None):
+        '''Prompt user to pick one password from given password tree. Password
+        tree, provided by "tree" argument filtered using "regexp". 
+        
+        If resulted list contains only one password, return it without
+        prompting. If no passwords were located, or user desides to cancel
+        operation, return None'''
+        
+        if tree is None:
+            tree = self.getCwd()
+        passwords = tree.locate(regexp)
         if not passwords:
             print "No passwords matching \"%s\" were found" % regexp
             return None
@@ -256,7 +265,7 @@ long password correctly."""
         if(arg[0] == '/'):
             path = root.normalizePath(arg.split('/'))
         else:
-            path = root.normalizePath(self.pwd + arg.split('/'))
+            path = root.normalizePath(self.cwd + arg.split('/'))
         return path
     
     ##########################################
@@ -286,7 +295,7 @@ long password correctly."""
 Syntax:
     ls [<category>]
 '''
-        root_tree = self.getPwd()
+        root_tree = self.getCwd()
         if not arg:
             # list current dir
             tree = root_tree
@@ -319,7 +328,7 @@ Syntax:
         except KeyError:
             print "cd: %s: No such catalog" % arg
         else:
-            self.pwd = cdpath
+            self.cwd = cdpath
             self.updatePrompt()
 
     def complete_cd(self, text, line, begidx, endidx):
@@ -327,27 +336,36 @@ Syntax:
     
     def do_pwd(self, arg):
         '''print name of current/working directory'''
-        print '/'+'/'.join(self.pwd)
+        print '/'+'/'.join(self.cwd)
     
     def do_show(self, arg):
         '''display password information.
         
 Syntax:
-    show <regexp>
+    show [-r] <regexp>
 
-This will display contents of a password item in current category. If
-several items matched by <regexp>, list of them will be printed and you will be
-prompted to enter a number, pointing to password you want to look at.
-After receiving that number, KedPM will show you the password.
-'''
+    -r - recursive search. search all subtree for matching passwords
+
+This will display contents of a password item in current category or whole
+subtree, if -r flag was specified. If several items matched by <regexp>, list
+of them will be printed and you will be prompted to enter a number, pointing to
+password you want to look at.  After receiving that number, KedPM will show you
+the password.'''
         
-        selected_password = self.pickPassword(arg)
+        argv = arg.split()
+        tree = None        
+        if argv and argv[0] == '-r':
+            tree = self.getCwd().flatten()
+            if len(argv) > 1:
+                arg = " ".join(argv[1:])
+            else:
+                arg = ""
+            
+        selected_password = self.pickPassword(arg, tree)
         if selected_password:
             print "---------------------------------------"
             print selected_password.asText()
             print "---------------------------------------"
-        else:
-            print "No password selected"
 
     def do_edit(self, arg):
         '''edit password information.
@@ -396,7 +414,7 @@ Syntax:
         except (KeyboardInterrupt, EOFError):
             print "Cancelled"
         else:
-            tree = self.getPwd()
+            tree = self.getCwd()
             tree.addNode(new_pass)
             self.tryToSave()
 
@@ -421,7 +439,7 @@ Creates new password category in current one.
             print "try 'help mkdir' for more information"
             return
 
-        pwd = self.getPwd()
+        pwd = self.getCwd()
         pwd.addBranch(arg.strip())
 
     def do_rename(self, arg):
@@ -439,7 +457,7 @@ Syntax:
         oldname = args[0]
         newname = args[1]
         try:
-            self.pdb.getTree().renameBranch(self.pwd+[oldname], newname)
+            self.pdb.getTree().renameBranch(self.cwd+[oldname], newname)
         except RenameError:
             print "rename: category %s already exists" % newname
             return
@@ -543,7 +561,7 @@ be prompted to choose one from the list."""
         answer = raw_input("Do you really want to delete this password (y/N)? ")
         if answer.lower().startswith('y'):
             # Do delete selected password
-            self.getPwd().removeNode(selected_password)
+            self.getCwd().removeNode(selected_password)
             print "Password deleted"
             self.tryToSave()
         else:
@@ -578,7 +596,7 @@ Syntax:
         selected_password = self.pickPassword(pw)
         if selected_password:
             dst_branch.addNode(selected_password)
-            self.getPwd().removeNode(selected_password)
+            self.getCwd().removeNode(selected_password)
             self.tryToSave()                
         else:
             print "No password selected"
@@ -596,7 +614,7 @@ Deletes a password category and ALL it\'s entries
             print "try 'help rmdir' for more information"
             return
 
-        pwd = self.getPwd()
+        pwd = self.getCwd()
         answer = raw_input("Are you sure you want to delete category '" + arg + " and ALL it's entries? [y/N]: ")
         if answer.lower().startswith('y'):
             pwd.removeBranch(arg.strip())

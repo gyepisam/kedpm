@@ -13,7 +13,8 @@ Version 0.3.0 (??)
     * ``rmdir`` and ``mv`` commands were added to CLI (Patch #825957).
     Thanks indygena!
 
-    * Parser feature added.H
+    * Parser feature added. It will help you incorporate passwords from
+    your mails to database more efficiently.
 
     * Support for fpm-0.58 databases with longer passwords (up to
     256 characters). Not tested yet.
@@ -21,7 +22,11 @@ Version 0.3.0 (??)
     * GUI now can display password as plain text. It is useful when you
     need to send password to someone.
 
-    * Various GUI usability enhancements.
+    * Added ability to search whole password tree in one operation. The
+    feature accessed through "Flatten" button in GUI and through "-r"
+    flag in "show" command in CLI.
+
+    * Various CLI and GUI usability enhancements.
 
 Version 0.2.5 (2003-09-21)
 

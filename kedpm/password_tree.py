@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: password_tree.py,v 1.13 2003/10/22 21:33:25 kedder Exp $
+# $Id: password_tree.py,v 1.14 2003/10/26 16:58:50 kedder Exp $
 
 """Password items organized in recursive tree."""
 
@@ -162,6 +162,19 @@ class PasswordTree:
     
     def getIterator(self):
         return PasswordTreeIterator(self)
+
+    def flatten(self):
+        """Traverse the whole tree and return flat representation of it as
+        PasswordTree instance."""
+
+        result = PasswordTree()
+        iter = self.getIterator()
+        while 1:
+            pwd = iter.next()
+            if pwd is None:
+                break
+            result.addNode(pwd)
+        return result        
     
     def asString(self, indent = 0):
         output = ""
@@ -176,11 +189,24 @@ class PasswordTree:
     def __str__(self):
         return self.asString()
 
+    def getBranchContainingNode(self, node):
+        if node in self._nodes:
+            return self
+        for branch in self._branches.values():
+            res = branch.getBranchContainingNode(node)
+            if res:
+                return res
+        else:
+            return None
+
     def removeNode(self, node):
-        """Removes a node from the tree."""
-        self._nodes.remove(node)
+        """Removes a node from the tree.
+        
+        If node is not found in the current branch, search for node recursively
+        in whole subtree."""
+        container = self.getBranchContainingNode(node)
+        container._nodes.remove(node)
 
     def removeBranch(self, name):
         """Removes a branch from the tree."""
         del(self._branches[name])
-        
