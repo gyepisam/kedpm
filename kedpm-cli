@@ -14,10 +14,13 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: kedpm-cli,v 1.1 2003/08/05 18:32:15 kedder Exp $
+# $Id: kedpm-cli,v 1.2 2003/08/07 18:56:31 kedder Exp $
 
 from kedpm.frontends.cli import Frontend
 
-if __name__ == "__main__":
+def main():
     frontend = Frontend()
     frontend.run()
+    
+if __name__ == "__main__":
+    main()

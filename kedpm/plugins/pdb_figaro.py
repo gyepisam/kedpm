@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: pdb_figaro.py,v 1.1 2003/08/05 18:32:18 kedder Exp $
+# $Id: pdb_figaro.py,v 1.2 2003/08/07 18:56:31 kedder Exp $
 
 """ Figaro password manager database plugin """
 
@@ -91,7 +91,13 @@ class PDBFigaro (PasswordDatabase):
     def _getTagData(self, node, tag):
         chnode = node.getElementsByTagName(tag)
         if chnode and node.hasChildNodes():
-            return self.decrypt(strip(chnode.pop().firstChild.data))
+            datanode= chnode.pop()
+            encrypted = ""
+            # datanode can have more than one text chunk
+            for child in datanode.childNodes:
+                encrypted += child.data
+            assert len(encrypted) % 8 == 0
+            return self.decrypt(encrypted)
         else: return ""    
     
     def decrypt(self, string):
