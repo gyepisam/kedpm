@@ -17,8 +17,9 @@ interpreter can run.
 
 KedPM written as extensible framework, which allows to plug in custom
 password database back-ends and custom user interface front-ends.
-Currently only Figaro PM back-end and CLI (Command Line Interface)
-front-end supported.
+Currently only Figaro PM back-end supported. To manage his passwords,
+user can choose between GUI (GTK2 based graphical user interface) and
+CLI (Command Line Interface).
 
 Installation
 ============
@@ -29,11 +30,16 @@ instructions.
 Starting Ked Password Manager
 =============================
 
-To run Ked Password Manager Command Line Interface, run::
+To run Ked Password Manager, issue this command::
 
-    kedpm-cli
+    $ kedpm
 
-``kedpm-cli`` program should be located in your PATH.
+This will run graphical user interface based on GTK2. Alternatively you
+can use kedpm with command line user interface::
+
+    $ kedpm -c
+
+Note: ``kedpm`` program should be located in your PATH.
 
 If you have Figaro Password Manager database KedPM will try to open
 it. To do it properly, KedPM will ask you for valid password. 
@@ -51,13 +57,10 @@ encrypt password data with. Then KedPM will create empty FPM database.
 Command Line Interface
 ======================
 
-Currently KedPM supports only command line interface (no GUI for now,
-but its going to change soon).
-
-However, CLI should be quite intuitive for those, who has experience
-with Linux shell. Password are placed in categories, like files
-are placed in directories. You can move between categories with ``cd``
-command, show contents of category with ``ls`` command, and so on. 
+CLI should be quite intuitive for those, who has experience with Linux
+shell. Password are placed in categories, like files are placed in
+directories. You can move between categories with ``cd`` command, show
+contents of category with ``ls`` command, and so on. 
 
 There is one difference however: passwords in database don't have unique
 identifiers, like files in filesystem. Passwords in KedPM identified by

@@ -14,12 +14,15 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: kedpm-gtk,v 1.1 2003/08/22 21:53:35 kedder Exp $
+# $Id: kedpm-gtk,v 1.2 2003/09/06 20:04:47 kedder Exp $
 
-from kedpm.frontends.gtk.app import Application
-def main():
-    frontend = Application()
-    frontend.run()
-    
-if __name__ == "__main__":
-    main()
+# This script runs 'scripts/kedpm' script and allows running it from source
+# tree without installing. This script intended for developers' use only
+# (mostly because it's an ugly hack). Users should install kedpm and run kedpm
+# program directly.
+
+import imp
+
+file = open('scripts/kedpm', 'r')
+module = imp.load_source('app', 'scripts/kedpm', file)
+print module.main(['-g'])

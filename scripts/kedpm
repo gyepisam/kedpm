@@ -1,0 +1,66 @@
+#!/usr/bin/env python
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+#
+# $Id: kedpm,v 1.1 2003/09/06 20:04:47 kedder Exp $
+
+from kedpm.frontends import frontendFactory
+from getopt import getopt, GetoptError
+import sys
+
+def usage():
+    print "try `%s --help' for more information" % sys.argv[0]
+    
+def help():
+    print '''Ked Password Manager
+Usage %s [option]:
+
+Recognized options:
+    -c, --frontend=cli: Run command line interface.
+    -g, --frontend=gtk: Run GTK2 graphical interface.
+    
+    -?, -h, --help: print this message''' % sys.argv[0]
+
+def main(argv):
+    try:
+        opts, args = getopt(argv, "cgh?", ['frontend=', 'help'])
+    except GetoptError, message:
+        print message
+        usage()
+        sys.exit(1)
+    frontend = "gtk"
+    for o, a in opts:
+        if o in ('--help', '-h', '-?'):
+            help()
+            sys.exit(1)
+        elif o == "--frontend":
+            frontend = a
+            break
+        elif o == '-g':
+            frontend='gtk'
+        elif o == '-c':
+            frontend='cli'
+    try:
+        app = frontendFactory(frontend)
+        app.run()
+    except ValueError, e:
+        print e[0]
+        print '''Supported frontends are:
+    cli: Command line interface;
+    gtk: GTK2 graphical interface;'''
+        sys.exit(1)
+
+if __name__ == "__main__":
+    main(sys.argv[1:])

@@ -7,6 +7,9 @@ Version 0.2.0 (??)
 
     * Added ability to rename password categories
 
+    * ``kedpm-cli`` script renamed to ``kedpm``. To run GUI, use 
+    ``kedpm -g``; to run CLI, use ``kedpm -c``.
+
 Version 0.1.0 (2003-08-20)
 
     * Added ability to save password database in fpm-compatible format.

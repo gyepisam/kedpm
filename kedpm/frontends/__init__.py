@@ -15,13 +15,29 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: __init__.py,v 1.1 2003/08/05 18:32:18 kedder Exp $
+# $Id: __init__.py,v 1.2 2003/09/06 20:04:47 kedder Exp $
 
-''' KED Password Manager 
+''' KED Password Manager - simple to use, extensible and secure password
+manager.
 
-Simple to use, extensible and secure password manager
+This module contains frontends implementations.
+Supported frontends::
+    
+    * cli - Command Line Interface frontend
+    
+    * gtk - GTK-2 frontend'''
 
-Frontends
-'''
+def frontendFactory(frontend):
+    if frontend == 'cli':
+        from kedpm.frontends.cli import Frontend
+        return Frontend()
+    elif frontend == 'gtk':
+        from kedpm.frontends.gtk.app import Application
+        return Application()
+    else:
+        raise ValueError, '''Frontend "%s" is not supported.
+Supported frontends are:
+    cli: Command line interface;
+    gtk: GTK2 graphical interface;''' % frontend
 
-__version__ = '0.0.1'
+

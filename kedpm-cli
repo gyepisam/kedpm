@@ -14,14 +14,15 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: kedpm-cli,v 1.3 2003/08/16 21:11:20 kedder Exp $
+# $Id: kedpm-cli,v 1.4 2003/09/06 20:04:47 kedder Exp $
 
-import pdb
-from kedpm.frontends.cli import Frontend
+# This script runs 'scripts/kedpm' script and allows running it from source
+# tree without installing. This script intended for developers' use only
+# (mostly because it's an ugly hack). Users should install kedpm and run kedpm
+# program directly.
 
-def main():
-    frontend = Frontend()
-    frontend.run()
-    
-if __name__ == "__main__":
-    main()
+import imp
+
+file = open('scripts/kedpm', 'r')
+module = imp.load_source('app', 'scripts/kedpm', file)
+print module.main(['-c'])
