@@ -20,10 +20,15 @@ Version 0.4.0 (??)
 
     * Support for password trees of arbitrary depth in Figaro
     databases. This feature is not supported by FPM itself, although
-    databases with subcategories should still be readable by FPM.
+    databases with subcategories should still be readable by FPM. (SF
+    BUG #845305)
 
     * Saving history of searches in GUI. The feature is similar to
     browser url bar history.
+
+    * Better completion in CLI.
+
+    * Password list columns in GUI are now sortable and resizable.
 
 Version 0.3.1 (2003-10-27)
 
@@ -84,7 +89,6 @@ Version 0.1.0 (2003-08-20)
     * Improved command line interface: overall usability improvements; 
     
     * New cli commands: 'mkdir', 'new', 'edit' and 'save';
-
 
 Version 0.0.2 (2003-08-05)
 

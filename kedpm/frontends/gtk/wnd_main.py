@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: wnd_main.py,v 1.27 2004/02/28 16:34:57 kedder Exp $
+# $Id: wnd_main.py,v 1.28 2004/02/28 18:45:20 kedder Exp $
 
 '''Main KedPM window'''
 import os
@@ -125,6 +125,8 @@ class MainWindow(Window):
             for field in fields:
                 renderer = gtk.CellRendererText()
                 col = gtk.TreeViewColumn(self.prot.getFieldTitle(field), renderer)
+                col.set_resizable(True)
+                col.set_sort_column_id(count)
                 col.add_attribute(renderer, 'text', count)
                 password_list.append_column(col)
                 count += 1

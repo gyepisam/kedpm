@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: cli.py,v 1.30 2004/02/19 21:51:40 kedder Exp $
+# $Id: cli.py,v 1.31 2004/02/28 18:45:20 kedder Exp $
 
 "Command line interface for Ked Password Manager"
 
@@ -235,11 +235,13 @@ long password correctly."""
             self.do_save('')
 
     def complete_dirs(self, text, line, begidx, endidx):
-        dirs=self.pdb.getTree().getBranches()
+        completing = line[:endidx].split(' ')[-1]
+        abspath = self.getAbsolutePath(completing)
+        dirs = self.pdb.getTree().getTreeFromPath(abspath).getBranches()
         compl = []
         for dir in dirs:
             if dir.startswith(text):
-                compl.append(dir)
+                compl.append(dir+'/')
         return compl
 
     def getEditorInput(self, content=''):
@@ -269,11 +271,20 @@ long password correctly."""
     def getAbsolutePath(self, arg):
         """Return absolute path from potentially relative (cat)"""
         root = self.pdb.getTree()
+        if not arg:
+            return self.cwd
         if(arg[0] == '/'):
             path = root.normalizePath(arg.split('/'))
         else:
             path = root.normalizePath(self.cwd + arg.split('/'))
         return path
+
+    def getTreeFromRelativePath(self, path):
+        """Get tree object from given relative path and current working
+        directory"""
+        root = self.pdb.getTree()
+        abspath = self.getAbsolutePath(path)
+        return root.getTreeFromPath(abspath)
 
     ##########################################
     # Command implementations below.         #
@@ -303,17 +314,12 @@ long password correctly."""
 Syntax:
     ls [<category>]
 '''
-        root_tree = self.getCwd()
-        if not arg:
-            # list current dir
-            tree = root_tree
-        else:
-            # list given dir
-            try:
-                tree = root_tree[arg]
-            except KeyError:
-                print "ls: %s:  No such catalog" % arg
-                return
+        try:
+            tree = self.getTreeFromRelativePath(arg)
+        except KeyError:
+            print "ls: %s:  No such catalog" % arg
+            return
+        
         print "=== Directories ==="
         for bname in tree.getBranches().keys():
             print bname+"/"
@@ -324,7 +330,7 @@ Syntax:
         return self.complete_dirs(text, line, begidx, endidx)
 
     def do_cd(self, arg):
-        '''change directory (catalog)
+        '''change directory (category)
 
 Syntax:
     cd <category>
@@ -622,12 +628,33 @@ Deletes a password category and ALL it\'s entries
             print "try 'help rmdir' for more information"
             return
 
-        pwd = self.getCwd()
-        answer = raw_input("Are you sure you want to delete category '" + arg + " and ALL it's entries? [y/N]: ")
+        abspath = self.getAbsolutePath(arg)
+        if not abspath:
+            print "rmdir: Can't remove root directory"
+            return
+        pwd = self.pdb.getTree().getTreeFromPath(abspath[:-1])
+        toremove = abspath[-1]
+        abspath_str = '/'+'/'.join(abspath)
+        
+        #pwd = self.getCwd()
+        answer = raw_input("Are you sure you want to delete category %s'" \
+                " and ALL it's entries? [y/N]: " % abspath_str)
         if answer.lower().startswith('y'):
-            pwd.removeBranch(arg.strip())
-            print "rmdir: cateogry \"%s\" and all it's entries were deleted." % arg
+            pwd.removeBranch(toremove)
+            print "rmdir: cateogry \"%s\" and all it's entries were deleted." % abspath_str
             self.tryToSave()
+
+        # Check if current directory still exists. If not - cd to root.
+        try:
+            cwd = self.getCwd()
+        except KeyError:
+            print "rmdir: Warning! Current working directory was removed. " \
+                    "Changing to /"
+            self.cwd = []
+            self.updatePrompt()
+
+    def complete_rmdir(self, text, line, begidx, endidx):
+        return self.complete_dirs(text, line, begidx, endidx)
 
     def do_patterns(self, arg):
         '''Edit pareser patterns. Will open default text editor in order to
@@ -671,5 +698,3 @@ edit.'''
 
     def showMessage(self, message):
         print message
-
-
