@@ -17,7 +17,7 @@ Version 0.3.0 (??)
     your mails to password database more efficiently.
 
     * Support for fpm-0.58 databases with longer passwords (up to
-    256 characters).
+    256 characters). Not tested yet.
 
     * Various GUI usability enhancements.
 
