@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: config.py,v 1.4 2003/10/12 20:39:49 kedder Exp $
+# $Id: config.py,v 1.5 2003/10/13 21:09:40 kedder Exp $
 
 """Configuration for Ked Password Manager"""
 from xml.dom import minidom
@@ -61,6 +61,10 @@ class SelectOption (Option):
         if value not in self.__constraint:
             raise OptionError, "Value must be one of %s" % self.__constraint
         self._value = value
+
+    def getConstraint(self):
+        """Return available valid values"""
+        return self.__constraint
 
 class Options (UserDict):
     """List of self-validationg options"""

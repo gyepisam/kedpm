@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: dialogs.py,v 1.11 2003/10/12 20:39:49 kedder Exp $
+# $Id: dialogs.py,v 1.12 2003/10/13 21:09:40 kedder Exp $
 
 '''Dialog classes'''
 
@@ -228,31 +228,6 @@ class AddCategoryDialog(Dialog):
     
     def process(self):
         self.category_name = self['category_name'].get_text()
-
-class PreferencesDialog(Dialog):
-    name="dlg_preferences"
-    def run(self):
-        self.options = globals.app.conf.options
-        self.setUp()
-        res = self.window.run()
-        self.saveConfig()
-        self.destroyDialog()
-
-    def setUp(self):
-        options = globals.app.conf.options
-        self.tooltips = gtk.Tooltips()
-        for opt in options.keys():
-            wdg = self["wdg_" + opt]
-            self.tooltips.set_tip(wdg, options.getOption(opt).doc)
-            wdg.connect("changed", self.on_option_widget_changed, opt)
-    
-    def on_option_widget_changed(self, widget, option):
-        print "Changed: ", option
-        # Figure out property value
-        print self.options[option]
-
-    def saveConfig(self):
-        pass
 
 def errorMessageDialog(message):
     dialog = gtk.MessageDialog(globals.app.wnd_main.window,

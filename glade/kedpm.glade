@@ -1587,15 +1587,6 @@ Please choose the password which will be used to encrypt your passwords. It is v
 			      </child>
 
 			      <child>
-				<widget class="GtkMenuItem" id="sm_no">
-				  <property name="visible">True</property>
-				  <property name="label" translatable="yes">no</property>
-				  <property name="use_underline">True</property>
-				  <signal name="activate" handler="on_sm_no_activate" last_modification_time="Sat, 11 Oct 2003 18:34:39 GMT"/>
-				</widget>
-			      </child>
-
-			      <child>
 				<widget class="GtkMenuItem" id="sm_auto">
 				  <property name="visible">True</property>
 				  <property name="label" translatable="yes">auto</property>

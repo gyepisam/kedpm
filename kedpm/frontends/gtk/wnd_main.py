@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: wnd_main.py,v 1.14 2003/10/12 20:39:49 kedder Exp $
+# $Id: wnd_main.py,v 1.15 2003/10/13 21:09:40 kedder Exp $
 
 '''Main KedPM window'''
 
@@ -27,7 +27,8 @@ from kedpm.password import TYPE_STRING
 from kedpm.exceptions import RenameError
 
 from base import Window
-from dialogs import AboutDialog, PasswordEditDialog, AddCategoryDialog, PreferencesDialog
+from dialogs import AboutDialog, PasswordEditDialog, AddCategoryDialog
+from preferences import PreferencesDialog
 from dialogs import errorMessageDialog
 from kedpm.plugins.pdb_figaro import FigaroPassword # FIXME: this should be parametrized
 
