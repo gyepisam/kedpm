@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: cli.py,v 1.13 2003/09/04 20:28:59 kedder Exp $
+# $Id: cli.py,v 1.14 2003/09/12 18:19:53 kedder Exp $
 
 "Command line interface for Ked Password Manager"
 
@@ -22,13 +22,13 @@ from kedpm import __version__
 from kedpm.plugins.pdb_figaro import PDBFigaro, FigaroPassword
 from kedpm.passdb import DatabaseNotExist
 from kedpm.exceptions import WrongPassword, RenameError
+from kedpm.frontends.frontend import Frontend
 from kedpm import password
 from getpass import getpass
 from cmd import Cmd
 import sys
-from shutil import copyfile
 
-class Frontend (Cmd):
+class Application (Cmd, Frontend):
     PS1 = "kedpm:%s> " # prompt template
     pwd = []
     intro = """Ked Password Manager is ready for operation.
@@ -55,6 +55,7 @@ try 'help' for brief description of available commands
             except DatabaseNotExist:
                 password = self.createNewDatabase()
         print "Password accepted."
+        print
 
     def createNewDatabase(self):
         'Create new password database and return password for created database'
@@ -383,25 +384,14 @@ Syntax:
     def complete_rename(self, text, line, begidx, endidx):
         return self.comlete_dirs(text, line, begidx, endidx)
 
-    def run(self):
-        try:
-            self.openDatabase()
-        except (EOFError, KeyboardInterrupt):
-            print
-            print "Good bye."
-            sys.exit(1)
-        print 
-        if not self.pdb.native:
-            # Do backup
-            backupfile = self.pdb.default_db_filename+'.kedpm.bak'
-            print "WARNING! KedPM has detected original FPM password database."
-            print "Backing it up to %s" % backupfile
-            print
-            copyfile(self.pdb.default_db_filename, backupfile)
-        
+    def mainLoop(self):
         self.updatePrompt()
         try:
             self.cmdloop()
         except KeyboardInterrupt:
             self.do_exit("")
+
+    def showMessage(self, message):
+        print message
+        
 

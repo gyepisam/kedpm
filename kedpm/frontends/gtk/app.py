@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: app.py,v 1.4 2003/08/30 21:47:45 kedder Exp $
+# $Id: app.py,v 1.5 2003/09/12 18:19:53 kedder Exp $
 
 ''' Gtk Frontend Application class '''
 
@@ -30,8 +30,9 @@ from kedpm.plugins.pdb_figaro import PDBFigaro
 import globals
 from wnd_main import MainWindow
 from dialogs import LoginDialog
+from kedpm.frontends.frontend import Frontend
 
-class Application(object):
+class Application(object, Frontend):
     pdb = None
     wnd_main = None
     
@@ -45,8 +46,22 @@ class Application(object):
         if res != gtk.RESPONSE_OK:
             print "Good bye."
             sys.exit(1)
+
+    def mainLoop(self):
+        globals.app = self # Make application instance available to all modules
+        self.wnd_main = MainWindow()
+        gtk.main()
+
+    def showMessage(self, message):
+        dialog = gtk.MessageDialog(None,
+                                    gtk.DIALOG_DESTROY_WITH_PARENT,
+                                    gtk.MESSAGE_INFO,
+                                    gtk.BUTTONS_CLOSE,
+                                    message);
+        dialog.run();
+        dialog.destroy();
                 
-    def run(self):
+    def _run(self):
         globals.app = self # Make application instance available to all modules
         self.openDatabase()
         self.wnd_main = MainWindow()

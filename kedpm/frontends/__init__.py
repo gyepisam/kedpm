@@ -15,7 +15,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: __init__.py,v 1.2 2003/09/06 20:04:47 kedder Exp $
+# $Id: __init__.py,v 1.3 2003/09/12 18:19:53 kedder Exp $
 
 ''' KED Password Manager - simple to use, extensible and secure password
 manager.
@@ -29,8 +29,8 @@ Supported frontends::
 
 def frontendFactory(frontend):
     if frontend == 'cli':
-        from kedpm.frontends.cli import Frontend
-        return Frontend()
+        from kedpm.frontends.cli import Application
+        return Application()
     elif frontend == 'gtk':
         from kedpm.frontends.gtk.app import Application
         return Application()
