@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: wnd_main.py,v 1.10 2003/09/04 20:28:59 kedder Exp $
+# $Id: wnd_main.py,v 1.11 2003/09/05 19:40:23 kedder Exp $
 
 '''Main KedPM window'''
 
@@ -34,7 +34,9 @@ class MainWindow(Window):
     '''Main window of Ked Password Manager'''
     
     name = "wnd_main"
-    menu_names = ['menu_category']
+    #menu_names = ['menu_category']
+    menu_category = None
+    menu_password = None
 
     passwords = []          # List of passwords currently displaying in the password pane
     prot = None             # Prototype password instance
@@ -53,6 +55,8 @@ class MainWindow(Window):
         self['category_tree'].grab_focus()
         self.window.selection_add_target("PRIMARY", "STRING", 1)
         self.window.selection_add_target("CLIPBOARD", "STRING", 1)
+        self.menu_category = self.getGladeWidget('menu_category')
+        #self.menu_password = self.getGladeWidget('menu_password')
 
     def setupCategories(self):
         category_tree = self['category_tree']
@@ -120,6 +124,7 @@ class MainWindow(Window):
         password_list.set_model(store)
 
     def generatePasswordPopup(self):
+        #menu_password = self.menu_password
         menu_password = self.getGladeWidget('menu_password')
         #return menu_password
         fields = self.prot.getFieldsOfType()
@@ -180,13 +185,13 @@ class MainWindow(Window):
             if pathinfo:
                 #path, column, cell_x, cell_y = pathinfo
                 #if not self.password_menu:
-                self.password_menu = self.generatePasswordPopup()
-                self.password_menu.popup(None, None, None, event.button, event.time)
+                password_menu = self.generatePasswordPopup()
+                password_menu.popup(None, None, None, event.button, event.time)
         return gtk.FALSE
 
     def on_category_tree_button_press_event(self, widget, event):
         if event.button == 3:
-            self.menus['menu_category'].popup(None, None, None, event.button, event.time)
+            self.menu_category.popup(None, None, None, event.button, event.time)
         return gtk.FALSE
 
     def on_password_popup_activate(self, widget, data):
@@ -219,8 +224,13 @@ class MainWindow(Window):
             response = dlg.run()
             if response == gtk.RESPONSE_OK:
                 self.setupPasswords()
-
+                
+    def on_pmi_edit_activate(self, widget):
+        '''password list popup 'Edit' item clicked'''
+        self.on_tb_edit_clicked(widget)
+    
     def on_tb_add_clicked(self, widget):
+        '''Toolbar 'Add' button clicked'''
         pswd = FigaroPassword()
         dlg = PasswordEditDialog(pswd)
         response = dlg.run()
@@ -229,6 +239,7 @@ class MainWindow(Window):
             self.setupPasswords()
 
     def on_mi_save_activate(self, widget):
+        '''Main menu 'Save' item activated'''
         self.pdb.save()
         sb = self['statusbar']
         cid = sb.get_context_id('status') 
@@ -236,7 +247,7 @@ class MainWindow(Window):
         sb.push(cid, "Saved.")
 
     def on_mi_add_category_activate(self, widget):
-        print "Adding subcategory"
+        '''Main menu 'Add category' item activated'''
         dlg = AddCategoryDialog()
         response = dlg.run()
         if response == gtk.RESPONSE_OK and dlg.category_name!='':
@@ -248,11 +259,13 @@ class MainWindow(Window):
                 self.updateCategories()
                 
     def on_category_tree_popup_menu(self, wodget):
-        self.menus['menu_category'].popup(None, None, None, 0, gtk.get_current_event_time())
+        '''Shift-F10 pressed in category tree'''
+        self.menu_category.popup(None, None, None, 0, gtk.get_current_event_time())
 
     def on_password_list_popup_menu(self, widget):
-        self.password_menu = self.generatePasswordPopup()
-        self.password_menu.popup(None, None, None, 0, gtk.get_current_event_time())
+        '''Shift-F10 pressed in password tree'''
+        password_menu = self.generatePasswordPopup()
+        password_menu.popup(None, None, None, 0, gtk.get_current_event_time())
         
     def on_category_edited(self, renderer, path, newname):
         category_tree = self['category_tree']

@@ -1,7 +1,12 @@
 .PHONY: test
 .PHONY: clean
+.PHONY: install
+
 test: 
 	./run_tests
 	
 clean:
-	find . -name "*.py[c|o]" | xargs rm -v 
+	./setup.py clean
+	
+install:
+	./setup.py install

@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: base.py,v 1.4 2003/09/01 21:27:39 kedder Exp $
+# $Id: base.py,v 1.5 2003/09/05 19:40:23 kedder Exp $
 
 import gtk
 import gtk.glade
@@ -32,8 +32,9 @@ class Window(object):
     
     name = ""
     window = None
-    menu_names=[]
-    menus = {}
+    signals = {}
+    #menu_names=[]
+    #menus = {}
     
 
     def __init__(self):
@@ -43,19 +44,21 @@ class Window(object):
         for item in dir(self):
             if item.startswith('on_'):
                 signals[item] = getattr(self, item)
-        self.widgetTree.signal_autoconnect(signals)
+        self.signals = signals
+        self.widgetTree.signal_autoconnect(self.signals)
         self.window = self.widgetTree.get_widget(self.name)
-        for menu in self.menu_names:
-            print "Loading", menu
-            menu_wt = gtk.glade.XML(globals.glade_file, menu)
-            menu_wt.signal_autoconnect(signals)
-            self.menus[menu] = menu_wt.get_widget(menu)
+        #for menu in self.menu_names:
+        #    print "Loading", menu
+        #    menu_wt = gtk.glade.XML(globals.glade_file, menu)
+        #    menu_wt.signal_autoconnect(signals)
+        #    self.menus[menu] = menu_wt.get_widget(menu)
 
     def __getitem__(self, name):
         return self.widgetTree.get_widget(name) 
 
     def getGladeWidget(self, name):
         widgetTree = gtk.glade.XML(globals.glade_file, name)
+        widgetTree.signal_autoconnect(self.signals)
         return widgetTree.get_widget(name)
 
 class Dialog(Window):
