@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: kedpm,v 1.1 2003/09/06 20:04:47 kedder Exp $
+# $Id: kedpm,v 1.2 2003/10/09 21:12:06 kedder Exp $
 
 from kedpm.frontends import frontendFactory
 from getopt import getopt, GetoptError
@@ -40,7 +40,7 @@ def main(argv):
         print message
         usage()
         sys.exit(1)
-    frontend = "gtk"
+    frontend = "gtk"  # default frontend
     for o, a in opts:
         if o in ('--help', '-h', '-?'):
             help()
@@ -52,6 +52,7 @@ def main(argv):
             frontend='gtk'
         elif o == '-c':
             frontend='cli'
+
     try:
         app = frontendFactory(frontend)
         app.run()

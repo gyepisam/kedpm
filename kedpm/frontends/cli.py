@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: cli.py,v 1.18 2003/09/30 21:02:45 kedder Exp $
+# $Id: cli.py,v 1.19 2003/10/09 21:12:06 kedder Exp $
 
 "Command line interface for Ked Password Manager"
 
@@ -206,9 +206,14 @@ long password correctly."""
 
         #return pwd
 
-    def tryToSave(self):        
+    def tryToSave(self):
         if self.modified:
-            answer = raw_input("Database was modified. Do you want to save it now? [Y/n]: ")
+            savemode = self.conf.options["save-mode"]
+            if savemode == 'no':
+                return
+            answer = 'y'
+            if self.conf.options["save-mode"] == "ask":
+                answer = raw_input("Database was modified. Do you want to save it now? [Y/n]: ")            
             if answer=='' or answer.lower().startswith('y'):
                 self.do_save('')
     
@@ -441,6 +446,63 @@ Syntax:
 
     def complete_rename(self, text, line, begidx, endidx):
         return self.comlete_dirs(text, line, begidx, endidx)
+
+    def do_help(self, arg):
+        """Print help topic"""
+        argv = arg.split()
+        if argv and argv[0] in ['set']:
+            # Provide extended help
+            help_def = getattr(self, "help_"+argv[0])
+            if help_def:
+                help_def(' '.join(argv[1:]))
+            else: 
+                Cmd.do_help(self, arg)
+        else:
+            Cmd.do_help(self, arg)
+
+    def do_set(self, arg):
+        """Set KedPM options
+
+Syntax:
+    set                     -- show all options
+    set <option>            -- show value of option
+    set <option> = <value>  -- set value to option
+
+for boolean values 1, 'on' or 'true' are considered as True; 0, 'off' or 'false' are
+considered as False.
+
+enter help set <option> for more info on particular option."""
+        
+        opts = self.conf.options
+        if not arg:
+            # show all options
+            for opt, value in opts.items():
+                print "%s = %s" % (opt, value)
+            return
+        tokens = arg.split('=')
+        optname = tokens[0]
+        try:
+            option = opts[optname]
+        except KeyError:
+            print "set: no such option: %s" % arg
+            return
+        if len(tokens) == 1:
+            # show value of option
+            print "%s = %s" % (optname, option.get())
+        else:
+            # set the value
+            option.set(' '.join(tokens[1:]))
+        
+
+    def help_set(self, arg):
+        if not arg:
+            print self.do_set.__doc__
+            return
+        try:
+            option = self.conf.options[arg]
+            print "%s: %s" % (arg, option.doc)
+        except KeyError:
+            print "set: no such option: %s" % arg
 
     def mainLoop(self):
         self.updatePrompt()

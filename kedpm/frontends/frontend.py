@@ -14,14 +14,17 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: frontend.py,v 1.2 2003/09/21 19:39:16 kedder Exp $
+# $Id: frontend.py,v 1.3 2003/10/09 21:12:06 kedder Exp $
 
 '''Ked Password Manager frontend abstraction.'''
 
 from shutil import copyfile
 import sys
 
+from kedpm.config import Configuration
+
 class Frontend:
+    conf = None  # Configuration object
     def mainLoop(self):
         '''Main loop of frontend application here.'''
         pass
@@ -31,6 +34,14 @@ class Frontend:
         pass
     
     def run(self):
+        '''Run frontnend program
+        
+        Do common initialisation stuff common to all frontends,'''
+
+        # Open configuration
+        self.conf = Configuration()
+        self.conf.open()
+        # Open database
         try:
             self.openDatabase()
         except (EOFError, KeyboardInterrupt):

@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: test_config.py,v 1.1 2003/10/03 22:08:57 kedder Exp $
+# $Id: test_config.py,v 1.2 2003/10/09 21:12:06 kedder Exp $
 
 import unittest
 
@@ -26,10 +26,11 @@ class ConfigTestCase(unittest.TestCase):
         self.conf.open(fname="test/sample_config.xml")
         
     def test_readConfig(self):
-        self.assertEqual(self.conf.options["save-mode"], "ask")
+        self.assertEqual(self.conf.options["save-mode"].get(), "ask")
         self.assertEqual(len(self.conf.patterns), 2)
         self.assertEqual(self.conf.patterns["sample1"], 
                 "Username/Password: {user}/{password}")
+
 
 def suite():
     return unittest.makeSuite(ConfigTestCase, 'test')
