@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: pdb_figaro.py,v 1.2 2003/08/07 18:56:31 kedder Exp $
+# $Id: pdb_figaro.py,v 1.3 2003/08/07 22:26:11 kedder Exp $
 
 """ Figaro password manager database plugin """
 
@@ -28,35 +28,16 @@ from Crypto.Hash import MD5
 from kedpm.exceptions import WrongPassword
 from kedpm.passdb import PasswordDatabase
 from kedpm.password_tree import PasswordTree
-from kedpm.password import Password
+from kedpm.password import Password, TYPE_STRING, TYPE_TEXT, TYPE_PASSWORD
 
 class FigaroPassword (Password):
-    ''' Password structure used in Figaro Password Manager 0.53 '''
-    fields = {
-        "title": "Title",
-        "host": "Host",
-        "name": "Username",
-        "notes": "Notes",
-        "password": "Password",
-    }
-
-    searchable = ["title", "host", "name", "notes"]
-    listable = searchable
-
-    def __init__(self, title, user, url, password, notes):
-        Password.__init__(self, url, user, password)
-        self.title = title
-        self.notes = notes
-    def asText(self):
-        text = """
-Title:    %s
-Host:     %s
-Username: %s
-Notes:    %s
-Password: %s
-""" % (self.title, self.host, self.name, self.notes, self.password)
-        return text
-
+    fields_type_info = [
+        ('title',     {'title': 'Title', 'type': TYPE_STRING}),
+        ('user',     {'title': 'Username', 'type': TYPE_STRING}),
+        ('url',     {'title': 'URL', 'type': TYPE_STRING}),
+        ('notes',     {'title': 'Notes', 'type': TYPE_TEXT}),
+        ('password', {'title': 'Password', 'type': TYPE_PASSWORD}),
+    ]
 
 class PDBFigaro (PasswordDatabase):
 
@@ -82,11 +63,11 @@ class PDBFigaro (PasswordDatabase):
     
     def _getPasswordFromNode(self, node):
         ''' Create password instance from given fpm node '''
-        fields = ["title", "user", "url", "password", "notes"]
-        params = []
+        fields = ["title", "user", "url", "notes", "password"]
+        params = {}
         for field in fields:
-            params.append(self._getTagData(node, field))
-        return FigaroPassword(*params)
+            params[field] = self._getTagData(node, field)
+        return FigaroPassword(**params)
     
     def _getTagData(self, node, tag):
         chnode = node.getElementsByTagName(tag)

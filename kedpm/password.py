@@ -14,37 +14,85 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: password.py,v 1.1 2003/08/05 18:32:18 kedder Exp $
+# $Id: password.py,v 1.2 2003/08/07 22:26:11 kedder Exp $
 
 """ Password item """
 
+# type constants
+TYPE_STRING = 'string'
+TYPE_TEXT = 'text'
+TYPE_PASSWORD = 'password'
+
 class Password:
     """ Basic class for password structure """
-    fields = {
-        "host": "Host",
-        "name": "Username",
-        "password": "Password",
-    }
+    
+    fields_type_info = [
+        ('host',     {'title': 'Host', 'type': TYPE_STRING}),
+        ('name',     {'title': 'Username', 'type': TYPE_STRING}),
+        ('password', {'title': 'Password', 'type': TYPE_PASSWORD}),
+    ]
 
-    searchable = ["host", "name"]
-    listable = searchable
-  
-    host = ""
-    name = "" 
-    password ="" 
+    _fields = {}
 
-    def __init__(self, host="", name="", password=""):
-        self.host = host
-        self.name = name
-        self.password = password    
+    def __init__(self, **kw):
+        self._fields = {}
+        for key, fieldinfo in self.fields_type_info:
+            finfo  = fieldinfo.copy()
+            finfo['value'] = kw.get(key)
+            self._fields[key] = finfo
+
+    def __getitem__(self, key):
+        return self._fields[key]['value']
+
+    def __setitem__(self, key, value):
+        if self._fields.has_key(key):
+            self._fields[key]['value'] = value
+        else:
+            raise KeyError, "No such field in this password"
+
+    def __getattr__(self, name):
+        try:
+            attr = self[name]
+        except KeyError, message:
+            raise AttributeError, message
+        return attr
+
+    def __setattr__(self, name, value):
+        try:
+            self[name] = value
+        except KeyError, message:
+            self.__dict__[name] = value
     
     def __str__(self):
         return "Password for <%s>" % self.name
 
+    def getFieldTitle(self, name):
+        '''Returns title of field "name"'''
+        for key, fieldinfo in self.fields_type_info:
+            if key==name:
+                return fieldinfo['title']
+        else:
+            return ""
+
+    def getFieldsOfType(self, types):
+        '''Returns all fields of type listed in types list'''
+        res = []
+        for key, fieldinfo in self.fields_type_info:
+            if fieldinfo['type'] in types:
+                res.append(key)
+        return res
+
+    def getSearhableFields(self):
+        '''Returns list of fields that can be searched on. Practically this
+        means all fields except TYPE_PASSWORD'''
+        return self.getFieldsOfType([TYPE_STRING, TYPE_TEXT])
+
     def asText(self):
-        text = """
-Host:     %s
-Username: %s
-Password: %s
-""" % (self.host, self.name, self.password)
-        return text
+        'Returns plain text representation of the password'
+        astext = ""
+        for key, fieldinfo in self.fields_type_info:
+            if self[key] is None:
+                continue
+            astext += "%s: %s\n" % (fieldinfo['title'], self[key])
+        return astext
+            

@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: password_tree.py,v 1.1 2003/08/05 18:32:18 kedder Exp $
+# $Id: password_tree.py,v 1.2 2003/08/07 22:26:11 kedder Exp $
 
 """ Password items organized in recursive tree """
 
@@ -62,7 +62,7 @@ class PasswordTree:
         re_search = re.compile(".*"+pattern+".*")
         results = []
         for password in self._nodes:
-            for field in password.searchable:
+            for field in password.getSearhableFields():
                 fval = getattr(password, field)
                 if re_search.match(fval):
                     results.append(password)

@@ -14,11 +14,12 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: cli.py,v 1.3 2003/08/07 19:07:24 kedder Exp $
+# $Id: cli.py,v 1.4 2003/08/07 22:26:11 kedder Exp $
 
 from kedpm import __version__
 from kedpm.plugins.pdb_figaro import PDBFigaro
 from kedpm.exceptions import WrongPassword
+from kedpm import password
 from getpass import getpass
 from cmd import Cmd
 import sys
@@ -66,14 +67,13 @@ try 'help' for brief description of available commands
         lengths = show_numbers and {'nr': 3} or {}
         headers = show_numbers and ['Nr'] or []
         fstr = show_numbers and "%%%ds " or ""
-        listable = prot.listable
-        if show_numbers:
-            listable = ['nr'] + listable
+        listable = prot.getFieldsOfType([password.TYPE_STRING])
         # determine maximum space needed by each column
-        for fld in prot.listable:
-            lengths[fld] = len(prot.fields[fld])
+        for fld in listable:
+            ftitle = prot.getFieldTitle(fld)
+            lengths[fld] = len(ftitle)
             fstr = fstr + "%%%ds "
-            headers.append(prot.fields[fld])
+            headers.append(ftitle)
         
         ptuples = []
         num = 1
@@ -81,7 +81,7 @@ try 'help' for brief description of available commands
             ptup = []
             if show_numbers:
                 ptup.append("%d)" %num)
-            for fld in pwd.listable:
+            for fld in listable:
                 ptup.append(getattr(pwd, fld))
                 newlen = len(getattr(pwd, fld))
                 if  newlen > lengths[fld]:
@@ -89,6 +89,8 @@ try 'help' for brief description of available commands
             ptuples.append(tuple(ptup))
             num = num + 1
         # form format string
+        if show_numbers:
+            listable = ['nr'] + listable
         fstr = fstr % tuple([lengths[x]+1 for x in listable])
         print fstr % tuple(headers)
         print fstr % tuple(["="*lengths[x]for x in listable])
@@ -166,7 +168,9 @@ try 'help' for brief description of available commands
                 return
         else:
             selected_password = passwords[0]
+        print "---------------------------------------"
         print selected_password.asText()
+        print "---------------------------------------"
     
     def run(self):
         self.openDatabase()

@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: test_password_tree.py,v 1.1 2003/08/05 18:32:18 kedder Exp $
+# $Id: test_password_tree.py,v 1.2 2003/08/07 22:26:11 kedder Exp $
 
 import unittest
 from kedpm.password_tree import PasswordTree
@@ -23,12 +23,12 @@ from kedpm.password import Password
 class PasswordTreeTestCase(unittest.TestCase):
     def setUp(self):
         self.ptree = PasswordTree()
-        self.pass1 = Password("host1", "name1", "password1")
-        self.pass2 = Password("host2", "name2", "password2")
+        self.pass1 = Password(host = "host1", name = "name1", password = "password1")
+        self.pass2 = Password(host = "host2", name = "name2", password = "password2")
         self.ptree.addNode(self.pass1)
         self.ptree.addNode(self.pass2)
         self.subdir = self.ptree.addBranch("subdir")
-        self.pass3 = Password("host3", "name3", "password3")
+        self.pass3 = Password(host = "host3", name = "name3", password = "password3")
         self.subdir.addNode(self.pass3)
         
     def test_create(self):
