@@ -14,11 +14,11 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: test_figaro.py,v 1.6 2003/08/15 20:43:22 kedder Exp $
+# $Id: test_figaro.py,v 1.7 2003/08/16 21:11:20 kedder Exp $
 
 import os
 import unittest
-from kedpm.plugins.pdb_figaro import PDBFigaro, FPM_PASSWORD_LEN
+from kedpm.plugins.pdb_figaro import FigaroPassword, PDBFigaro, FPM_PASSWORD_LEN
 from Crypto.Cipher import Blowfish
 
 class PDBFigaroTestCase(unittest.TestCase):
@@ -98,6 +98,21 @@ class SavedFigaroTestCase(PDBFigaroTestCase):
         pdb.save(fname="fpm.saved")
         self.pdb = PDBFigaro()
         self.pdb.open(self.password, fname='fpm.saved')
+
+    def test_catlessPassword(self):
+        'Saving and loading password without category'
+
+        tree = self.pdb.getTree()
+        pwd = FigaroPassword(title='CLHost', password='CLPass')
+        tree.addNode(pwd)
+        self.pdb.save(fname='fpm.saved')
+        self.pdb = PDBFigaro()
+        self.pdb.open(self.password, fname='fpm.saved')
+        tlnodes = self.pdb.getTree().getNodes()
+        self.assertEqual(len(tlnodes), 1)
+        self.assertEqual(tlnodes[0].title, 'CLHost')
+        self.assertEqual(tlnodes[0]['password'], 'CLPass')
+        self.assertEqual(tlnodes[0]['url'], '')
 
     def tearDown(self):
         os.remove('fpm.saved')

@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: test_password_tree.py,v 1.3 2003/08/13 22:02:00 kedder Exp $
+# $Id: test_password_tree.py,v 1.4 2003/08/16 21:11:20 kedder Exp $
 
 import unittest
 from kedpm.password_tree import PasswordTree
@@ -117,6 +117,22 @@ class PasswordTreeIteratorTestCase(unittest.TestCase):
         ptree.addNode(self.pwds[9])       
         
         self.ptree = ptree
+
+    def test_getCurrentCategory(self):
+        iter = self.ptree.getIterator()
+        iter.next() # pw0
+        self.assertEqual(iter.getCurrentCategory(), 'br1')
+        iter.next() # pw1
+        iter.next() # pw2
+        self.assertEqual(iter.getCurrentCategory(), 'br1')
+        iter.next() # pw3
+        iter.next() # pw4
+        iter.next() # pw5
+        iter.next() # pw6
+        self.assertEqual(iter.getCurrentCategory(), 'br2')
+        iter.next() # pw7
+        iter.next() # pw8
+        self.assertEqual(iter.getCurrentCategory(), '')
 
     def test_order(self):
         iter = self.ptree.getIterator()

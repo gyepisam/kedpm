@@ -4,6 +4,9 @@ top.
 Version 0.1.0 (??)
 
     * Added ability to save password database in fpm-compatible format.
+    
+    * Improved command line interface: added simple completion to 'cd'
+    and 'ls' commands; 'new', 'edit' and 'save' commands implemented.
 
 
 Version 0.0.2 (2003-08-05)

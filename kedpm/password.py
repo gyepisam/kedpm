@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: password.py,v 1.4 2003/08/15 20:43:22 kedder Exp $
+# $Id: password.py,v 1.5 2003/08/16 21:11:20 kedder Exp $
 
 """ Password item """
 
@@ -22,7 +22,6 @@
 TYPE_STRING = 'string'
 TYPE_TEXT = 'text'
 TYPE_PASSWORD = 'password'
-TYPE_META = 'meta'
 
 class Password:
     """ Basic class for password structure """
@@ -39,7 +38,7 @@ class Password:
         self._fields = {}
         for key, fieldinfo in self.fields_type_info:
             finfo  = fieldinfo.copy()
-            finfo['value'] = kw.get(key)
+            finfo['value'] = kw.get(key, "")
             self._fields[key] = finfo
 
     def __getitem__(self, key):
@@ -50,6 +49,11 @@ class Password:
             self._fields[key]['value'] = value
         else:
             raise KeyError, "No such field in this password"
+
+    def update(self, info):
+        for k in self._fields.keys():
+            if info.has_key(k):
+                self._fields[k]['value'] = info[k]
 
     def __getattr__(self, name):
         try:
@@ -99,7 +103,7 @@ class Password:
         'Returns plain text representation of the password'
         astext = ""
         for key, fieldinfo in self.fields_type_info:
-            if self[key] is None:
+            if self[key] == '':
                 continue
             astext += "%s: %s\n" % (fieldinfo['title'], self[key])
         return astext

@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: pdb_figaro.py,v 1.7 2003/08/15 20:43:22 kedder Exp $
+# $Id: pdb_figaro.py,v 1.8 2003/08/16 21:11:20 kedder Exp $
 
 """ Figaro password manager database plugin """
 
@@ -30,7 +30,7 @@ from random import randint
 from kedpm.exceptions import WrongPassword
 from kedpm.passdb import PasswordDatabase
 from kedpm.password_tree import PasswordTree
-from kedpm.password import Password, TYPE_STRING, TYPE_TEXT, TYPE_PASSWORD, TYPE_META
+from kedpm.password import Password, TYPE_STRING, TYPE_TEXT, TYPE_PASSWORD
 
 FPM_PASSWORD_LEN = 24
 
@@ -71,7 +71,6 @@ class PDBFigaro (PasswordDatabase):
         # Save LauncherList xml element. Although kedpm don't use launchers
         # yet, this list will be inserted into saved database to preserve
         # compatibility with fpm.
-
         nodes = fpm.documentElement.getElementsByTagName("LauncherList")
         if nodes:
             assert len(nodes) == 1
@@ -80,9 +79,12 @@ class PDBFigaro (PasswordDatabase):
         nodes = fpm.documentElement.getElementsByTagName("PasswordItem")
         for node in nodes:
             category = self._getTagData(node, "category")
-            branch = self._pass_tree.get(category)
-            if not branch:
-                branch = self._pass_tree.addBranch(category)
+            if category=="":
+                branch = self._pass_tree
+            else:
+                branch = self._pass_tree.get(category)
+                if not branch:
+                    branch = self._pass_tree.addBranch(category)
             branch.addNode(self._getPasswordFromNode(node))
 
     def save(self, fname="fpm.kedpm-saved"):

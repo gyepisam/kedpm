@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: test_password.py,v 1.2 2003/08/11 21:29:58 kedder Exp $
+# $Id: test_password.py,v 1.3 2003/08/16 21:11:20 kedder Exp $
 
 import unittest
 from kedpm import password
@@ -28,9 +28,9 @@ class PasswordTestCase(unittest.TestCase):
         self.full = Password(host='TheHost', name='TheName', password='Password')
         
     def test_getitem(self):
-        self.assertEqual(self.empty['host'], None)
+        self.assertEqual(self.empty['host'], '')
         self.assertEqual(self.hostonly['host'], 'TheHost')
-        self.assertEqual(self.hostname['password'], None)
+        self.assertEqual(self.hostname['password'], '')
         self.assertEqual(self.full['name'], 'TheName')
         self.assertRaises(KeyError, self.full.__getitem__, 'NoSuchField')
 
@@ -47,7 +47,7 @@ class PasswordTestCase(unittest.TestCase):
     def test_getattr(self):        
         # __getattr__ method should work the same as getitem, so we will not
         # perform a full test
-        self.assertEqual(self.empty.host, None)
+        self.assertEqual(self.empty.host, '')
         try:
             nsf = self.hostonly.NoSuchField
         except AttributeError:
@@ -75,7 +75,7 @@ Password: Password
         hostonly_asText = self.hostonly.asText()
         self.assertEqual(hostonly_asText, '''Host: TheHost
 ''')
-    
+
     def test_getFieldsOfType(self):
         fields = self.full.getFieldsOfType()
         self.assertEqual(fields, ['host', 'name', 'password'])

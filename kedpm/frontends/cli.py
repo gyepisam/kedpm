@@ -14,10 +14,10 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: cli.py,v 1.7 2003/08/15 20:43:22 kedder Exp $
+# $Id: cli.py,v 1.8 2003/08/16 21:11:20 kedder Exp $
     
 from kedpm import __version__
-from kedpm.plugins.pdb_figaro import PDBFigaro
+from kedpm.plugins.pdb_figaro import PDBFigaro, FigaroPassword
 from kedpm.exceptions import WrongPassword
 from kedpm import password
 from getpass import getpass
@@ -27,9 +27,9 @@ import sys
 class Frontend (Cmd):
     PS1 = "kedpm:%s> " # prompt template
     pwd = []
-    intro = """KED Password Manager (version %s) is ready for operation.
+    intro = """Ked Password Manager is ready for operation.
 try 'help' for brief description of available commands
-""" % __version__
+"""
 
     modified = 0
     
@@ -37,6 +37,7 @@ try 'help' for brief description of available commands
         ''' Open database amd prompt for password if nesessary '''
         self.pdb = PDBFigaro()
         password = ""
+        print "Ked Password Manager (version %s)" % __version__
         while 1:
             try:
                 self.pdb.open(password)
@@ -45,10 +46,10 @@ try 'help' for brief description of available commands
                 if password:
                     print "Error! Wrong password."
                 else: 
-                    print "Provide password to access the database"
+                    print "Provide password to access the database (Ctrl-C to exit)"
                 try:
                     password = getpass("Password: ")
-                except EOFError:
+                except (EOFError, KeyboardInterrupt):
                     print
                     print "Good bye."
                     sys.exit(1)
@@ -139,6 +140,8 @@ try 'help' for brief description of available commands
 
     def editPassword(self, pwd):
         '''Prompt user for each field of the password. Respect fields' type.'''
+
+        input = {}
     
         for field, fieldinfo in pwd.fields_type_info:
             field_type = fieldinfo['type']
@@ -157,11 +160,22 @@ try 'help' for brief description of available commands
                 print """Error. Type %s is unsupported yet. This field will retain an old value.""" % field_type
 
             if new_value!="":
-                pwd[field] = new_value
-        return pwd
+                input[field] = new_value
+
+        pwd.update(input)
+        #return pwd
+    
+    def comlete_dirs(self, text, line, begidx, endidx):
+        dirs=self.pdb.getTree().getBranches()
+        compl = []
+        for dir in dirs:
+            if dir.startswith(text):
+                compl.append(dir)
+        return compl
     
     ##########################################
     # Command implementations below.         #
+        
     def emptyline(self):
         pass
     
@@ -197,6 +211,9 @@ try 'help' for brief description of available commands
             print bname+"/"
         print "==== Passwords ===="
         self.listPasswords(tree.getNodes())
+
+    def complete_ls(self, text, line, begidx, endidx):
+        return self.comlete_dirs(text, line, begidx, endidx)
     
     def do_cd(self, arg):
         ''' change directory (catalog)'''
@@ -210,6 +227,9 @@ try 'help' for brief description of available commands
             self.pwd = cdpath
             self.updatePrompt()
 
+    def complete_cd(self, text, line, begidx, endidx):
+        return self.comlete_dirs(text, line, begidx, endidx)
+    
     def do_pwd(self, arg):
         '''print name of current/working directory'''
         print '/'+'/'.join(self.pwd)
@@ -248,11 +268,26 @@ receiving that number, you will be able to edit picked password.
 
         selected_password = self.pickPassword(arg)
         if selected_password:
-            self.editPassword(selected_password)
+            try:
+                self.editPassword(selected_password)
+            except (KeyboardInterrupt, EOFError):
+                print "Cancelled"
         else:
             print "No password selected"
-
         self.modified = 1
+
+    def do_new(self, arg):
+        '''Add new password to current category. You will be prompted to enter
+fields.'''
+        new_pass = FigaroPassword() # FIXME: Password type shouldn't be hardcoded.
+        try:
+            self.editPassword(new_pass)
+        except (KeyboardInterrupt, EOFError):
+            print "Cancelled"
+        else:
+            tree = self.getPwd()
+            tree.addNode(new_pass)
+            self.modified = 1
 
     def do_save(self, arg):
         '''Save current password tree to a file'''
@@ -263,5 +298,4 @@ receiving that number, you will be able to edit picked password.
         self.openDatabase()
         self.updatePrompt()
         self.cmdloop()
-
 
