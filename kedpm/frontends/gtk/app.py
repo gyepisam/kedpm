@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: app.py,v 1.6 2003/09/21 19:39:16 kedder Exp $
+# $Id: app.py,v 1.7 2004/01/04 17:07:16 kedder Exp $
 
 ''' Gtk Frontend Application class '''
 
@@ -24,6 +24,7 @@ pygtk.require("2.0");
 
 import gtk
 import sys
+from os.path import expanduser
 
 from kedpm.plugins.pdb_figaro import PDBFigaro
 from kedpm.passdb import DatabaseNotExist
@@ -38,10 +39,9 @@ class Application(object, Frontend):
     wnd_main = None
     
     def openDatabase(self):
-        self.pdb = PDBFigaro()
+        self.pdb = PDBFigaro(filename = expanduser(self.conf.options['fpm-database']))
         dlg = LoginDialog(pdb = self.pdb)
         password = dlg['password']
-        #while 1:
         try:
             res = dlg.run()
             if res != gtk.RESPONSE_OK:
@@ -59,7 +59,7 @@ class Application(object, Frontend):
         database"""
         dlg = NewDatabaseDialog()
         newpass = dlg.run()
-        self.pdb.create(newpass)
+        self.pdb.create(newpass, expanduser(self.conf.options['fpm-database']))
         return newpass
 
     def mainLoop(self):

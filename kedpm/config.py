@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: config.py,v 1.6 2003/10/14 21:30:42 kedder Exp $
+# $Id: config.py,v 1.7 2004/01/04 17:07:16 kedder Exp $
 
 """Configuration for Ked Password Manager"""
 import os
@@ -45,6 +45,10 @@ class Option:
 
     def set(self, value):
         self._value = value
+
+class FileOption (Option):
+    """Option containing filename"""
+    pass
 
 class SelectOption (Option):
     """Option that can be set to value from known list of possible values"""
@@ -91,6 +95,9 @@ class Configuration:
     "ask": Ask user whether save or not when database changes;
     "no": Do not save modified database automatically;
     "auto": Save database automatically after every change."""),
+
+        "fpm-database": FileOption('~/.fpm/fpm', """Filename where all passwords are stored.
+Changes will take effect after kedpm restart."""),
     })
 
     patterns = {}

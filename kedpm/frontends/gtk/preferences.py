@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: preferences.py,v 1.2 2003/10/25 19:43:27 kedder Exp $
+# $Id: preferences.py,v 1.3 2004/01/04 17:07:16 kedder Exp $
 
 """Preferences for GTK2 GUI"""
 import gtk
@@ -22,7 +22,7 @@ import gtk
 import globals
 from base import Dialog
 
-from kedpm.config import SelectOption
+from kedpm.config import SelectOption, FileOption
 
 class Preference(object):
     """Base class for GUI preferences items"""
@@ -41,10 +41,14 @@ class Preference(object):
         pass
 
 class SelectPreference(Preference):
-    """Preference for selection option"""
+    """Preference for selection option.
+    
+    Widget for this preference should be gtk.OptionMenu."""
     
     def setWidget(self):
         """Build gtk menu and set the right value"""
+        assert self._widget.__class__ == gtk.OptionMenu
+
         super(SelectPreference, self).setWidget()
         # build option menu
         menu = gtk.Menu()
@@ -63,6 +67,41 @@ class SelectPreference(Preference):
         value = self._option.getConstraint()[index]
         self._option.set(value)
 
+class FilePreference(Preference):
+    """Preference for file options. Lets user select file from interactive
+    dialog.
+
+    Widget for this preference should be gtk.HBox."""
+
+    def setWidget(self):
+        """Build filename entry and "Browse..." button"""
+        assert self._widget.__class__ == gtk.HBox
+
+        self._widget.set_spacing(6)
+        self.fname_entry  = gtk.Entry()        
+        self._widget.pack_start(self.fname_entry, True, True, 0)
+        browse_button = gtk.Button('_Browse...')
+        browse_button.connect('clicked', self.on_browse_button_activate)
+        self._widget.pack_end(browse_button, False, True, 0)
+        self._widget.show_all()
+        # tooltip
+        self.tooltips = gtk.Tooltips()
+        self.tooltips.set_tip(self.fname_entry, self._option.doc)
+        # set the value
+        self.fname_entry.set_text(self._option.get())
+
+    def on_browse_button_activate(self, widget):
+        file_dialog = gtk.FileSelection()
+        file_dialog.set_filename(self.fname_entry.get_text())
+        resp = file_dialog.run()
+        if resp == gtk.RESPONSE_OK:
+            self.fname_entry.set_text(file_dialog.get_filename())
+        file_dialog.destroy()
+        
+    def setOption(self):
+        value = self.fname_entry.get_text()
+        self._option.set(value)
+
 class PreferencesDialog(Dialog):
     name="dlg_preferences"
 
@@ -78,13 +117,14 @@ class PreferencesDialog(Dialog):
 
     def setUp(self):
         options = globals.app.conf.options
-        self.tooltips = gtk.Tooltips()
+        #self.tooltips = gtk.Tooltips()
         for opt in options.keys():
             wdg = self["wdg_" + opt]
-            option = options.getOption(opt)
-            preference = self.getPreferenceFromOption(option, wdg)
-            preference.setWidget()
-            self.preferences.append(preference)
+            if wdg:
+                option = options.getOption(opt)
+                preference = self.getPreferenceFromOption(option, wdg)
+                preference.setWidget()
+                self.preferences.append(preference)
 
     def setOptions(self):
         """Read preferences dialog and set options"""
@@ -95,6 +135,8 @@ class PreferencesDialog(Dialog):
         """Return preference instance depending on option type"""
         if isinstance(option, SelectOption):
             return SelectPreference(option, widget)
+        if isinstance(option, FileOption):
+            return FilePreference(option, widget)
         else:
             raise TypeError, "Unrecognized option"
 

@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: passdb.py,v 1.3 2003/08/17 18:56:18 kedder Exp $
+# $Id: passdb.py,v 1.4 2004/01/04 17:07:16 kedder Exp $
 
 """ Password Database """
 
@@ -28,7 +28,7 @@ class PasswordDatabase:
     Real databases should be implemented in plugins
     """
 
-    def __init__(self):
+    def __init__(self, **args):
         self._pass_tree = PasswordTree()
 
     def open(self, password = ""):
@@ -41,10 +41,6 @@ class PasswordDatabase:
 
     def create(self, password, fname=""):
         """Create new password database"""
-        pass
-
-    def keys(self):
-        """ enumerate keys """
         pass
 
     def getTree(self):

@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: cli.py,v 1.27 2003/10/26 16:58:50 kedder Exp $
+# $Id: cli.py,v 1.28 2004/01/04 17:07:16 kedder Exp $
 
 "Command line interface for Ked Password Manager"
 
@@ -29,6 +29,7 @@ from kedpm import parser
 from getpass import getpass
 from cmd import Cmd
 import os, sys, tempfile
+from os.path import expanduser
 
 class Application (Cmd, Frontend):
     PS1 = "kedpm:%s> " # prompt template
@@ -46,7 +47,7 @@ try 'help' for brief description of available commands
     
     def openDatabase(self):
         ''' Open database amd prompt for password if nesessary '''
-        self.pdb = PDBFigaro()
+        self.pdb = PDBFigaro(filename = expanduser(self.conf.options['fpm-database']))
         password = ""
         print "Ked Password Manager (version %s)" % __version__
         while 1:
@@ -181,7 +182,6 @@ try 'help' for brief description of available commands
             else:                
                 print "Passwords don't match. Try again."
         return pwd
-        
 
     def editPassword(self, pwd):
         '''Prompt user for each field of the password. Respect fields' type.'''

@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: frontend.py,v 1.3 2003/10/09 21:12:06 kedder Exp $
+# $Id: frontend.py,v 1.4 2004/01/04 17:07:16 kedder Exp $
 
 '''Ked Password Manager frontend abstraction.'''
 
@@ -27,11 +27,19 @@ class Frontend:
     conf = None  # Configuration object
     def mainLoop(self):
         '''Main loop of frontend application here.'''
-        pass
+        raise NotImplementedError
         
     def showMessage(self, message):
         '''Display an information message'''
-        pass
+        raise NotImplementedError
+
+    def openDatabase(self):
+        """Opend database. (set self.pdb variable)
+        
+        Prompt user for password if necessary. If no database exists yet,
+        create empty one, asking user for necessary information.
+        """ 
+        raise NotImplementedError
     
     def run(self):
         '''Run frontnend program
