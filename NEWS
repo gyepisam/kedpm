@@ -5,17 +5,19 @@ Version 0.1.0 (??)
 
     * Added ability to save password database in fpm-compatible format.
     If KedPM detects that it had opened database saved by FPM, it makes
-    a backup to ~/.fpm/fpm.kedpm.bak.
+    a backup to ~/.fpm/fpm.kedpm.bak;
     
     * Improved command line interface: added simple completion to 'cd'
-    and 'ls' commands; 'new', 'edit' and 'save' commands implemented.
+    and 'ls' commands; 
+    
+    * New cli commands: 'mkdir', 'new', 'edit' and 'save';
 
 
 Version 0.0.2 (2003-08-05)
 
     * First public release. All it can do is read Figaro Password
     Manager database files and display passwords to user via cli
-    interface.
+    interface;
 
 
  vim: tw=72 et fo=ta

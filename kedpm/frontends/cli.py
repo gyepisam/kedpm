@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: cli.py,v 1.11 2003/08/17 19:38:28 kedder Exp $
+# $Id: cli.py,v 1.12 2003/08/18 18:53:26 kedder Exp $
 
 "Command line interface for Ked Password Manager"
 
@@ -227,7 +227,10 @@ try 'help' for brief description of available commands
         Cmd.do_help(self, arg)
 
     def do_ls(self, arg):
-        '''List available catalogs and passwords'''
+        '''List available catalogs and passwords
+Syntax:
+    ls [<category>]
+'''
         root_tree = self.getPwd()
         if not arg:
             # list current dir
@@ -249,7 +252,11 @@ try 'help' for brief description of available commands
         return self.comlete_dirs(text, line, begidx, endidx)
     
     def do_cd(self, arg):
-        ''' change directory (catalog)'''
+        '''change directory (catalog)
+ 
+Syntax:
+    cd <category>
+'''
         root =  self.pdb.getTree()
         cdpath = root.normalizePath(arg.split('/'))
         try:
@@ -326,12 +333,29 @@ fields.'''
         self.tryToSave()
 
     def do_save(self, arg):
-        '''Save current password tree to a file'''
+        '''Save current password tree'''
         sys.stdout.write("Saving...")
         sys.stdout.flush()
         self.pdb.save()
         print "OK"
         self.modified = 0
+
+    def do_mkdir(self, arg):
+        '''create new category (directory)
+        
+Syntax:
+    mkdir <category>
+            
+Creates new password category in current one.
+'''
+        if not arg:
+            print "mkdir: too few arguments"
+            print "try 'help mkdir' for more information"
+            return
+
+        pwd = self.getPwd()
+        pwd.addBranch(arg.strip())
+        
 
     def run(self):
         try:
