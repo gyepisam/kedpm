@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: setup.py,v 1.2 2003/08/20 19:32:07 kedder Exp $
+# $Id: setup.py,v 1.3 2003/08/26 21:33:57 kedder Exp $
 
 from distutils.core import setup
 from kedpm import __version__
@@ -38,7 +38,7 @@ PM back-end and command line interface front-end supported."""
         author="Andrey Lebedev",
         author_email="andrey@users.sourceforge.net",
         url="http://kedpm.sourceforge.net/",
-        packages=['kedpm', 'kedpm.plugins', 'kedpm.frontends'],
+        packages=['kedpm', 'kedpm.plugins', 'kedpm.frontends', 'kedpm.frontends.gtk'],
         scripts=['kedpm-cli'],
         data_files=[(os.path.join('share', 'kedpm'), ['AUTHORS', 'COPYING', 'INSTALL'])],
         classifiers = [

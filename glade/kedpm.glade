@@ -14,6 +14,8 @@
   <property name="resizable">True</property>
   <property name="destroy_with_parent">False</property>
   <signal name="destroy" handler="on_wnd_main_destroy" last_modification_time="Thu, 21 Aug 2003 19:46:30 GMT"/>
+  <signal name="selection_clear_event" handler="on_wnd_main_selection_clear_event" last_modification_time="Tue, 26 Aug 2003 21:07:23 GMT"/>
+  <signal name="selection_get" handler="on_wnd_main_selection_get" last_modification_time="Tue, 26 Aug 2003 21:08:47 GMT"/>
 
   <child>
     <widget class="GtkVBox" id="vbox1">
@@ -334,7 +336,7 @@
       <child>
 	<widget class="GtkStatusbar" id="statusbar">
 	  <property name="visible">True</property>
-	  <property name="has_resize_grip">False</property>
+	  <property name="has_resize_grip">True</property>
 	</widget>
 	<packing>
 	  <property name="padding">0</property>
@@ -809,6 +811,12 @@
 </widget>
 
 <widget class="GtkMenu" id="menu_password">
+
+  <child>
+    <widget class="GtkMenuItem" id="separator1">
+      <property name="visible">True</property>
+    </widget>
+  </child>
 
   <child>
     <widget class="GtkImageMenuItem" id="pmi_edit">

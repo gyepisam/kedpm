@@ -1,3 +1,26 @@
+2003-08-26 00:32  Andrey Lebedev <andrey@micro.lt>
+
+	* glade/kedpm.glade, kedpm/frontends/gtk/base.py,
+	kedpm/frontends/gtk/wnd_main.py: little popup support code
+
+2003-08-25 00:51  Andrey Lebedev <andrey@micro.lt>
+
+	* glade/kedpm.glade, kedpm/password_tree.py,
+	kedpm/frontends/gtk/wnd_main.py: password navigation almost done
+
+2003-08-24 17:01  Andrey Lebedev <andrey@micro.lt>
+
+	* glade/kedpm.glade, kedpm/frontends/gtk/app.py,
+	kedpm/frontends/gtk/base.py, kedpm/frontends/gtk/dialogs.py: login
+	procedure implemented
+
+2003-08-24 12:35  Andrey Lebedev <andrey@micro.lt>
+
+	* ChangeLog, glade/kedpm.glade, kedpm/frontends/gtk/app.py,
+	kedpm/frontends/gtk/base.py, kedpm/frontends/gtk/dialogs.py,
+	kedpm/frontends/gtk/globals.py, kedpm/frontends/gtk/wnd_main.py:
+	GTK infastructure
+
 2003-08-23 00:53  Andrey Lebedev <andrey@micro.lt>
 
 	* kedpm-gtk, glade/kedpm.glade, glade/kedpm.gladep,

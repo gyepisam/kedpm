@@ -1,3 +1,4 @@
 include AUTHORS COPYING INSTALL NEWS ChangeLog MANIFEST.in
 include kedpm-cli run_tests
 include test/fpm.sample
+include glade/kedpm.glade glade/kedpm.gladep
