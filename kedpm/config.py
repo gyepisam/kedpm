@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: config.py,v 1.8 2004/01/18 16:29:20 kedder Exp $
+# $Id: config.py,v 1.9 2005/11/09 19:00:52 kedder Exp $
 
 """Configuration for Ked Password Manager"""
 import os
@@ -83,6 +83,25 @@ class Options (UserDict):
     def __setitem__(self, key, value):
         self.getOption(key).set(value)
 
+class BooleanOption (Option):
+    """Option that can be set to value from known list of possible boolean values"""
+
+    __boolmap = {}
+
+    for k,v in ((True, [True, 'true', 'on', 'yes', 1]), (False, [False, 'false', 'off', 'no', 0])):
+         for b in v:
+           __boolmap[b] = k
+
+    def __init__(self, default=False, doc=""):
+        self.set(default)
+        self.doc = doc
+
+    def set(self, value):
+        if not self.__boolmap.has_key(value):
+            raise OptionError, "Value must be one of %s" % self.__boolmap.keys()
+        self._value = self.__boolmap[value]
+
+
 class Configuration:
     """Configuration file interface"""
 
@@ -98,6 +117,18 @@ class Configuration:
 
         "fpm-database": FileOption('~/.fpm/fpm', """Filename where all passwords are stored.
 Changes will take effect after kedpm restart."""),
+
+        "verbose": BooleanOption(True, """A boolean value:
+        True: print interactive messages;
+        False: do not print interactive messages."""),
+
+       "force-single": BooleanOption(True, """A boolean value:
+        True: prompt the user to pick one when a regular expression matches multiple entries;
+        False: do not prompt when a regular expression matches multiple entries."""),
+
+       "confirm-deletes": BooleanOption(True, """A boolean value:
+        True: prompt the user to confirm delete operations;
+        False: do not confirm delete operations."""),
     })
 
     default_patterns = [

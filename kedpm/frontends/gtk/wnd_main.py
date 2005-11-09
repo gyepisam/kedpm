@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: wnd_main.py,v 1.29 2005/03/05 21:44:33 kedder Exp $
+# $Id: wnd_main.py,v 1.30 2005/11/09 19:00:53 kedder Exp $
 
 '''Main KedPM window'''
 import os
@@ -336,12 +336,12 @@ class MainWindow(Window):
                 #if not self.password_menu:
                 password_menu = self.generatePasswordPopup()
                 password_menu.popup(None, None, None, event.button, event.time)
-        return gtk.FALSE
+        return False
 
     def on_category_tree_button_press_event(self, widget, event):
         if event.button == 3:
             self.menu_category.popup(None, None, None, event.button, event.time)
-        return gtk.FALSE
+        return False
 
     def on_password_popup_activate(self, widget, data):
         password = self.getSelectedPassword()

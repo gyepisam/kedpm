@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: cli.py,v 1.34 2005/03/05 21:44:32 kedder Exp $
+# $Id: cli.py,v 1.35 2005/11/09 19:00:52 kedder Exp $
 
 "Command line interface for Ked Password Manager"
 
@@ -47,11 +47,22 @@ try 'help' for brief description of available commands.
         if sys.stdout.isatty():
             self.PS1 = "\x1b[1m"+self.PS1+"\x1b[0m" # colored prompt template
 
+
+    def printMessage(self, message, *vars):
+        if self.verbose:
+          print (message) % vars
+
     def openDatabase(self):
-        ''' Open database amd prompt for password if nesessary '''
+        ''' Open database amd prompt for password if necessary '''
+        
+        self.verbose = self.conf.options['verbose']
+        self.force_single = self.conf.options['force-single']
+        self.confirm_deletes = self.conf.options['confirm-deletes']
+
         self.pdb = PDBFigaro(filename = expanduser(self.conf.options['fpm-database']))
         password = ""
-        print _("Ked Password Manager (version %s)") % __version__
+        self.printMessage(_("Ked Password Manager (version %s)"), __version__)
+
         while 1:
             try:
                 self.pdb.open(password)
@@ -64,7 +75,7 @@ try 'help' for brief description of available commands.
                 password = getpass(_("Password: "))
             except DatabaseNotExist:
                 password = self.createNewDatabase()
-        print _("Password accepted.")
+        self.printMessage(_("Password accepted."))
         print
 
     def createNewDatabase(self):
@@ -130,6 +141,24 @@ try 'help' for brief description of available commands.
         for ptup in ptuples:
             print fstr % ptup
 
+    def filterPasswords(self, regexp, tree = None):
+      '''Returns a list of passwords, filtered by REGEXP'''
+      if tree is None:
+            tree = self.getCwd()
+      
+      return(tree.locate(regexp))
+
+
+    def getPasswords(self, regexp, tree = None):
+      '''Returns a list of passwords, filtered by REGEXP.
+         Calls pickPassword if program has been configured to force
+         single selection'''
+      
+      if self.force_single:
+            return [self.pickPassword(regexp, tree)] 
+      else:
+            return(self.filterPasswords(regexp, tree))
+         
     def pickPassword(self, regexp, tree = None):
         '''Prompt user to pick one password from given password tree. Password
         tree, provided by "tree" argument filtered using "regexp".
@@ -138,12 +167,13 @@ try 'help' for brief description of available commands.
         prompting. If no passwords were located, or user desides to cancel
         operation, return None'''
 
-        if tree is None:
-            tree = self.getCwd()
-        passwords = tree.locate(regexp)
+        passwords = self.filterPasswords(regexp, tree)
+        
         if not passwords:
-            print _("No passwords matching \"%s\" were found") % regexp
+            self.printMessage(_("No passwords matching \"%s\" were found"), regexp)
             return None
+          
+         
         if len(passwords) > 1:
             self.listPasswords(passwords, 1)
             print _("Enter number. Enter 0 to cancel.")
@@ -256,7 +286,7 @@ long password correctly.""")
             editor = os.environ['EDITOR']
         else:
             editor = default_editor
-        print _("running %s") % editor
+        self.printMessage(_("running %s"), editor)
         # create temporary file
         handle, tmpfname = tempfile.mkstemp(prefix="kedpm_")
         tmpfile = open(tmpfname, 'w')
@@ -300,13 +330,19 @@ long password correctly.""")
         readline.write_history_file(self.histfile)
         if self.modified:
             self.tryToSave()
-        print _("Exiting.")
+        self.printMessage(_("Exiting."))
         sys.exit(0)
 
     def do_EOF(self, arg):
         '''The same as 'exit' command'''
         print
         self.do_exit(arg)
+
+    def do_quit(self, arg):
+        '''The same as 'exit' command'''
+        print
+        self.do_exit(arg)
+
 
     def do_help(self, arg):
         '''Print help message'''
@@ -364,10 +400,11 @@ Syntax:
     -r - recursive search. search all subtree for matching passwords
 
 This will display contents of a password item in current category or whole
-subtree, if -r flag was specified. If several items matched by <regexp>, list
+subtree, if -r flag was specified. If several items matched by <regexp> and the
+program has been configured to prompt for a single entry, a list
 of them will be printed and you will be prompted to enter a number, pointing to
 password you want to look at.  After receiving that number, KedPM will show you
-the password.'''
+the password. Otherwise all matching entries will be displayed'''
 
         argv = arg.split()
         tree = None
@@ -378,10 +415,10 @@ the password.'''
             else:
                 arg = ""
 
-        selected_password = self.pickPassword(arg, tree)
-        if selected_password:
+        selected_passwords = self.getPasswords(arg, tree)
+        for record in selected_passwords:
             print "---------------------------------------"
-            print selected_password.asText()
+            print record.asText()
             print "---------------------------------------"
 
     def do_edit(self, arg):
@@ -404,9 +441,9 @@ receiving that number, you will be able to edit picked password.
                 #self.modified = 1
                 self.tryToSave()
             except (KeyboardInterrupt, EOFError):
-                print _("Cancelled")
+                self.printMessage(_("Cancelled"))
         else:
-            print _("No password selected")
+            self.printMessage(_("No password selected"))
 
     def do_new(self, arg):
         '''Add new password to current category. You will be prompted to enter
@@ -429,11 +466,31 @@ Syntax:
         try:
             self.editPassword(new_pass)
         except (KeyboardInterrupt, EOFError):
-            print "Cancelled"
+            self.printMessage(_("Cancelled"))
         else:
             tree = self.getCwd()
             tree.addNode(new_pass)
             self.tryToSave()
+
+    def do_import(self, arg):
+        '''Imports new password records into current category.
+Syntax:
+    import
+    
+    Get properties by parsing provided text. Will open default text editor
+    for you to paste text in.
+'''
+        argv = arg.split()
+        tree = self.getCwd()
+
+        text = self.getEditorInput()
+        for line in text.split("\n"):
+          new_pass = FigaroPassword() # FIXME: Password type shouldn't be hardcoded.
+          choosendict = parser.parseMessage(line, self.conf.patterns)
+          new_pass.update(choosendict)
+          tree.addNode(new_pass)
+
+        self.tryToSave()
 
     def do_save(self, arg):
         '''Save current password tree'''
@@ -512,7 +569,7 @@ one.
             new_pass = arg
 
         self.pdb.changePassword(new_pass)
-        print _("Password changed.")
+        self.printMessage(_("Password changed."))
         
 
     def do_help(self, arg):
@@ -589,33 +646,46 @@ enter help set <option> for more info on particular option."""
 Syntax:
     rm <regexp>
 
-Remove password from database. If several passwords matches <regexp>, you will
-be prompted to choose one from the list."""
+Remove password from database. If several passwords matches <regexp> and the
+'force-single' option is enabled, you will be prompted to select one from the
+list. Otherwise all matching records will be selected.  If the
+'confirm-deletes' option is enabled, you will be prompted to confirm the
+deletion.  Otherwise records will be deleted without confirmation."""
 
         if not arg:
             print "rm: you must specify a password to remove"
             return
 
-        selected_password = self.pickPassword(arg)
-        if not selected_password:
-            print _("No password selected.")
+        selected_passwords = self.pickPassword(arg)
+        if not selected_passwords:
+            self.printMessage(_("No password selected."))
             return
 
-        print selected_password.asText()
-        answer = raw_input("Do you really want to delete this password (y/N)? ")
-        if answer.lower().startswith('y'):
+        Cwd = self.getCwd()
+        
+        for password in selected_passwords:
+            if self.confirm_deletes:
+                print selected_password.asText()
+                answer = raw_input("Do you really want to delete this " \
+                                   "password (y/N)? ")
+                if not answer.lower().startswith('y'):
+                    self.printMessage(_("Password was not deleted."))
+                    continue
+
             # Do delete selected password
-            self.getCwd().removeNode(selected_password)
-            print _("Password deleted")
+            Cwd.removeNode(password)
+            self.printMessage(_("Password deleted"))
+
             self.tryToSave()
-        else:
-            print _("Password was not deleted.")
+
 
     def do_mv(self, arg):
         '''move a password
-
 Syntax:
     mv <regexp> <category>
+
+Move a password record to a different category. If several records match, and the 'force-single' option
+is enabled, you will be prompted to pick one. Otherwise all matching records will be moved.
 '''
         args = arg.split()
         if len(args) != 2:
@@ -637,13 +707,17 @@ Syntax:
             return
 
         # select password from user
-        selected_password = self.pickPassword(pw)
-        if selected_password:
-            dst_branch.addNode(selected_password)
-            self.getCwd().removeNode(selected_password)
+        selected_passwords = self.getPasswords(pw)
+        if not selected_passwords:
+            self.printMessage(_("No password selected"))
+            return
+          
+        Cwd = self.getCwd
+
+        for password in selected_passwords:
+            dst_branch.addNode(password)
+            Cwd().removeNode(password)
             self.tryToSave()
-        else:
-            print _("No password selected")
 
     def do_rmdir(self, arg):
         '''Delete a category (directory)
@@ -671,7 +745,7 @@ Deletes a password category and ALL it\'s entries
                 " and ALL it's entries? [y/N]: ") % abspath_str)
         if answer.lower().startswith('y'):
             pwd.removeBranch(toremove)
-            print _("rmdir: cateogry \"%s\" and all it's entries were deleted.") % abspath_str
+            print _("rmdir: category \"%s\" and all it's entries were deleted.") % abspath_str
             self.tryToSave()
 
         # Check if current directory still exists. If not - cd to root.

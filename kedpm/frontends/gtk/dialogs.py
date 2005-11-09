@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: dialogs.py,v 1.20 2005/03/05 21:44:33 kedder Exp $
+# $Id: dialogs.py,v 1.21 2005/11/09 19:00:53 kedder Exp $
 
 '''Dialog classes'''
 
@@ -117,12 +117,12 @@ class PasswordEditDialog(Dialog):
             entry.set_text(value)
             hbox = gtk.HBox()
             hbox.set_spacing(6)
-            entry.set_visibility(gtk.FALSE)
-            hbox.pack_start(entry, gtk.FALSE, gtk.TRUE)
+            entry.set_visibility(False)
+            hbox.pack_start(entry, False, True)
             btn = gtk.ToggleButton('_Show')
-            btn.set_property('can-focus', gtk.FALSE)
+            btn.set_property('can-focus', False)
             btn.connect('toggled', self.on_show_button_toggled, entry)
-            hbox.pack_start(btn, gtk.FALSE, gtk.TRUE)
+            hbox.pack_start(btn, False, True)
             return hbox, entry
         elif type == password.TYPE_TEXT:
             frame = gtk.Frame()
@@ -153,7 +153,7 @@ class PasswordEditDialog(Dialog):
                 if self.password.getField(field)['type'] == password.TYPE_TEXT:
                     buf = entry.get_buffer()
                     b_start, b_end = buf.get_bounds()
-                    value = buf.get_text(b_start, b_end, gtk.FALSE)
+                    value = buf.get_text(b_start, b_end, False)
                 else:
                     value = entry.get_text()
                 props[field] = value
@@ -208,7 +208,7 @@ class ParsePasswordDialog(Dialog):
         patterns = globals.app.conf.patterns
         buf = self['text'].get_buffer()
         b_start, b_end = buf.get_bounds()
-        text = buf.get_text(b_start, b_end, gtk.FALSE)
+        text = buf.get_text(b_start, b_end, False)
         self.parseddict = parseMessage(text, patterns)
         return True
 
