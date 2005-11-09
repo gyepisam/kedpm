@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ked Password Manager 0.4.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-03-05 22:50+0200\n"
+"POT-Creation-Date: 2005-03-06 01:16+0200\n"
 "PO-Revision-Date: 2004-03-02 00:33+0200\n"
 "Last-Translator: Andrey Lebedev <andrey@micro.lt>\n"
 "Language-Team: Russian <ru@li.org>\n"
@@ -56,7 +56,7 @@ msgid "Repeat password: "
 msgstr "Повторите пароль:"
 
 #: kedpm/frontends/cli.py:78 kedpm/frontends/cli.py:504
-#: kedpm/frontends/gtk/dialogs.py:393
+#: kedpm/frontends/gtk/dialogs.py:325
 #, fuzzy
 msgid "Empty passwords are really insecure. You should create one."
 msgstr "Пустые пароли крайне небезопасны. Вы должны создать пароль."
@@ -77,7 +77,7 @@ msgstr "Введите номер. Введите 0 для отмены."
 msgid "show: "
 msgstr "показать: "
 
-#: kedpm/frontends/cli.py:186 kedpm/frontends/gtk/dialogs.py:389
+#: kedpm/frontends/cli.py:186 kedpm/frontends/gtk/dialogs.py:321
 msgid "Passwords don't match. Try again."
 msgstr "Пароли не совпадают. Попробуйте снова."
 
@@ -227,6 +227,11 @@ msgstr "rmdir:·категория·\"%s\" и все её записи были 
 #: kedpm/frontends/cli.py:681
 msgid "rmdir: Warning! Current working directory was removed. Changing to /"
 msgstr "rmdir:·Внимание! Текущая рабочая директория была удалена. Изменяю на /"
+
+#: kedpm/frontends/gtk/dialogs.py:63
+#, fuzzy
+msgid "Password incorrect. Please try again"
+msgstr "<span color=\"red\"><b>Пароль неверный. Попробуйте снова</b></span>"
 
 #: glade/glade-msg.c:7
 msgid "Ked Password Manager"
