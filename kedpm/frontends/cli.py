@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: cli.py,v 1.36 2006/02/13 04:56:16 anarcat Exp $
+# $Id: cli.py,v 1.37 2006/02/13 05:04:07 anarcat Exp $
 
 "Command line interface for Ked Password Manager"
 
@@ -827,15 +827,14 @@ This will export the contents of matching passwords in the current directory or 
             regexp = argv[0]
 
 	selected_passwords = self.filterPasswords(regexp, tree)
-        try:
-            if len(argv) > 1:
-                output = open(argv[1], 'w')
+        if len(argv) > 1:
+            output = open(argv[1], 'w')
+        else:
+            output = sys.stdout
+        for record in selected_passwords:
+            if (len(argv) > 2) and (argv[2] == "csv"):
+                output.write(record.asCSV())
             else:
-                output = sys.stdout
-            for record in selected_passwords:
-                if (len(argv) > 2) and (argv[2] == "csv"):
-                    output.write(record.asCSV())
-                else:
-                    output.write(record.asText())
-            if len(argv) > 1:
-                output.close()
+                output.write(record.asText())
+        if len(argv) > 1:
+            output.close()
