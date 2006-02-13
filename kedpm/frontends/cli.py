@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: cli.py,v 1.38 2006/02/13 05:10:52 anarcat Exp $
+# $Id: cli.py,v 1.39 2006/02/13 05:29:12 anarcat Exp $
 
 "Command line interface for Ked Password Manager"
 
@@ -656,27 +656,26 @@ deletion.  Otherwise records will be deleted without confirmation."""
             print "rm: you must specify a password to remove"
             return
 
-        selected_passwords = self.pickPassword(arg)
-        if not selected_passwords:
+        selected_password = self.pickPassword(arg)
+        if not selected_password:
             self.printMessage(_("No password selected."))
             return
 
         Cwd = self.getCwd()
         
-        for password in selected_passwords:
-            if self.confirm_deletes:
-                print selected_password.asText()
-                answer = raw_input("Do you really want to delete this " \
-                                   "password (y/N)? ")
-                if not answer.lower().startswith('y'):
-                    self.printMessage(_("Password was not deleted."))
-                    continue
+        if self.confirm_deletes:
+            print selected_password.asText()
+            answer = raw_input("Do you really want to delete this " \
+                               "password (y/N)? ")
+            if answer.lower().startswith('y'):
+                # Do delete selected password
+                Cwd.removeNode(selected_password)
+                self.printMessage(_("Password deleted"))
+                
+                self.tryToSave()
+            else:
+                self.printMessage(_("Password was not deleted."))
 
-            # Do delete selected password
-            Cwd.removeNode(password)
-            self.printMessage(_("Password deleted"))
-
-            self.tryToSave()
 
 
     def do_mv(self, arg):
