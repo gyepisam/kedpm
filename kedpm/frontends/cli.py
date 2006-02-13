@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: cli.py,v 1.37 2006/02/13 05:04:07 anarcat Exp $
+# $Id: cli.py,v 1.38 2006/02/13 05:10:52 anarcat Exp $
 
 "Command line interface for Ked Password Manager"
 
@@ -803,6 +803,10 @@ edit.'''
     def showMessage(self, message):
         print message
 
+    # this needs more error checking:
+    # * check if passwords match the regexp
+    # * check if the output file can be opened 
+    # * check if the format given is valid
     def do_export(self, arg):
     	'''Export many passwords.
 
@@ -819,22 +823,33 @@ This will export the contents of matching passwords in the current directory or 
 
         argv = arg.split()
         tree = None
+        # this represents all passwords
         regexp = ""
+        # recurse into the tree if appropriate
         if argv and argv[0] == '-r':
             tree = self.getCwd().flatten()
             argv = argv[1:]
+
+        # first argument: the regexp
         if len(argv) > 0:
             regexp = argv[0]
 
+        # filter passwords through the regexp
 	selected_passwords = self.filterPasswords(regexp, tree)
+
+        # second argument: the output file
         if len(argv) > 1:
             output = open(argv[1], 'w')
         else:
             output = sys.stdout
+
+        # print all found passwords to output stream
         for record in selected_passwords:
+            # third argument: the output format
             if (len(argv) > 2) and (argv[2] == "csv"):
                 output.write(record.asCSV())
             else:
                 output.write(record.asText())
+        # close stream if necessary
         if len(argv) > 1:
             output.close()
