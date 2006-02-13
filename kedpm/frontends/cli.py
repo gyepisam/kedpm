@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: cli.py,v 1.35 2005/11/09 19:00:52 kedder Exp $
+# $Id: cli.py,v 1.36 2006/02/13 04:56:16 anarcat Exp $
 
 "Command line interface for Ked Password Manager"
 
@@ -802,3 +802,40 @@ edit.'''
 
     def showMessage(self, message):
         print message
+
+    def do_export(self, arg):
+    	'''Export many passwords.
+
+Syntax:
+    export [-r] [<regexp> [<file> [<format]]]
+
+    -r - recursive search. search all subtree for matching passwords
+    <regexp> - match only those passwords
+    <file> - export to file
+    <format> - one of "plain" or "csv"
+
+This will export the contents of matching passwords in the current directory or the whole subtree, if -r was specified. If <file> is not specified, the passwords are printed on stdout. Note that <file> will be overwritten if it exists.
+'''
+
+        argv = arg.split()
+        tree = None
+        regexp = ""
+        if argv and argv[0] == '-r':
+            tree = self.getCwd().flatten()
+            argv = argv[1:]
+        if len(argv) > 0:
+            regexp = argv[0]
+
+	selected_passwords = self.filterPasswords(regexp, tree)
+        try:
+            if len(argv) > 1:
+                output = open(argv[1], 'w')
+            else:
+                output = sys.stdout
+            for record in selected_passwords:
+                if (len(argv) > 2) and (argv[2] == "csv"):
+                    output.write(record.asCSV())
+                else:
+                    output.write(record.asText())
+            if len(argv) > 1:
+                output.close()

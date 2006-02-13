@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: password.py,v 1.6 2003/09/21 18:18:08 kedder Exp $
+# $Id: password.py,v 1.7 2006/02/13 04:56:16 anarcat Exp $
 
 """ Password item """
 
@@ -108,3 +108,10 @@ class Password:
             astext += "%s: %s\n" % (fieldinfo['title'], self[key])
         return astext
             
+    def asCSV(self):
+        'Returns a one-line, CSV-compatible representation of the password'
+        astext = ""
+        for key, fieldinfo in self.fields_type_info:
+            astext += "\"%s\"," % (self[key])
+        astext += "\n"
+        return astext
