@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: cli.py,v 1.39 2006/02/13 05:29:12 anarcat Exp $
+# $Id: cli.py,v 1.40 2006/02/13 05:32:44 anarcat Exp $
 
 "Command line interface for Ked Password Manager"
 
@@ -416,10 +416,11 @@ the password. Otherwise all matching entries will be displayed'''
                 arg = ""
 
         selected_passwords = self.getPasswords(arg, tree)
-        for record in selected_passwords:
-            print "---------------------------------------"
-            print record.asText()
-            print "---------------------------------------"
+        if selected_passwords:
+            for record in selected_passwords:
+                print "---------------------------------------"
+                print record.asText()
+                print "---------------------------------------"
 
     def do_edit(self, arg):
         '''edit password information.
