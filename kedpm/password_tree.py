@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: password_tree.py,v 1.16 2004/02/28 18:45:20 kedder Exp $
+# $Id: password_tree.py,v 1.17 2006/02/13 06:22:00 anarcat Exp $
 
 """Password items organized in recursive tree."""
 
@@ -165,6 +165,22 @@ class PasswordTree:
                     results.append(password)
                     break
         return results
+
+    def rlocate(self, regexp = '', curdir = '.'):
+        '''Locate passwords in this tree recursively.
+
+This looks for passwords in all branches of this tree, using locate().
+
+It returns a { path, password } dictionnary.'''
+        paths = {}
+        for result in self.locate(regexp):
+            paths[curdir + '/' + result['title']] = result
+
+        for name, branch in self.getBranches().iteritems():
+            paths.update(branch.rlocate(regexp, curdir + '/' + name))
+
+        return paths
+
 
     def getTreeFromPath(self, path):
         """Return password tree from given path.

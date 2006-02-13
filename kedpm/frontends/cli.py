@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: cli.py,v 1.41 2006/02/13 05:41:11 anarcat Exp $
+# $Id: cli.py,v 1.42 2006/02/13 06:22:00 anarcat Exp $
 
 "Command line interface for Ked Password Manager"
 
@@ -853,3 +853,14 @@ This will export the contents of matching passwords in the current directory or 
         # close stream if necessary
         if len(argv) > 1:
             output.close()
+
+    def do_find(self, regexp):
+        '''Locate a password in the tree.
+
+Syntax:
+    find [<regexp>]
+
+This will list the paths with passwords matching the regexp.
+'''
+        for path, password in self.getCwd().rlocate(regexp).iteritems():
+            print path
