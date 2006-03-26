@@ -14,11 +14,12 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: test_config.py,v 1.7 2004/02/24 22:58:46 kedder Exp $
+# $Id: test_config.py,v 1.8 2006/03/26 10:04:19 kedder Exp $
 
+import os
 import unittest
 
-from kedpm.config import Configuration, Options, Option, SelectOption
+from kedpm.config import Configuration, Options, Option, SelectOption, BooleanOption
 
 class ConfigTestCase(unittest.TestCase):
     def setUp(self):
@@ -31,6 +32,16 @@ class ConfigTestCase(unittest.TestCase):
         self.assertEqual(len(self.conf.patterns), 2)
         self.assertEqual(self.conf.patterns[0],
                 "Username/Password: {user}/{password}")
+
+    def test_saveConfig(self):
+        self.conf.options['verbose'] = True
+        self.conf.options['confirm-deletes'] = 'yes'
+        self.conf.filename = "test/saved_config.xml"
+        self.conf.save()
+        self.conf.open()
+        self.assertEqual(self.conf.options['verbose'], True)
+        self.assertEqual(self.conf.options['confirm-deletes'], True)
+        os.unlink('test/saved_config.xml')
 
 class OptionsTestCase(unittest.TestCase):
     def test_option(self):

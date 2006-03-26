@@ -14,10 +14,11 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: config.py,v 1.9 2005/11/09 19:00:52 kedder Exp $
+# $Id: config.py,v 1.10 2006/03/26 10:04:19 kedder Exp $
 
 """Configuration for Ked Password Manager"""
 import os
+import types
 from xml.dom import minidom
 from UserDict import UserDict
 
@@ -97,6 +98,8 @@ class BooleanOption (Option):
         self.doc = doc
 
     def set(self, value):
+        if type(value) in types.StringTypes:
+            value = value.lower()
         if not self.__boolmap.has_key(value):
             raise OptionError, "Value must be one of %s" % self.__boolmap.keys()
         self._value = self.__boolmap[value]
@@ -217,7 +220,7 @@ Changes will take effect after kedpm restart."""),
         for optname, optvalue in self.options.items():
             opt_node = document.createElement('option')
             opt_node.setAttribute('name', optname)
-            opt_node.appendChild(document.createTextNode(optvalue.get()))
+            opt_node.appendChild(document.createTextNode(str(optvalue)))
             options.appendChild(opt_node)
             
         root.appendChild(document.createTextNode('\n'))
