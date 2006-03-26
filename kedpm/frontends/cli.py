@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: cli.py,v 1.42 2006/02/13 06:22:00 anarcat Exp $
+# $Id: cli.py,v 1.43 2006/03/26 16:37:34 kedder Exp $
 
 "Command line interface for Ked Password Manager"
 
@@ -40,12 +40,16 @@ try 'help' for brief description of available commands.
 """)
 
     modified = 0
-    histfile = os.getenv("HOME") + '/.kedpm/history'
+    histfile = os.path.join(expanduser('~'), '.kedpm', 'history')
 
     def __init__(self):
         Cmd.__init__(self)
-        if sys.stdout.isatty():
-            self.PS1 = "\x1b[1m"+self.PS1+"\x1b[0m" # colored prompt template
+        
+        # This method of setting colored prompt doesn't work on windows. We
+        # need to figure out how to put color in cross-platform way and
+        # re-enable it here.
+        #if sys.stdout.isatty():
+        #    self.PS1 = "\x1b[1m"+self.PS1+"\x1b[0m" # colored prompt template
 
 
     def printMessage(self, message, *vars):

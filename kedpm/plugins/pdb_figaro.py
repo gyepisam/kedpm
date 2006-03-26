@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: pdb_figaro.py,v 1.19 2005/03/05 21:44:33 kedder Exp $
+# $Id: pdb_figaro.py,v 1.20 2006/03/26 16:37:34 kedder Exp $
 
 """ Figaro password manager database plugin """
 
@@ -63,7 +63,8 @@ class FigaroPassword (Password):
 
 class PDBFigaro (PasswordDatabase):
 
-    default_db_filename = os.getenv('HOME') + '/.fpm/fpm'
+    default_db_filename = os.path.join(os.path.expanduser("~"),
+                                       '.fpm', 'fpm')
     launcherlist = None
     filename = None
     native = 0

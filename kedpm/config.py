@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: config.py,v 1.10 2006/03/26 10:04:19 kedder Exp $
+# $Id: config.py,v 1.11 2006/03/26 16:37:33 kedder Exp $
 
 """Configuration for Ked Password Manager"""
 import os
@@ -110,7 +110,7 @@ class Configuration:
 
     # Configuration file name
     #filename = "doc/sample_config.xml"
-    filename = os.getenv('HOME') + '/.kedpm/config.xml'
+    filename = os.path.join(os.path.expanduser('~'), '.kedpm', 'config.xml')
 
     options = Options({
         "save-mode": SelectOption(['ask', 'no', 'auto'], 'ask', """One of three values:
