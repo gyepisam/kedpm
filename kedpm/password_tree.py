@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: password_tree.py,v 1.17 2006/02/13 06:22:00 anarcat Exp $
+# $Id: password_tree.py,v 1.18 2006/09/06 03:22:54 gyepi Exp $
 
 """Password items organized in recursive tree."""
 
@@ -276,4 +276,7 @@ It returns a { path, password } dictionnary.'''
 
     def removeBranch(self, name):
         """Removes a branch from the tree."""
-        del(self._branches[name])
+        try:
+          del(self._branches[name])
+        except KeyError:
+          pass
