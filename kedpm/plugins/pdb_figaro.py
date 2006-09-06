@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: pdb_figaro.py,v 1.20 2006/03/26 16:37:34 kedder Exp $
+# $Id: pdb_figaro.py,v 1.21 2006/09/06 03:29:41 gyepi Exp $
 
 """ Figaro password manager database plugin """
 
@@ -41,9 +41,9 @@ class FigaroPassword (Password):
     fields_type_info = [
         ('title',     {'title': 'Title', 'type': TYPE_STRING}),
         ('user',     {'title': 'Username', 'type': TYPE_STRING}),
+        ('password', {'title': 'Password', 'type': TYPE_PASSWORD}),
         ('url',     {'title': 'URL', 'type': TYPE_STRING}),
         ('notes',     {'title': 'Notes', 'type': TYPE_TEXT}),
-        ('password', {'title': 'Password', 'type': TYPE_PASSWORD}),
     ]
 
     default = 0
