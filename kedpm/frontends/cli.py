@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: cli.py,v 1.43 2006/03/26 16:37:34 kedder Exp $
+# $Id: cli.py,v 1.44 2006/09/06 03:27:11 gyepi Exp $
 
 "Command line interface for Ked Password Manager"
 
@@ -221,7 +221,7 @@ try 'help' for brief description of available commands.
         return pwd
 
     def editPassword(self, pwd):
-        '''Prompt user for each field of the password. Respect fields' type.'''
+        '''Prompt user for each field of the password. Respect fields\' type.'''
 
         input = {}
 
@@ -282,14 +282,13 @@ long password correctly.""")
         return compl
 
     def getEditorInput(self, content=''):
-        """Fire up default editor and read user input from temporary file"""
-        default_editor = "vi"
+        """Fire up an editor and read user input from temporary file"""
         if os.environ.has_key('VISUAL'):
             editor = os.environ['VISUAL']
         elif os.environ.has_key('EDITOR'):
             editor = os.environ['EDITOR']
         else:
-            editor = default_editor
+            editor = "vi"
         self.printMessage(_("running %s"), editor)
         # create temporary file
         handle, tmpfname = tempfile.mkstemp(prefix="kedpm_")
@@ -322,6 +321,14 @@ long password correctly.""")
         root = self.pdb.getTree()
         abspath = self.getAbsolutePath(path)
         return root.getTreeFromPath(abspath)
+
+    def shiftArgv(self, argv, count = 1):
+        if len(argv) > count:
+          arg = " ".join(argv[count:])
+        else:
+          arg = ""
+        
+        return arg
 
     ##########################################
     # Command implementations below.         #
@@ -414,10 +421,7 @@ the password. Otherwise all matching entries will be displayed'''
         tree = None
         if argv and argv[0] == '-r':
             tree = self.getCwd().flatten()
-            if len(argv) > 1:
-                arg = " ".join(argv[1:])
-            else:
-                arg = ""
+            arg = self.shiftArgv(argv)
 
         selected_passwords = self.getPasswords(arg, tree)
         for record in selected_passwords:
@@ -430,20 +434,38 @@ the password. Otherwise all matching entries will be displayed'''
         '''edit password information.
 
 Syntax:
-    edit <regexp>
+    edit [-p] <regexp>
 
 This will prompt you for editing of a password item in current category. If
 several items matched by <regexp>, list of them will be printed and you will be
 prompted to enter a number, pointing to password you want to edit.  After
-receiving that number, you will be able to edit picked password.
+receiving that number, you will be able to edit the selected password.
+
+If the optional '-p' flag is specified, the password will be edited with the
+the editor specified in the VISUAL or EDITOR environment variables, defaulting
+to "vi" if neither is found. Otherwise the user will be prompted to
+edit/modify each line of the password entry.
 
 '''
+        argv = arg.split()
+
+        if argv and argv[0] == '-p':
+          use_editor = 1
+          arg = self.shiftArgv(argv)
+        else:
+          use_editor = 0
 
         selected_password = self.pickPassword(arg)
+        
         if selected_password:
             try:
-                self.editPassword(selected_password)
-                #self.modified = 1
+                if use_editor:
+                    text = self.getEditorInput(selected_password.asEditText())
+                    chosendict = parser.parseMessage(text, self.conf.patterns)
+                    selected_password.update(chosendict)
+                else:
+                  self.editPassword(selected_password)
+
                 self.tryToSave()
             except (KeyboardInterrupt, EOFError):
                 self.printMessage(_("Cancelled"))
