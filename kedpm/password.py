@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: password.py,v 1.8 2006/09/06 03:22:12 gyepi Exp $
+# $Id: password.py,v 1.9 2006/09/06 15:05:36 gyepi Exp $
 
 """ Password item """
 
@@ -99,6 +99,18 @@ class Password:
         means all fields except TYPE_PASSWORD'''
         return self.getFieldsOfType([TYPE_STRING, TYPE_TEXT])
 
+    def getEditPattern(self):
+      '''Returns a pattern for parsing EditText'''
+      
+      #Notes is greedy match and should be in the last position.
+      custom_pattern = {'notes' :'''~(?P<notes>.*)'''}
+      pattern = []
+
+      for key, fieldinfo in self.fields_type_info:
+          pattern.append("%s{ }:{ }{%s}" % (fieldinfo['title'], custom_pattern.get(key, key)))
+     
+      return "".join(pattern)
+      
     def asText(self):
         'Returns plain text representation of the password'
         astext = ""
@@ -118,6 +130,7 @@ class Password:
             astext += "\n"
         return astext
 
+    
     def asCSV(self):
         'Returns a one-line, CSV-compatible representation of the password'
         astext = ""

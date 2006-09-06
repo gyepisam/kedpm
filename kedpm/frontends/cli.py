@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: cli.py,v 1.45 2006/09/06 04:31:45 gyepi Exp $
+# $Id: cli.py,v 1.46 2006/09/06 15:05:36 gyepi Exp $
 
 "Command line interface for Ked Password Manager"
 
@@ -460,7 +460,9 @@ edit/modify each entry of the password entry on the command line.
             try:
                 if use_editor:
                     text = self.getEditorInput(selected_password.asEditText())
-                    chosendict = parser.parseMessage(text, self.conf.patterns)
+                    patterns = self.conf.patterns
+                    patterns.append(selected_password.getEditPattern())
+                    chosendict = parser.parseMessage(text, patterns)
                     selected_password.update(chosendict)
                 else:
                   self.editPassword(selected_password)
@@ -660,6 +662,7 @@ enter help set <option> for more info on particular option."""
     def help_set(self, arg):
         if not arg:
             print self.do_set.__doc__
+            #TODO: document Options here.
             return
         try:
             option = self.conf.options.getOption(arg)
@@ -673,7 +676,7 @@ enter help set <option> for more info on particular option."""
 Syntax:
     rm <regexp>
 
-Remove password from database. If several passwords matches <regexp> and the
+Remove password from database. If several passwords match <regexp> and the
 'force-single' option is enabled, you will be prompted to select one from the
 list. Otherwise all matching records will be selected.  If the
 'confirm-deletes' option is enabled, you will be prompted to confirm the
@@ -787,7 +790,7 @@ Deletes a password category and ALL it\'s entries
         return self.complete_dirs(text, line, begidx, endidx)
 
     def do_patterns(self, arg):
-        '''Edit pareser patterns. Will open default text editor in order to
+        '''Edit parser patterns. Will open default text editor in order to
 edit.'''
 
         disclaimer = '''# Here you can teach Ked Password Manager how to
@@ -839,7 +842,7 @@ edit.'''
 Syntax:
     export [-r] [<regexp> [<file> [<format]]]
 
-    -r - recursive search. search all subtree for matching passwords
+    -r - recursive search. search all subtrees for matching passwords
     <regexp> - match only those passwords
     <file> - export to file
     <format> - one of "plain" or "csv"
@@ -886,7 +889,9 @@ This will export the contents of matching passwords in the current directory or 
 Syntax:
     find [<regexp>]
 
-This will list the paths with passwords matching the regexp.
+List the paths with passwords matching the regexp.
+TODO: Empty regexp leads to inconsistent results. 
 '''
+
         for path, password in self.getCwd().rlocate(regexp).iteritems():
             print path
