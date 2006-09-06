@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: cli.py,v 1.44 2006/09/06 03:27:11 gyepi Exp $
+# $Id: cli.py,v 1.45 2006/09/06 04:31:45 gyepi Exp $
 
 "Command line interface for Ked Password Manager"
 
@@ -436,15 +436,14 @@ the password. Otherwise all matching entries will be displayed'''
 Syntax:
     edit [-p] <regexp>
 
-This will prompt you for editing of a password item in current category. If
-several items matched by <regexp>, list of them will be printed and you will be
-prompted to enter a number, pointing to password you want to edit.  After
-receiving that number, you will be able to edit the selected password.
+This will prompt user to edit a password item in current category. If
+several items are matched by <regexp>, a list of them will be printed and user
+will be prompted to select one.
 
 If the optional '-p' flag is specified, the password will be edited with the
 the editor specified in the VISUAL or EDITOR environment variables, defaulting
 to "vi" if neither is found. Otherwise the user will be prompted to
-edit/modify each line of the password entry.
+edit/modify each entry of the password entry on the command line.
 
 '''
         argv = arg.split()
@@ -632,11 +631,11 @@ enter help set <option> for more info on particular option."""
                 print "%s = %s" % (opt, value)
             return
         tokens = arg.split('=')
-        opt_name = tokens[0]
+        opt_name = tokens[0].strip()
         try:
             opt_value = opts[opt_name]
         except KeyError:
-            print _("set: no such option: %s") % arg
+            print _("set: no such option: [%s]") % arg
             return
         if len(tokens) == 1:
             # show value of option
@@ -644,7 +643,8 @@ enter help set <option> for more info on particular option."""
         else:
             # set the value
             try:
-                opts[opt_name] = ' '.join(tokens[1:])
+                opt_value = ' '.join(tokens[1:])
+                opts[opt_name] = opt_value.strip() 
             except OptionError, e:
                 print "set: %s" % e
         # save confuguration file

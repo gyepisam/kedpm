@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: config.py,v 1.12 2006/09/06 03:35:48 gyepi Exp $
+# $Id: config.py,v 1.13 2006/09/06 04:31:45 gyepi Exp $
 
 """Configuration for Ked Password Manager"""
 import os
@@ -89,7 +89,8 @@ class BooleanOption (Option):
 
     __boolmap = {}
 
-    for k,v in ((True, [True, 'true', 'on', 'yes', 1]), (False, [False, 'false', 'off', 'no', 0])):
+    #Don't add 0, 1 to this list. True and False are coerced to those values and hide them.
+    for k,v in ((True, [True, 'true', 'on', 'yes']), (False, [False, 'false', 'off', 'no'])):
          for b in v:
            __boolmap[b] = k
 
@@ -100,8 +101,23 @@ class BooleanOption (Option):
     def set(self, value):
         if type(value) in types.StringTypes:
             value = value.lower()
+
+        #Convert number to boolean
+        try:
+          intvalue = int(value)
+        except (ValueError, IndexError):
+          intvalue = None
+
+        if intvalue is not None:
+          if intvalue == 0:
+            value = False
+          elif intvalue == 1:
+            value = True
+
         if not self.__boolmap.has_key(value):
-            raise OptionError, "Value must be one of %s" % self.__boolmap.keys()
+            ok_values = self.__boolmap.keys()
+            ok_values.extend((0,1))
+            raise OptionError, "Value [%s] is not acceptable. Must be one of %s" % (str(value), ok_values)
         self._value = self.__boolmap[value]
 
 
