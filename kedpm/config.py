@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: config.py,v 1.13 2006/09/06 04:31:45 gyepi Exp $
+# $Id: config.py,v 1.14 2006/09/06 05:22:14 gyepi Exp $
 
 """Configuration for Ked Password Manager"""
 import os
@@ -155,7 +155,8 @@ Changes will take effect after kedpm restart."""),
         "User{~(name)?}{ }:{ }{user}",
         "Pass{~(word)?}{ }:{ }{password}",
         "Host{~(name)?}{ }:{ }{url}",
-        "Server{ }:{ }{url}"
+        "Server{ }:{ }{url}",
+        "Title{ }:{ }{title}{ }Username{ }:{ }{user}{ }Password{ }:{ }{password}{ }URL{ }:{ }{url}{ }Notes{ }:{ }{~(?P&lt;notes&gt;.*)}"
     ]
     patterns = []
 
