@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: config.py,v 1.11 2006/03/26 16:37:33 kedder Exp $
+# $Id: config.py,v 1.12 2006/09/06 03:35:48 gyepi Exp $
 
 """Configuration for Ked Password Manager"""
 import os
@@ -212,7 +212,7 @@ Changes will take effect after kedpm restart."""),
         domimpl = minidom.getDOMImplementation()
         document= domimpl.createDocument("http://kedpm.sourceforge.net/xml/fpm", "config", None)
         root = document.documentElement
-        root.setAttribute('verion', __version__)
+        root.setAttribute('version', __version__)
         
         # Add options
         options = document.createElement('options')
