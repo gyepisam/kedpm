@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: config.py,v 1.14 2006/09/06 05:22:14 gyepi Exp $
+# $Id: config.py,v 1.15 2006/09/07 01:18:31 gyepi Exp $
 
 """Configuration for Ked Password Manager"""
 import os
@@ -46,6 +46,9 @@ class Option:
 
     def set(self, value):
         self._value = value
+
+    def get_doc(self, name):
+      return "%s = %s\n%s" % (name, str(self._value), self.doc)
 
 class FileOption (Option):
     """Option containing filename"""
@@ -85,7 +88,7 @@ class Options (UserDict):
         self.getOption(key).set(value)
 
 class BooleanOption (Option):
-    """Option that can be set to value from known list of possible boolean values"""
+    """Option that can be set to a value from known list of possible boolean values"""
 
     __boolmap = {}
 

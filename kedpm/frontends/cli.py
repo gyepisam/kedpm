@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: cli.py,v 1.46 2006/09/06 15:05:36 gyepi Exp $
+# $Id: cli.py,v 1.47 2006/09/07 01:18:31 gyepi Exp $
 
 "Command line interface for Ked Password Manager"
 
@@ -621,10 +621,12 @@ Syntax:
     set <option>            -- show value of option
     set <option> = <value>  -- set value to option
 
-for boolean values 1, 'on' or 'true' are considered as True; 0, 'off' or 'false' are
-considered as False.
+For boolean values: 
+1, 'on' or 'true' are synonyms for True and
+0, 'off' or 'false' are synonyms for False.
 
-enter help set <option> for more info on particular option."""
+Enter help set <option> for more info on a particular option.
+"""
 
         opts = self.conf.options
         if not arg:
@@ -662,11 +664,14 @@ enter help set <option> for more info on particular option."""
     def help_set(self, arg):
         if not arg:
             print self.do_set.__doc__
-            #TODO: document Options here.
+            for name, option in self.conf.options.iteritems():
+              print option.get_doc(name)
+              print ""
+
             return
         try:
             option = self.conf.options.getOption(arg)
-            print "%s: %s" % (arg, option.doc)
+            print option.get_doc(arg)
         except KeyError:
             print _("set: no such option: %s") % arg
 
