@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: password.py,v 1.9 2006/09/06 15:05:36 gyepi Exp $
+# $Id: password.py,v 1.10 2006/10/11 02:52:20 gyepi Exp $
 
 """ Password item """
 
@@ -103,11 +103,14 @@ class Password:
       '''Returns a pattern for parsing EditText'''
       
       #Notes is greedy match and should be in the last position.
-      custom_pattern = {'notes' :'''~(?P<notes>.*)'''}
+      custom_pattern = {'notes' :'''(?P<notes>.*)'''}
       pattern = []
 
       for key, fieldinfo in self.fields_type_info:
-          pattern.append("%s{ }:{ }{%s}" % (fieldinfo['title'], custom_pattern.get(key, key)))
+        if custom_pattern.has_key(key):
+          pattern.append("%s:\s*%s" % (fieldinfo['title'], custom_pattern.get(key)))
+        else:
+          pattern.append("%s:\s*(?P<%s>.*?)" % (fieldinfo['title'], key))
      
       return "".join(pattern)
       
@@ -122,13 +125,11 @@ class Password:
  
     def asEditText(self):
         'Returns plain text representation of the password in an editable and parseable format'
-        astext = ""
+        astext = [] 
         for key, fieldinfo in self.fields_type_info:
-            astext += "%s" % (fieldinfo['title'])
-            if self[key] != '':
-              astext += ": %s" % (self[key])
-            astext += "\n"
-        return astext
+            astext.append("%s: %s" % (fieldinfo['title'], self[key]))
+
+        return "\n".join(astext)
 
     
     def asCSV(self):
