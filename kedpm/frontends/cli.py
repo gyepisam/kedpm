@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: cli.py,v 1.47 2006/09/07 01:18:31 gyepi Exp $
+# $Id: cli.py,v 1.48 2006/10/11 02:54:28 gyepi Exp $
 
 "Command line interface for Ked Password Manager"
 
@@ -283,12 +283,15 @@ long password correctly.""")
 
     def getEditorInput(self, content=''):
         """Fire up an editor and read user input from temporary file"""
-        if os.environ.has_key('VISUAL'):
-            editor = os.environ['VISUAL']
-        elif os.environ.has_key('EDITOR'):
-            editor = os.environ['EDITOR']
+
+        for name in ('VISUAL', 'EDITOR'):
+          editor = os.environ.get(name)
+          if editor:
+            break
         else:
-            editor = "vi"
+          if editor is None:
+            editor = 'vi'
+
         self.printMessage(_("running %s"), editor)
         # create temporary file
         handle, tmpfname = tempfile.mkstemp(prefix="kedpm_")
@@ -436,23 +439,23 @@ the password. Otherwise all matching entries will be displayed'''
 Syntax:
     edit [-p] <regexp>
 
-This will prompt user to edit a password item in current category. If
-several items are matched by <regexp>, a list of them will be printed and user
-will be prompted to select one.
+Prompts the user to edit a password item in the current category.
+If <regexp> matches multiple items, the list of matches will be printed
+and user is prompted to select one.
 
-If the optional '-p' flag is specified, the password will be edited with the
+If the optional '-p' flag is specified, the password will be edited using the
 the editor specified in the VISUAL or EDITOR environment variables, defaulting
-to "vi" if neither is found. Otherwise the user will be prompted to
-edit/modify each entry of the password entry on the command line.
+to "vi" if neither is found. Otherwise the user is prompted to
+edit each entry of the password entry on the command line.
 
 '''
         argv = arg.split()
 
         if argv and argv[0] == '-p':
-          use_editor = 1
+          use_editor = True 
           arg = self.shiftArgv(argv)
         else:
-          use_editor = 0
+          use_editor = False
 
         selected_password = self.pickPassword(arg)
         
@@ -460,8 +463,7 @@ edit/modify each entry of the password entry on the command line.
             try:
                 if use_editor:
                     text = self.getEditorInput(selected_password.asEditText())
-                    patterns = self.conf.patterns
-                    patterns.append(selected_password.getEditPattern())
+                    patterns = [selected_password.getEditPattern()]
                     chosendict = parser.parseMessage(text, patterns)
                     selected_password.update(chosendict)
                 else:
@@ -478,17 +480,25 @@ edit/modify each entry of the password entry on the command line.
 fields.
 
 Syntax:
-    new [-p]
+    new [-p | -t]
 
     -p - Get properties by parsing provided text. Will open default text editor
-         for you to paste text in.
+         for you to paste text in. Mutually exclusive with -t option. 
+    -t - Display editor template in default text editor. Mutually exclusive with -p option.
 '''
         new_pass = FigaroPassword() # FIXME: Password type shouldn't be hardcoded.
         argv = arg.split()
 
-        if "-p" in argv:
+        if   "-p" in argv and "-t" in argv:
+            print _("new: -p and -t arguments are mutually exclusive.")          
+            print _("try 'help new' for more information")
+        elif "-p" in argv:
             text = self.getEditorInput()
             choosendict = parser.parseMessage(text, self.conf.patterns)
+            new_pass.update(choosendict)
+        elif "-t" in argv:
+            text = self.getEditorInput(new_pass.asEditText())
+            choosendict = parser.parseMessage(text, [new_pass.getEditPattern()])
             new_pass.update(choosendict)
 
         try:
