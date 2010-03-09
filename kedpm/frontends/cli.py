@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: cli.py,v 1.48 2006/10/11 02:54:28 gyepi Exp $
+# $Id: cli.py,v 1.49 2010/03/09 15:49:28 eg1981 Exp $
 
 "Command line interface for Ked Password Manager"
 
@@ -54,7 +54,7 @@ try 'help' for brief description of available commands.
 
     def printMessage(self, message, *vars):
         if self.verbose:
-          print (message) % vars
+            print (message) % vars
 
     def openDatabase(self):
         ''' Open database amd prompt for password if necessary '''
@@ -146,21 +146,21 @@ try 'help' for brief description of available commands.
             print fstr % ptup
 
     def filterPasswords(self, regexp, tree = None):
-      '''Returns a list of passwords, filtered by REGEXP'''
-      if tree is None:
+        '''Returns a list of passwords, filtered by REGEXP'''
+        if tree is None:
             tree = self.getCwd()
       
-      return(tree.locate(regexp))
+        return(tree.locate(regexp))
 
 
     def getPasswords(self, regexp, tree = None):
-      '''Returns a list of passwords, filtered by REGEXP.
-         Calls pickPassword if program has been configured to force
-         single selection'''
+        '''Returns a list of passwords, filtered by REGEXP.
+        Calls pickPassword if program has been configured to force
+        single selection'''
       
-      if self.force_single:
+        if self.force_single:
             return [self.pickPassword(regexp, tree)] 
-      else:
+        else:
             return(self.filterPasswords(regexp, tree))
          
     def pickPassword(self, regexp, tree = None):
@@ -285,12 +285,12 @@ long password correctly.""")
         """Fire up an editor and read user input from temporary file"""
 
         for name in ('VISUAL', 'EDITOR'):
-          editor = os.environ.get(name)
-          if editor:
-            break
-        else:
-          if editor is None:
-            editor = 'vi'
+            editor = os.environ.get(name)
+            if editor:
+                break
+            else:
+                if editor is None:
+                    editor = 'vi'
 
         self.printMessage(_("running %s"), editor)
         # create temporary file
@@ -327,9 +327,9 @@ long password correctly.""")
 
     def shiftArgv(self, argv, count = 1):
         if len(argv) > count:
-          arg = " ".join(argv[count:])
+            arg = " ".join(argv[count:])
         else:
-          arg = ""
+            arg = ""
         
         return arg
 
@@ -452,10 +452,10 @@ edit each entry of the password entry on the command line.
         argv = arg.split()
 
         if argv and argv[0] == '-p':
-          use_editor = True 
-          arg = self.shiftArgv(argv)
+            use_editor = True 
+            arg = self.shiftArgv(argv)
         else:
-          use_editor = False
+            use_editor = False
 
         selected_password = self.pickPassword(arg)
         
@@ -467,7 +467,7 @@ edit each entry of the password entry on the command line.
                     chosendict = parser.parseMessage(text, patterns)
                     selected_password.update(chosendict)
                 else:
-                  self.editPassword(selected_password)
+                    self.editPassword(selected_password)
 
                 self.tryToSave()
             except (KeyboardInterrupt, EOFError):
@@ -523,10 +523,10 @@ Syntax:
 
         text = self.getEditorInput()
         for line in text.split("\n"):
-          new_pass = FigaroPassword() # FIXME: Password type shouldn't be hardcoded.
-          choosendict = parser.parseMessage(line, self.conf.patterns)
-          new_pass.update(choosendict)
-          tree.addNode(new_pass)
+            new_pass = FigaroPassword() # FIXME: Password type shouldn't be hardcoded.
+            choosendict = parser.parseMessage(line, self.conf.patterns)
+            new_pass.update(choosendict)
+            tree.addNode(new_pass)
 
         self.tryToSave()
 
@@ -675,8 +675,8 @@ Enter help set <option> for more info on a particular option.
         if not arg:
             print self.do_set.__doc__
             for name, option in self.conf.options.iteritems():
-              print option.get_doc(name)
-              print ""
+                print option.get_doc(name)
+                print ""
 
             return
         try:
@@ -852,7 +852,7 @@ edit.'''
     # * check if the output file can be opened 
     # * check if the format given is valid
     def do_export(self, arg):
-    	'''Export many passwords.
+        '''Export many passwords.
 
 Syntax:
     export [-r] [<regexp> [<file> [<format]]]
@@ -879,7 +879,7 @@ This will export the contents of matching passwords in the current directory or 
             regexp = argv[0]
 
         # filter passwords through the regexp
-	selected_passwords = self.filterPasswords(regexp, tree)
+        selected_passwords = self.filterPasswords(regexp, tree)
 
         # second argument: the output file
         if len(argv) > 1:

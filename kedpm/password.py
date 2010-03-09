@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: password.py,v 1.10 2006/10/11 02:52:20 gyepi Exp $
+# $Id: password.py,v 1.11 2010/03/09 15:49:26 eg1981 Exp $
 
 """ Password item """
 
@@ -100,19 +100,19 @@ class Password:
         return self.getFieldsOfType([TYPE_STRING, TYPE_TEXT])
 
     def getEditPattern(self):
-      '''Returns a pattern for parsing EditText'''
+        '''Returns a pattern for parsing EditText'''
       
-      #Notes is greedy match and should be in the last position.
-      custom_pattern = {'notes' :'''(?P<notes>.*)'''}
-      pattern = []
+        #Notes is greedy match and should be in the last position.
+        custom_pattern = {'notes' :'''(?P<notes>.*)'''}
+        pattern = []
 
-      for key, fieldinfo in self.fields_type_info:
-        if custom_pattern.has_key(key):
-          pattern.append("%s:\s*%s" % (fieldinfo['title'], custom_pattern.get(key)))
-        else:
-          pattern.append("%s:\s*(?P<%s>.*?)" % (fieldinfo['title'], key))
+        for key, fieldinfo in self.fields_type_info:
+            if custom_pattern.has_key(key):
+                pattern.append("%s:\s*%s" % (fieldinfo['title'], custom_pattern.get(key)))
+            else:
+                pattern.append("%s:\s*(?P<%s>.*?)" % (fieldinfo['title'], key))
      
-      return "".join(pattern)
+        return "".join(pattern)
       
     def asText(self):
         'Returns plain text representation of the password'

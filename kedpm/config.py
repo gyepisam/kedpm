@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: config.py,v 1.15 2006/09/07 01:18:31 gyepi Exp $
+# $Id: config.py,v 1.16 2010/03/09 15:49:27 eg1981 Exp $
 
 """Configuration for Ked Password Manager"""
 import os
@@ -48,7 +48,7 @@ class Option:
         self._value = value
 
     def get_doc(self, name):
-      return "%s = %s\n%s" % (name, str(self._value), self.doc)
+        return "%s = %s\n%s" % (name, str(self._value), self.doc)
 
 class FileOption (Option):
     """Option containing filename"""
@@ -94,8 +94,8 @@ class BooleanOption (Option):
 
     #Don't add 0, 1 to this list. True and False are coerced to those values and hide them.
     for k,v in ((True, [True, 'true', 'on', 'yes']), (False, [False, 'false', 'off', 'no'])):
-         for b in v:
-           __boolmap[b] = k
+        for b in v:
+            __boolmap[b] = k
 
     def __init__(self, default=False, doc=""):
         self.set(default)
@@ -107,15 +107,15 @@ class BooleanOption (Option):
 
         #Convert number to boolean
         try:
-          intvalue = int(value)
+            intvalue = int(value)
         except (ValueError, IndexError):
-          intvalue = None
+            intvalue = None
 
         if intvalue is not None:
-          if intvalue == 0:
-            value = False
-          elif intvalue == 1:
-            value = True
+            if intvalue == 0:
+                value = False
+            elif intvalue == 1:
+                value = True
 
         if not self.__boolmap.has_key(value):
             ok_values = self.__boolmap.keys()

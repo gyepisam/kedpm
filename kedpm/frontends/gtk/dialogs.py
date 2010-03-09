@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: dialogs.py,v 1.21 2005/11/09 19:00:53 kedder Exp $
+# $Id: dialogs.py,v 1.22 2010/03/09 15:49:28 eg1981 Exp $
 
 '''Dialog classes'''
 
@@ -80,7 +80,7 @@ class AboutDialog(Dialog):
             CreditsDialog(transient_for=self.window).run()
             return False
 
- # FIXME: this should be parametrized
+# FIXME: this should be parametrized
 from kedpm.plugins.pdb_figaro import FigaroPassword, FigaroPasswordTooLongError
 class PasswordEditDialog(Dialog):
     name = "dlg_edit"
