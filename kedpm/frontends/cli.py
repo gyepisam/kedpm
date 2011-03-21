@@ -14,7 +14,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #
-# $Id: cli.py,v 1.49 2010/03/09 15:49:28 eg1981 Exp $
+# $Id: cli.py,v 1.50 2011/03/21 00:27:36 anarcat Exp $
 
 "Command line interface for Ked Password Manager"
 
@@ -430,7 +430,16 @@ the password. Otherwise all matching entries will be displayed'''
         for record in selected_passwords:
             if record:
                 print "---------------------------------------"
-                print record.asText()
+                for key, fieldinfo in record.fields_type_info:
+                    if record[key] == '':
+                        continue
+                    if key == 'password':
+                        # this is a password, hide it with colors
+                        hide = "\x1b[%02im\x1b[%02im" % (31, 41)
+                        reset = "\x1b[%02im" % 0
+                        print "%s: %s" % (fieldinfo['title'], hide + record[key] + reset)
+                    else:
+                        print "%s: %s" % (fieldinfo['title'], record[key])
                 print "---------------------------------------"
 
     def do_edit(self, arg):
