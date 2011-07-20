@@ -1,14 +1,14 @@
 Format: http://dep.debian.net/deps/dep5
 Upstream-Name: kedpm
-Source: <url://example.com>
+Source: https://redmine.koumbit.net/projects/kedpm
 
 Files: *
-Copyright: <years> <put author's name and email here>
-           <years> <likewise for another author>
+Copyright: 2003-2006 Andrey Lebedev <andrey@micro.lt>
 License: GPL-2.0+
 
 Files: debian/*
-Copyright: 2011 Antoine Beaupré <anarcat@koumbit.org>
+Copyright: 2003 Andrey Lebedev <andrey@micro.lt>
+           2006,2011 Antoine Beaupré <anarcat@koumbit.org>
 License: GPL-2.0+
 
 License: GPL-2.0+
@@ -27,6 +27,3 @@ License: GPL-2.0+
  .
  On Debian systems, the complete text of the GNU General
  Public License version 2 can be found in "/usr/share/common-licenses/GPL-2".
-
-# Please also look if there are files or directories which have a
-# different copyright/license attached and list them here.
