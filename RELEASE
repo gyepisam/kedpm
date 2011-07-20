@@ -4,6 +4,7 @@ Release plan for Ked Password Manager
 2. Check database and options creation (?)
 3. Lay down release tag (rel-x-y-z)
 4. Make distribution tarball
+  * git archive --prefix kedpm-0.5.0/ -v -o ../kedpm-0.5.0.tgz v0.5.0
 5. Publish announcement to:
   * redmine.koumbit.net/projects/kedpm
   * freshmeat.net
