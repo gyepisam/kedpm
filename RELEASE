@@ -1,0 +1,10 @@
+Release plan for Ked Password Manager
+
+1. Review documentation
+2. Check database and options creation (?)
+3. Lay down release tag (rel-x-y-z)
+4. Make distribution tarball
+5. Publish announcement to:
+  * redmine.koumbit.net/projects/kedpm
+  * freshmeat.net
+  * PyPI
