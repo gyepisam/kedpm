@@ -24,7 +24,7 @@ Simple to use, extensible and secure password manager
 
 import os
 
-__version__ = '0.5.0-cvs'
+__version__ = '0.5.0'
 
 data_files_dir = None
 
