@@ -1,5 +1,13 @@
-kedpm (0.5-1) unstable; urgency=low
+kedpm (0.3.1-2) unstable; urgency=low
 
-  * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+  * Making package architecture independant.
 
- -- Antoine Beaupré <anarcat@koumbit.org>  Wed, 20 Jul 2011 01:04:40 -0400
+ -- Andrey Lebedev <andrey@micro.lt>  Wed, 29 Oct 2003 22:47:05 +0200
+
+kedpm (0.3.1-1) unstable; urgency=low
+
+  * Initial Release.
+  * This is my first Debian package.
+
+ -- Andrey Lebedev <andrey@micro.lt>  Mon, 27 Oct 2003 22:46:22 +0200
+

@@ -1,6 +1,7 @@
 kedpm for Debian
 ----------------
 
-<possible notes regarding this package - if none, delete this file>
+All python files where moved to /usr/lib/kedpm/kedpm directory and sys.path
+adjustment was made in /usr/bin/kedpm
 
- -- Antoine Beaupré <anarcat@koumbit.org>  Wed, 20 Jul 2011 01:04:40 -0400
+ -- Andrey Lebedev <andrey@micro.lt>, Mon, 27 Oct 2003 22:46:22 +0200
