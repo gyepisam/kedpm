@@ -1,3 +1,9 @@
+kedpm (0.4.0-1) UNRELEASED; urgency=low
+
+  * New upstream release
+
+ -- Antoine Beaupré <anarcat@koumbit.org>  Wed, 20 Jul 2011 01:20:33 -0400
+
 kedpm (0.3.1-2) unstable; urgency=low
 
   * Making package architecture independant.
