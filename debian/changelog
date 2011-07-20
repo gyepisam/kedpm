@@ -1,0 +1,5 @@
+kedpm (0.5-1) unstable; urgency=low
+
+  * Initial release (Closes: #nnnn)  <nnnn is the bug number of your ITP>
+
+ -- Antoine Beaupré <anarcat@koumbit.org>  Wed, 20 Jul 2011 01:04:40 -0400
