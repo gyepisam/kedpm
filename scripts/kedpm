@@ -19,6 +19,7 @@
 from kedpm.frontends import frontendFactory
 from getopt import getopt, GetoptError
 import sys
+import os
 
 def usage():
     print "try `%s --help' for more information" % sys.argv[0]
@@ -40,7 +41,10 @@ def main(argv):
         print message
         usage()
         sys.exit(1)
-    frontend = "gtk"  # default frontend
+    if os.getenv('DISPLAY'):
+        frontend = "gtk"  # default frontend
+    else:
+        frontend = 'cli' # fallback frontend if not running in X
     for o, a in opts:
         if o in ('--help', '-h', '-?'):
             help()
