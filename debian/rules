@@ -16,6 +16,10 @@
 # This has to be exported to make some magic below work.
 export DH_OPTIONS
 
+## we need to clean .pyc files after the autoclean, as dh_auto_clean runs setup.py, which builds stray .pyc files
+override_dh_auto_clean:
+	dh_auto_clean
+	find -name \*.pyc | xargs rm -v
 
 %:
 	dh $@ --with python2
