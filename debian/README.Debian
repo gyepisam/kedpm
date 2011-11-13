@@ -1,7 +1,0 @@
-kedpm for Debian
-----------------
-
-All python files where moved to /usr/lib/kedpm/kedpm directory and sys.path
-adjustment was made in /usr/bin/kedpm
-
- -- Andrey Lebedev <andrey@micro.lt>, Mon, 27 Oct 2003 22:46:22 +0200
