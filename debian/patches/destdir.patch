@@ -1,0 +1,16 @@
+commit 6bfb0cbba60d35694845da17feb47bd31b6a6aa8
+Author: Antoine Beaupré <anarcat@koumbit.org>
+Date:   Sun Nov 13 16:03:48 2011 -0500
+
+    patch: install in root=$DESTDIR
+
+diff --git a/Makefile b/Makefile
+index d239523..c07c3e6 100644
+--- a/Makefile
++++ b/Makefile
+@@ -11,4 +11,4 @@ clean:
+ 	-rm -r build
+ 
+ install:
+-	./setup.py install
++	./setup.py install --root=$(DESTDIR:=/) --prefix=/usr --install-layout=deb
