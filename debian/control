@@ -2,7 +2,7 @@ Source: kedpm
 Section: utils
 Priority: extra
 Maintainer: Antoine Beaupré <anarcat@koumbit.org>
-Build-Depends: debhelper (>= 8.0.0), python-setuptools, python-xmlbase, python-crypto
+Build-Depends: debhelper (>= 8.0.0), python-setuptools, python-crypto
 Standards-Version: 3.9.2
 Homepage: https://redmine.koumbit.net/projects/kedpm
 Vcs-Git: git://git.koumbit.net/kedpm.git
@@ -10,7 +10,7 @@ Vcs-Browser: https://redmine.koumbit.net/projects/kedpm/repository
 
 Package: kedpm
 Architecture: all
-Depends: python (>= 2.1), python-xmlbase, python-crypto, python-gtk2 (>= 1.99.14-1), python-glade2, ${shlibs:Depends}, ${misc:Depends}
+Depends: python (>= 2.1), python-crypto, python-gtk2 (>= 1.99.14-1), python-glade2, ${shlibs:Depends}, ${misc:Depends}
 Description: KED Password Manager
  Ked Password Manager helps to manage large amounts of passwords and related
  information, and simplifies the tasks of searching and entering password data.
