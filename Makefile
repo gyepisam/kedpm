@@ -11,4 +11,4 @@ clean:
 	-rm -r build
 
 install:
-	./setup.py install
+	./setup.py install --root=$(DESTDIR:=/) --prefix=/usr --install-layout=deb
