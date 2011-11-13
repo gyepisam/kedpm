@@ -6,8 +6,8 @@ test:
 	./run_tests
 
 clean:
-	-find -name \*.pyc | xargs rm -v
 	./setup.py clean
+	-find -name \*.pyc | xargs rm -v
 	-rm -r build
 
 install:
