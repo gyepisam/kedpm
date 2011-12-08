@@ -1,3 +1,10 @@
+kedpm (0.5.0-2) unstable; urgency=low
+
+  * fix build-deps for dh-python2
+  * change my maintainer email
+
+ -- Antoine Beaupré <anarcat@debian.org>  Thu, 08 Dec 2011 00:02:39 -0500
+
 kedpm (0.5.0-1) unstable; urgency=low
 
   * New upstream release

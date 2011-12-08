@@ -1,7 +1,7 @@
 Source: kedpm
 Section: utils
 Priority: extra
-Maintainer: Antoine Beaupré <anarcat@koumbit.org>
+Maintainer: Antoine Beaupré <anarcat@debian.org>
 Build-Depends: debhelper (>= 8.0.0), python-dev, python-setuptools, python-crypto
 Standards-Version: 3.9.2
 Homepage: https://redmine.koumbit.net/projects/kedpm
