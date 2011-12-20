@@ -1,3 +1,9 @@
+kedpm (0.5.0-3) unstable; urgency=low
+
+  * split the package in a plaintext and gtk version
+
+ -- Antoine Beaupré <anarcat@debian.org>  Tue, 20 Dec 2011 18:07:10 -0500
+
 kedpm (0.5.0-2) unstable; urgency=low
 
   * fix build-deps for dh-python2

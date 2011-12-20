@@ -23,7 +23,7 @@ override_dh_auto_clean:
 
 override_dh_auto_install:
 	dh_auto_install
-	rm $(CURDIR)/debian/kedpm/usr/share/kedpm/COPYING
+	rm $(CURDIR)/debian/tmp/usr/share/kedpm/COPYING
 
 %:
 	dh $@ --with python2
