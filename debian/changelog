@@ -1,3 +1,11 @@
+kedpm (0.5.0-4) unstable; urgency=low
+
+  * install a .desktop file
+  * patch: try the cli interface if we fail to load the GTK interface
+    (Closes: #653291)
+
+ -- Antoine Beaupré <anarcat@debian.org>  Thu, 05 Jan 2012 14:12:10 -0500
+
 kedpm (0.5.0-3) unstable; urgency=low
 
   * split the package in a plaintext and gtk version
