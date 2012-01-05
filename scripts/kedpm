@@ -59,6 +59,8 @@ def main(argv):
 
     try:
         app = frontendFactory(frontend)
+    except ImportError:
+        app = frontendFactory('cli')
     except ValueError, e:
         print e[0]
         print '''Supported frontends are:
