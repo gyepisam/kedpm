@@ -23,6 +23,7 @@ override_dh_auto_clean:
 
 override_dh_auto_install:
 	dh_auto_install
+	mkdir -p $(CURDIR)/debian/tmp/usr/share/applications
 	cp $(CURDIR)/debian/kedpm-gtk.desktop \
        $(CURDIR)/debian/tmp/usr/share/applications/kedpm-gtk.desktop
 	rm $(CURDIR)/debian/tmp/usr/share/kedpm/COPYING \
