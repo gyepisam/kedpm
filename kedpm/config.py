@@ -151,6 +151,11 @@ Changes will take effect after kedpm restart."""),
        "confirm-deletes": BooleanOption(True, """A boolean value:
         True: prompt the user to confirm delete operations;
         False: do not confirm delete operations."""),
+
+       "obscure-passwords": BooleanOption(True, """A boolean value:
+        True: obscure password display on screen;
+        False: do not obscure passwords."""),
+
     })
 
     default_patterns = [
