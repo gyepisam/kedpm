@@ -43,6 +43,9 @@ try 'help' for brief description of available commands.
     modified = 0
     histfile = os.path.join(expanduser('~'), '.kedpm', 'history')
 
+    # console supports escape sequences?
+    use_console_escapes = False 
+
     def __init__(self):
         Cmd.__init__(self)
         if (hasattr(sys.stdout, 'isatty') and sys.stdout.isatty()):
@@ -52,11 +55,14 @@ try 'help' for brief description of available commands.
                 # with a possible solution here: http://pypi.python.org/pypi/colorama
                 pass
             else:
-                self.PS1 = "\x1b[1m"+self.PS1+"\x1b[0m" # bold prompt
+                self.use_console_escapes = True
+
+        if self.use_console_escapes:
+            self.PS1 = "\x1b[1m"+self.PS1+"\x1b[0m" # bold prompt
 
 
     def printMessage(self, message, *vars):
-        if self.conf.options.get('verbose', True):
+        if self.conf.options['verbose']:
             print (message) % vars
 
     def openDatabase(self):
@@ -157,7 +163,7 @@ try 'help' for brief description of available commands.
         Calls pickPassword if program has been configured to force
         single selection'''
       
-        if self.conf.options.get('force-single', False):
+        if self.conf.options['force-single']:
             return [self.pickPassword(regexp, tree)] 
         else:
             return(self.filterPasswords(regexp, tree))
@@ -426,17 +432,16 @@ the password. Otherwise all matching entries will be displayed'''
             arg = self.shiftArgv(argv)
 
         selected_passwords = self.getPasswords(arg, tree)
+        obscure_passwords = self.conf.options['obscure-passwords']
+
         for record in selected_passwords:
             if record:
                 print "---------------------------------------"
                 for key, fieldinfo in record.fields_type_info:
                     if record[key] == '':
                         continue
-                    if key == 'password':
-                        # this is a password, hide it with colors
-                        hide = "\x1b[%02im\x1b[%02im" % (31, 41)
-                        reset = "\x1b[%02im" % 0
-                        print "%s: %s" % (fieldinfo['title'], hide + record[key] + reset)
+                    if fieldinfo['type'] == password.TYPE_PASSWORD and obscure_passwords and self.use_console_escapes:
+                        print "%s: \x1b[31m\x1b[41m%s\x1b[00m" % (fieldinfo['title'], record[key])
                     else:
                         print "%s: %s" % (fieldinfo['title'], record[key])
                 print "---------------------------------------"
@@ -669,7 +674,7 @@ Enter help set <option> for more info on a particular option.
                 opts[opt_name] = opt_value.strip() 
             except OptionError, e:
                 print "set: %s" % e
-        # save confuguration file
+        # save configuration file
         self.conf.save()
 
     def complete_set(self, text, line, begidx, endidx):
@@ -718,7 +723,7 @@ deletion.  Otherwise records will be deleted without confirmation."""
        
         do_delete = False
 
-        if self.conf.options.get('confirm-deletes', True):
+        if self.conf.options['confirm-deletes']:
             print selected_password.asText()
             answer = raw_input("Do you really want to delete this " \
                                "password (y/N)? ")
