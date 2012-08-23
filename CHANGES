@@ -24,6 +24,17 @@ Version 0.5.0 (Upcoming)
 
     * Project migrated to git and https://redmine.koumbit.net/projects/kedpm
 
+    * Show PS1 prompt in bold for non-Windows systems.
+
+    * Fix bug where 'set' command modifications to configuration values
+      did not update current session.
+
+    * Split lines in OS independent fashion. No more unixisms!
+
+    * Fix bug where passwords could not be deleted if
+      'confirm-deletes' option was false or not set.
+
+
 Version 0.4.0 (2004.02.29) 
 ==========================
 

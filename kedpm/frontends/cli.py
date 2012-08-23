@@ -31,6 +31,7 @@ from cmd import Cmd
 import os, sys, tempfile
 from os.path import expanduser
 import readline
+import ctypes
 
 class Application (Cmd, Frontend):
     PS1 = "kedpm:%s> " # prompt template
@@ -44,25 +45,23 @@ try 'help' for brief description of available commands.
 
     def __init__(self):
         Cmd.__init__(self)
-        
-        # This method of setting colored prompt doesn't work on windows. We
-        # need to figure out how to put color in cross-platform way and
-        # re-enable it here.
-        #if sys.stdout.isatty():
-        #    self.PS1 = "\x1b[1m"+self.PS1+"\x1b[0m" # colored prompt template
+        if (hasattr(sys.stdout, 'isatty') and sys.stdout.isatty()):
+            if hasattr(ctypes, 'windll'):
+                # skip windows for now, but see
+                # http://www.burgaud.com/bring-colors-to-the-windows-console-with-python/
+                # with a possible solution here: http://pypi.python.org/pypi/colorama
+                pass
+            else:
+                self.PS1 = "\x1b[1m"+self.PS1+"\x1b[0m" # bold prompt
 
 
     def printMessage(self, message, *vars):
-        if self.verbose:
+        if self.conf.options.get('verbose', True):
             print (message) % vars
 
     def openDatabase(self):
         ''' Open database amd prompt for password if necessary '''
         
-        self.verbose = self.conf.options['verbose']
-        self.force_single = self.conf.options['force-single']
-        self.confirm_deletes = self.conf.options['confirm-deletes']
-
         self.pdb = PDBFigaro(filename = expanduser(self.conf.options['fpm-database']))
         password = ""
         self.printMessage(_("Ked Password Manager (version %s)"), __version__)
@@ -158,7 +157,7 @@ try 'help' for brief description of available commands.
         Calls pickPassword if program has been configured to force
         single selection'''
       
-        if self.force_single:
+        if self.conf.options.get('force-single', False):
             return [self.pickPassword(regexp, tree)] 
         else:
             return(self.filterPasswords(regexp, tree))
@@ -531,7 +530,7 @@ Syntax:
         tree = self.getCwd()
 
         text = self.getEditorInput()
-        for line in text.split("\n"):
+        for line in [x for x in text.splitlines() if x]:
             new_pass = FigaroPassword() # FIXME: Password type shouldn't be hardcoded.
             choosendict = parser.parseMessage(line, self.conf.patterns)
             new_pass.update(choosendict)
@@ -716,19 +715,25 @@ deletion.  Otherwise records will be deleted without confirmation."""
             return
 
         Cwd = self.getCwd()
-        
-        if self.confirm_deletes:
+       
+        do_delete = False
+
+        if self.conf.options.get('confirm-deletes', True):
             print selected_password.asText()
             answer = raw_input("Do you really want to delete this " \
                                "password (y/N)? ")
             if answer.lower().startswith('y'):
-                # Do delete selected password
-                Cwd.removeNode(selected_password)
-                self.printMessage(_("Password deleted"))
-                
-                self.tryToSave()
+                do_delete = True
             else:
                 self.printMessage(_("Password was not deleted."))
+        else:
+            do_delete = True
+
+        if do_delete:
+            # Do delete selected password
+            Cwd.removeNode(selected_password)
+            self.printMessage(_("Password deleted"))
+            self.tryToSave()
 
 
 
@@ -827,16 +832,15 @@ edit.'''
 #  { } - matches arbitrary number of spaces or nothing;
 #  {~regexp} - matches arbitrary regular expression;
 # 
-# One line is one pattern. Empty lines and Lines starting with simbol "#" will
+# One line is one pattern. Empty lines and Lines starting with symbol "#" will
 # be ignored.
 
 '''
 
         pattern_text = '\n'.join(self.conf.patterns)
         text = self.getEditorInput(disclaimer+pattern_text)
-        cr = '\n' # XXX This is possible unixism
         patterns = []
-        for line in text.split(cr):
+        for line in [x for x in text.splitlines() if x]:
             line = line.strip()
             if line.startswith("#") or not line:
                 continue
