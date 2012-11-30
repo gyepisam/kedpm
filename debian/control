@@ -10,7 +10,7 @@ Vcs-Browser: https://redmine.koumbit.net/projects/kedpm/repository
 
 Package: kedpm
 Architecture: all
-Depends: python (>= 2.1), python-crypto, ${shlibs:Depends}, ${misc:Depends}
+Depends: ${python:Depends}, python-crypto, ${shlibs:Depends}, ${misc:Depends}
 Description: KED Password Manager
  Ked Password Manager helps to manage large amounts of passwords and related
  information, and simplifies the tasks of searching and entering password data.
@@ -22,7 +22,7 @@ Description: KED Password Manager
 
 Package: kedpm-gtk
 Architecture: all
-Depends: kedpm (>= ${source:Version}), python-gtk2 (>= 1.99.14-1), python-glade2, ${shlibs:Depends}, ${misc:Depends}
+Depends: kedpm (>= ${source:Version}), ${python:Depends}, python-gtk2 (>= 1.99.14-1), python-glade2, ${shlibs:Depends}, ${misc:Depends}
 Description: KED Password Manager
  Ked Password Manager helps to manage large amounts of passwords and related
  information, and simplifies the tasks of searching and entering password data.
