@@ -1,6 +1,0 @@
-# Compulsory line, this is a version 3 file
-version=3
-
-# Uncomment to examine a Webpage
-# <Webpage URL> <string match>
-https://redmine.koumbit.net/projects/kedpm/files kedpm-(.*)\.tgz

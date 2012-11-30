@@ -5,6 +5,11 @@ Ked Password Manager: CHANGES
 Noteworthy changes in Ked Password Manager. Most recent changes are at
 the top.
 
+Version 1.0
+===========
+
+Now a native Debian package, see debian/changelog for updates.
+
 Version 0.5.0 (Upcoming)
 ========================
 
