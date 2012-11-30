@@ -864,9 +864,8 @@ edit.'''
         '''Export many passwords.
 
 Syntax:
-    export [-r] [<regexp> [<file> [<format]]]
+    export [<regexp> [<file> [<format]]]
 
-    -r - recursive search. search all subtrees for matching passwords
     <regexp> - match only those passwords
     <file> - export to file
     <format> - one of "plain" or "csv"
@@ -875,20 +874,13 @@ This will export the contents of matching passwords in the current directory or 
 '''
 
         argv = arg.split()
-        tree = None
+
         # this represents all passwords
         regexp = ""
-        # recurse into the tree if appropriate
-        if argv and argv[0] == '-r':
-            tree = self.getCwd().flatten()
-            argv = argv[1:]
 
         # first argument: the regexp
         if len(argv) > 0:
             regexp = argv[0]
-
-        # filter passwords through the regexp
-        selected_passwords = self.filterPasswords(regexp, tree)
 
         # second argument: the output file
         if len(argv) > 1:
@@ -897,12 +889,16 @@ This will export the contents of matching passwords in the current directory or 
             output = sys.stdout
 
         # print all found passwords to output stream
-        for record in selected_passwords:
+        for path, record in self.getCwd().rlocate(regexp).iteritems():
+            if path == "./":
+                continue
             # third argument: the output format
             if (len(argv) > 2) and (argv[2] == "csv"):
                 output.write(record.asCSV())
             else:
+                output.write("Path: %s\n" % path)
                 output.write(record.asText())
+                output.write("\n")
         # close stream if necessary
         if len(argv) > 1:
             output.close()
