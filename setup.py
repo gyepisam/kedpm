@@ -52,7 +52,7 @@ front-ends."""
         url="http://kedpm.sourceforge.net/",
         packages=['kedpm', 'kedpm.plugins', 'kedpm.frontends', 'kedpm.frontends.gtk'],
         scripts=['scripts/kedpm'],
-        data_files=[(os.path.join('share', 'kedpm'), ['AUTHORS', 'COPYING', 'INSTALL']),
+        data_files=[(os.path.join('share', 'kedpm'), ['AUTHORS', 'INSTALL']),
             (os.path.join('share', 'kedpm', 'glade'),
                 [os.path.join('glade', 'kedpm.glade')] +
                 glob(os.path.join('glade', '*.png'))

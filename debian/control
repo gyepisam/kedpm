@@ -10,7 +10,7 @@ Vcs-Browser: https://redmine.koumbit.net/projects/kedpm/repository
 
 Package: kedpm
 Architecture: all
-Depends: python (>= 2.1), python-crypto, ${shlibs:Depends}, ${misc:Depends}
+Depends: python (>= 2.1), python-crypto, ${shlibs:Depends}, ${misc:Depends}, ${python:Depends}
 Description: KED Password Manager
  Ked Password Manager helps to manage large amounts of passwords and related
  information, and simplifies the tasks of searching and entering password data.
