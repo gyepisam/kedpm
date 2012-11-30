@@ -2,11 +2,10 @@ kedpm (1.0) unstable; urgency=low
 
   * New upstream release.
     - simplify export code, also export path
-    - cleanup properly .pyc files after ./setup clean, as it may generate some
-    - patch: install in root=$DESTDIR
     - make kedpm behave if we're in a console
   * Switch to a native package since we are the upstream now.
   * Fix python dependencies (Closes: #662157)
+  * Fix the build system to use python tools instead of hackish makefile
 
  -- Antoine Beaupré <anarcat@debian.org>  Fri, 30 Nov 2012 14:48:24 -0500
 
