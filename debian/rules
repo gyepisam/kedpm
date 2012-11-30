@@ -18,11 +18,12 @@ export DH_OPTIONS
 
 ## we need to clean .pyc files after the autoclean, as dh_auto_clean runs setup.py, which builds stray .pyc files
 override_dh_auto_clean:
-	dh_auto_clean
-	find -name \*.pyc | xargs rm -v
+	./setup.py clean
+	-find -name \*.pyc | xargs rm -fv
+	-rm -fr build
 
 override_dh_auto_install:
-	dh_auto_install
+	./setup.py install --root=$(DESTDIR:=/) --prefix=/usr --install-layout=deb
 	mkdir -p $(CURDIR)/debian/tmp/usr/share/applications
 	cp $(CURDIR)/debian/kedpm-gtk.desktop \
        $(CURDIR)/debian/tmp/usr/share/applications/kedpm-gtk.desktop
