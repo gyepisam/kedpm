@@ -1,0 +1,23 @@
+[Desktop Entry]
+Version=1.0
+
+Type=Application
+
+Name=Ked Password Manager
+GenericName=Password Manager
+GenericName[cs]=Správce hesel
+GenericName[de]=Kennwortverwalter
+GenericName[fr]=Gestionnaire de Mots de Passe
+GenericName[it]=Gestore di Parole d'Ordine
+Comment=Manage passwords
+Comment[cs]=Správa hesel
+Comment[de]=Kennwörter verwalten
+Comment[fr]=Gérer les mots de passe
+Comment[it]=Gestire le parole d'ordine
+
+Categories=GTK;Utility;
+
+Exec=kedpm
+TryExec=kedpm
+Terminal=false
+StartupNotify=true

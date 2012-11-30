@@ -1,0 +1,2 @@
+?package(kedpm-gtk,kedpm):needs="X11" section="Applications/System/Security"\
+  title="Ked Password Manager" command="/usr/bin/kedpm"
