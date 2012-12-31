@@ -1,0 +1,5 @@
+usr/lib/python2.7/dist-packages/kedpm-*.egg-info
+usr/lib/python2.7/dist-packages/kedpm/frontends/*.py
+usr/lib/python2.7/dist-packages/kedpm/*.py
+usr/lib/python2.7/dist-packages/kedpm/plugins
+usr/bin/kedpm

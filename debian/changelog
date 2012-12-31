@@ -1,0 +1,62 @@
+kedpm (1.0) unstable; urgency=low
+
+  * New upstream release.
+    - simplify export code, also export path
+    - make kedpm behave if we're in a console
+  * Switch to a native package since we are the upstream now.
+  * Fix python dependencies (Closes: #662157)
+  * Fix the build system to use python tools instead of hackish makefile
+
+ -- Antoine Beaupré <anarcat@debian.org>  Fri, 30 Nov 2012 14:48:24 -0500
+
+kedpm (0.5.0-4) unstable; urgency=low
+
+  * install a .desktop file
+  * patch: try the cli interface if we fail to load the GTK interface
+    (Closes: #653291)
+
+ -- Antoine Beaupré <anarcat@debian.org>  Thu, 05 Jan 2012 14:12:10 -0500
+
+kedpm (0.5.0-3) unstable; urgency=low
+
+  * split the package in a plaintext and gtk version
+  * install the manpage
+
+ -- Antoine Beaupré <anarcat@debian.org>  Tue, 20 Dec 2011 18:07:10 -0500
+
+kedpm (0.5.0-2) unstable; urgency=low
+
+  * fix build-deps for dh-python2
+  * change my maintainer email
+
+ -- Antoine Beaupré <anarcat@debian.org>  Thu, 08 Dec 2011 00:02:39 -0500
+
+kedpm (0.5.0-1) unstable; urgency=low
+
+  * New upstream release
+  * Upload to Debian unstable (Closes: #645220)
+  * Improve the Debian package to conform to policy, too many changes to
+    list here
+  * New patch: DESTDIR support for Makefile
+
+ -- Antoine Beaupré <anarcat@koumbit.org>  Wed, 20 Jul 2011 01:21:00 -0400
+
+kedpm (0.4.0-1) UNRELEASED; urgency=low
+
+  * New upstream release
+
+ -- Antoine Beaupré <anarcat@koumbit.org>  Wed, 20 Jul 2011 01:20:33 -0400
+
+kedpm (0.3.1-2) unstable; urgency=low
+
+  * Making package architecture independant.
+
+ -- Andrey Lebedev <andrey@micro.lt>  Wed, 29 Oct 2003 22:47:05 +0200
+
+kedpm (0.3.1-1) unstable; urgency=low
+
+  * Initial Release.
+  * This is my first Debian package.
+
+ -- Andrey Lebedev <andrey@micro.lt>  Mon, 27 Oct 2003 22:46:22 +0200
+

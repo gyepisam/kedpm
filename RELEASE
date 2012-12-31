@@ -1,11 +1,13 @@
 Release plan for Ked Password Manager
 
-1. Review documentation
-2. Check database and options creation (?)
-3. Lay down release tag (rel-x-y-z)
+1. Review changelog in debian/change
+2. Fix version number in kedpm/__init__.py
+3. Lay down release tag (vX.Y)
 4. Make distribution tarball
   * git archive --prefix kedpm-0.5.0/ -v -o ../kedpm-0.5.0.tgz v0.5.0
-5. Publish announcement to:
+5. Build debian package:
+  * git-buildpackage
+6. Publish announcement to:
   * redmine.koumbit.net/projects/kedpm
   * freshmeat.net
   * PyPI
