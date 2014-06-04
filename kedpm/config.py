@@ -156,6 +156,9 @@ Changes will take effect after kedpm restart."""),
         True: obscure password display on screen;
         False: do not obscure passwords."""),
 
+       "force-editor": BooleanOption(False, """A boolean value:
+       True: Use editor for editing entries, as if the "-p" option were specified.
+       False: Default to line based editing or use the "-p" option explicitly."""),
     })
 
     default_patterns = [

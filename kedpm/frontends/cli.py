@@ -456,10 +456,10 @@ Prompts the user to edit a password item in the current category.
 If <regexp> matches multiple items, the list of matches will be printed
 and user is prompted to select one.
 
-If the optional '-p' flag is specified, the password will be edited using the
-the editor specified in the VISUAL or EDITOR environment variables, defaulting
-to "vi" if neither is found. Otherwise the user is prompted to
-edit each entry of the password entry on the command line.
+If the optional '-p' flag is specified or the 'force-editor' config option is set,
+the password will be edited using the editor specified in the VISUAL or EDITOR
+environment variables, defaulting to "vi" if neither is found.
+Otherwise the user is prompted to edit each entry of the password entry on the command line.
 
 '''
         argv = arg.split()
@@ -467,6 +467,8 @@ edit each entry of the password entry on the command line.
         if argv and argv[0] == '-p':
             use_editor = True 
             arg = self.shiftArgv(argv)
+        elif self.conf.options['force-editor']:
+            use_editor = True
         else:
             use_editor = False
 
@@ -498,9 +500,14 @@ Syntax:
     -p - Get properties by parsing provided text. Will open default text editor
          for you to paste text in. Mutually exclusive with -t option. 
     -t - Display editor template in default text editor. Mutually exclusive with -p option.
+
+    If the config option 'force-editor is set, this command defaults to the -t option when no options are provided.
 '''
         new_pass = FigaroPassword() # FIXME: Password type shouldn't be hardcoded.
+
         argv = arg.split()
+
+        use_visual_editor = len(argv) == 0 and self.conf.options["force-editor"]
 
         if   "-p" in argv and "-t" in argv:
             print _("new: -p and -t arguments are mutually exclusive.")          
@@ -509,15 +516,16 @@ Syntax:
             text = self.getEditorInput()
             choosendict = parser.parseMessage(text, self.conf.patterns)
             new_pass.update(choosendict)
-        elif "-t" in argv:
+        elif "-t" in argv or use_visual_editor:
             text = self.getEditorInput(new_pass.asEditText())
             choosendict = parser.parseMessage(text, [new_pass.getEditPattern()])
             new_pass.update(choosendict)
 
         try:
-            self.editPassword(new_pass)
+            if not use_visual_editor:
+                self.editPassword(new_pass)
         except (KeyboardInterrupt, EOFError):
-            self.printMessage(_("Cancelled"))
+              self.printMessage(_("Cancelled"))
         else:
             tree = self.getCwd()
             tree.addNode(new_pass)
