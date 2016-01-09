@@ -75,6 +75,10 @@ class SelectOption (Option):
         """Return available valid values"""
         return self.__constraint
 
+class StringOption(Option):
+    """Option containing a string"""
+    pass
+
 class Options (UserDict):
     """List of self-validationg options"""
 
@@ -156,6 +160,11 @@ Changes will take effect after kedpm restart."""),
         True: obscure password display on screen;
         False: do not obscure passwords."""),
 
+       "open-command": StringOption("", """A string value:
+       Windows: start;
+       OSX: open;
+       Linux: xdg-open.
+       If not set, uses python's webbrowser module"""),
     })
 
     default_patterns = [
