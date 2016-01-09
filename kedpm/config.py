@@ -75,6 +75,10 @@ class SelectOption (Option):
         """Return available valid values"""
         return self.__constraint
 
+class StringOption(Option):
+    """Option containing a string"""
+    pass
+
 class Options (UserDict):
     """List of self-validationg options"""
 
@@ -159,6 +163,12 @@ Changes will take effect after kedpm restart."""),
        "force-editor": BooleanOption(False, """A boolean value:
        True: Use editor for editing entries, as if the "-p" option were specified.
        False: Default to line based editing or use the "-p" option explicitly."""),
+
+       "open-command": StringOption("", """A string value:
+     Windows: start;
+     OSX: open;
+     Linux: xdg-open.
+     If option is not set, uses python's webbrowser module"""),
     })
 
     default_patterns = [

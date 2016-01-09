@@ -32,6 +32,8 @@ import os, sys, tempfile
 from os.path import expanduser
 import readline
 import ctypes
+import subprocess
+import  webbrowser
 
 class Application (Cmd, Frontend):
     PS1 = "kedpm:%s> " # prompt template
@@ -338,6 +340,16 @@ long password correctly.""")
         
         return arg
 
+    def printRecord(self, record):
+        obscure_passwords = self.conf.options['obscure-passwords']
+        for key, fieldinfo in record.fields_type_info:
+            if record[key] == '':
+                continue
+            if fieldinfo['type'] == password.TYPE_PASSWORD and obscure_passwords and self.use_console_escapes:
+                print "%s: \x1b[31m\x1b[41m%s\x1b[00m" % (fieldinfo['title'], record[key])
+            else:
+                print "%s: %s" % (fieldinfo['title'], record[key])
+
     ##########################################
     # Command implementations below.         #
 
@@ -432,18 +444,11 @@ the password. Otherwise all matching entries will be displayed'''
             arg = self.shiftArgv(argv)
 
         selected_passwords = self.getPasswords(arg, tree)
-        obscure_passwords = self.conf.options['obscure-passwords']
 
         for record in selected_passwords:
             if record:
                 print "---------------------------------------"
-                for key, fieldinfo in record.fields_type_info:
-                    if record[key] == '':
-                        continue
-                    if fieldinfo['type'] == password.TYPE_PASSWORD and obscure_passwords and self.use_console_escapes:
-                        print "%s: \x1b[31m\x1b[41m%s\x1b[00m" % (fieldinfo['title'], record[key])
-                    else:
-                        print "%s: %s" % (fieldinfo['title'], record[key])
+                self.printRecord(record)
                 print "---------------------------------------"
 
     def do_edit(self, arg):
@@ -932,3 +937,35 @@ TODO: Empty regexp leads to inconsistent results.
 
         for path, password in self.getCwd().rlocate(regexp).iteritems():
             print path
+
+    def do_open(self, arg):
+        """Open password URL in a web browser.
+Syntax:
+    open <regexp>
+
+Open the URL of a password item in the current category with the configured 'open-command'.
+If <regexp> matches multiple items, the list of matches will be printed
+and user is prompted to select one.
+
+The selected entry is printed, then its URL is opened in a web browser.
+
+If 'open-command' is set, it is called with a password's URL as an argument.
+Otherwise, python's webbrowser module is used.
+
+"""
+        record = self.pickPassword(arg, self.getCwd().flatten())
+        if not record:
+            return
+
+        self.printRecord(record)
+
+        password_url = record['url']
+        if not password_url:
+            self.printMessage(_("URL field is empty"))
+            return
+
+        open_command = self.conf.options['open-command']
+        if open_command:
+            subprocess.call([open_command, password_url])
+        else:
+            webbrowser.open(password_url)
