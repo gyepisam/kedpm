@@ -5,6 +5,13 @@ Ked Password Manager: CHANGES
 Noteworthy changes in Ked Password Manager. Most recent changes are at
 the top.
 
+Version 1.0.1 (Upcoming)
+=========== ============
+
+   * Added 'obscure-passwords' option to make password hiding optional.
+   * Added 'force-editor' to always edit with an editor.
+   * Added 'open' command to open password record URL in a web browser.
+
 Version 1.0
 ===========
 
