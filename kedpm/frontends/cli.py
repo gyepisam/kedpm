@@ -33,7 +33,8 @@ from os.path import expanduser
 import readline
 import ctypes
 import subprocess
-import  webbrowser
+import webbrowser
+import shlex
 
 class Application (Cmd, Frontend):
     PS1 = "kedpm:%s> " # prompt template
@@ -949,8 +950,12 @@ and user is prompted to select one.
 
 The selected entry is printed, then its URL is opened in a web browser.
 
-If 'open-command' is set, it is called with a password's URL as an argument.
-Otherwise, python's webbrowser module is used.
+If 'open-command' is set, it is invoked to open the password's URL.
+If the command contains a '{}' placeholder, it is replaced with the URL.
+Otherwise, the URL is appended to the command.
+
+If the 'open-command' is not set, python's webbrowser module is used
+to open the password URL.
 
 """
         record = self.pickPassword(arg, self.getCwd().flatten())
@@ -966,6 +971,13 @@ Otherwise, python's webbrowser module is used.
 
         open_command = self.conf.options['open-command']
         if open_command:
-            subprocess.call([open_command, password_url])
+            command = shlex.split(open_command)
+            try:
+                i = command.index('{}')
+                command[i] = password_url
+            except ValueError:
+                command.append(password_url)
+
+            subprocess.call(command)
         else:
             webbrowser.open(password_url)

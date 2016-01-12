@@ -164,11 +164,10 @@ Changes will take effect after kedpm restart."""),
        True: Use editor for editing entries, as if the "-p" option were specified.
        False: Default to line based editing or use the "-p" option explicitly."""),
 
-       "open-command": StringOption("", """A string value:
-     Windows: start;
-     OSX: open;
-     Linux: xdg-open.
-     If option is not set, uses python's webbrowser module"""),
+       "open-command": StringOption("", """A string value invoked to open password URL in a web browser.
+     If the command contains a '{}' placeholder, it is replaced with the URL.
+     Otherwise, the URL is appended to the command.
+     If this option is not set, python's webbrowser module is used to open the URL"""),
     })
 
     default_patterns = [
